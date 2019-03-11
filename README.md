@@ -19,3 +19,5 @@ This fork change
 
 * add SAML2 based auth
 * add JS based copy button
+* add per-user based access to credentials
+* fix staff access to not owned credentials
