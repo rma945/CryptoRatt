@@ -210,6 +210,8 @@ def detail(request, cred_id):
     # User is not in the password owner group, show a read-only UI
     if cred.group in request.user.groups.all():
         readonly = False
+    elif request.user.is_staff:
+        readonly = False
     else:
         readonly = True
 

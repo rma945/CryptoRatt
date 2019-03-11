@@ -1,4 +1,4 @@
-Description:
+Description
 ============
 
 **Project archived**
@@ -10,11 +10,11 @@ If you decide to use RatticWeb you should take the following into account:
 * The filesystem in which the database is stored should be protected with encryption.
 * The access logs should be protected.
 * The machine which serves RatticWeb should be protected from access.
-* Tools like <a href=="http://www.ossec.net/">OSSEC</a> are your friend.
+* Tools like [OSSEC](http://www.ossec.net/) are your friend.
 
 
 
-This fork change:
+This fork change
 =================
 
 * add SAML2 based auth
