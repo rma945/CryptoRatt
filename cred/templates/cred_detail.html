@@ -45,7 +45,7 @@
   <td id="usertd" class="rattic-copy-button">
     {% if cred.username %}
       <span id="username">{{ cred.username }}</span>
-      <button class="btn btn-mini" id="copyuser">{% trans "Copy" %}</button>
+      <button class="btn btn-mini" id="js-copy-name" data-clipboard-target="#username">Copy</button>
     {% endif %}
   </td>
 </tr>
@@ -56,7 +56,7 @@
   </th>
   <td id="passtd" class="rattic-copy-button">
     <span id="password" class="passhidden">Fetching Password...</span>
-    <button class="btn btn-mini" id="copyclipboard">{% trans "Copy" %}</button>
+    <button class="btn btn-mini" id="js-copy-passwd" data-clipboard-target="#password">Copy</button>
   </td>
 </tr>
 
