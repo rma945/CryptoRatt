@@ -17,4 +17,5 @@ If you decide to use RatticWeb you should take the following into account:
 This fork change:
 =================
 
-* added SAML2 based auth
+* add SAML2 based auth
+* add JS based copy button
