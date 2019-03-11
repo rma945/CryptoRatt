@@ -41,6 +41,7 @@ class SearchManager(models.Manager):
         qs = qs.filter(Q(group__in=usergroups)
                      | Q(latest__group__in=usergroups)
                      | Q(groups__in=usergroups)
+                     | Q(users__in=[user.id])
                      | Q(latest__groups__in=usergroups)).distinct()
 
         return qs
@@ -83,6 +84,7 @@ class Cred(models.Model):
     description = models.TextField(verbose_name=_('Description'), blank=True, null=True)
     group = models.ForeignKey(Group, verbose_name=_('Group'))
     groups = models.ManyToManyField(Group, verbose_name=_('Groups'), related_name="child_creds", blank=True, null=True, default=None)
+    users = models.ManyToManyField(User, verbose_name=_('Users'), related_name="child_creds", blank=True, null=True, default=None)
     tags = models.ManyToManyField(Tag, verbose_name=_('Tags'), related_name='child_creds', blank=True, null=True, default=None)
     iconname = models.CharField(verbose_name=_('Icon'), default='Key.png', max_length=64)
     ssh_key = SizedFileField(verbose_name=_('SSH key'), storage=CredAttachmentStorage(), max_upload_size=settings.RATTIC_MAX_ATTACHMENT_SIZE, null=True, blank=True, upload_to='not required')

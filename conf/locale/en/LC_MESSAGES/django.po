@@ -708,6 +708,10 @@ msgstr ""
 msgid "Viewer Groups"
 msgstr ""
 
+#: cred/templates/cred_detail.html:71 cred/templates/cred_list.html:73
+msgid "Viewer Users"
+msgstr ""
+
 #: cred/templates/cred_detail.html:81
 msgid "Last Changed"
 msgstr ""

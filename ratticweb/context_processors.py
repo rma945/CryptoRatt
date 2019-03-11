@@ -8,6 +8,7 @@ def base_template_reqs(request):
         'pageurl': request.path,
         'LDAP_ENABLED': settings.LDAP_ENABLED,
         'SAML_ENABLED': settings.SAML_ENABLED,
+        'DEBUG_ENABLED': settings.DEBUG,
         'GOAUTH2_ENABLED': settings.GOAUTH2_ENABLED,
         'USE_LDAP_GROUPS': settings.USE_LDAP_GROUPS,
         'EXPORT_ENABLED': not settings.RATTIC_DISABLE_EXPORT,

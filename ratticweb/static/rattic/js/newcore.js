@@ -62,7 +62,7 @@ var RATTIC = (function ($, ZeroClipboard) {
   };
 
   /* Setup ZeroClipboard */
-  ZeroClipboard.config({ moviePath: my.page.getStaticURL('zeroclipboard/1.3.2/ZeroClipboard.swf') });
+  // ZeroClipboard.config({ moviePath: my.page.getStaticURL('zeroclipboard/1.3.2/ZeroClipboard.swf') });
 
   /********* Private Methods **********/
   /* Gets a cookie from the browser. Only works for cookies that
@@ -608,29 +608,29 @@ var RATTIC = (function ($, ZeroClipboard) {
 
   /* Add copy buttons to table cells */
   my.controls.tableCopyButtons = function (cells) {
-    if (!FlashDetect.installed) {
-      return false;
-    }
+    // if (!FlashDetect.installed) {
+    //   return false;
+    // }
 
     cells.each(function () {
       // Get the players
       var me = $(this),
         button = me.children('button'),
-        text = me.children('span'),
-        clip = new ZeroClipboard(button);
+        text = me.children('span')
+        // clip = new ZeroClipboard(button);
 
       // Set data for callbacks
-      button.data('copyfrom', text);
-      button.data('copybutton', button);
-      button.data('clip', clip);
-      me.data('copybutton', button);
-      text.data('copybutton', button);
+      // button.data('copyfrom', text);
+      // button.data('copybutton', button);
+      // button.data('clip', clip);
+      // me.data('copybutton', button);
+      // text.data('copybutton', button);
 
       // Apply callbacks
-      me.on('mouseleave', _hideCopyButton);
-      text.on('mouseover', _showCopyButton);
-      clip.on('mouseover', _showCopyButton);
-      clip.on('dataRequested', _copyButtonGetData);
+      // me.on('mouseleave', _hideCopyButton);
+      // text.on('mouseover', _showCopyButton);
+      // clip.on('mouseover', _showCopyButton);
+      // clip.on('dataRequested', _copyButtonGetData);
     });
 
     return true;
@@ -715,7 +715,7 @@ var RATTIC = (function ($, ZeroClipboard) {
     });
   };
   return my;
-}(jQuery, ZeroClipboard));
+}(jQuery));
 
 $(document).ready(function () {
   // Setup Icons
