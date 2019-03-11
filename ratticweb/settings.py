@@ -148,6 +148,8 @@ LOCAL_APPS = (
 )
 
 INSTALLED_APPS = (
+    # saml
+    'django_saml2_auth',
     # External apps
     'django.contrib.auth',
     'django.contrib.sessions',
@@ -319,6 +321,38 @@ if chgqreminder > 0:
     }
 
 CELERY_TIMEZONE = TIME_ZONE
+
+SAML_ENABLED = 'saml' in config.sections()
+
+if SAML_ENABLED:
+    # SAML IDP URL
+    SAML_IDP_URL = config.get('saml', 'idp_url')
+    
+    # SAML
+    SAML2_AUTH = {
+        # Metadata is required, choose either remote url or local file path
+        'ENTITY_ID': confget('saml', 'entity_id', ''),
+        'METADATA_AUTO_CONF_URL': confget('saml', 'metadata_url', ''),
+        'NAME_ID_FORMAT': 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
+
+        # Optional settings below
+        'DEFAULT_NEXT_URL': '/cred/list/',
+        'CREATE_USER': 'TRUE',
+        'NEW_USER_PROFILE': {
+            'ACTIVE_STATUS': True,
+            'STAFF_STATUS': False,
+            'SUPERUSER_STATUS': False,
+        },
+        'ATTRIBUTES_MAP': {
+            'email': confget('saml', 'attribute_email', 'email'),
+            'username': confget('saml', 'attribute_username', 'username'),
+            'first_name': confget('saml', 'attribute_firstname', 'firstname'),
+            'last_name': confget('saml', 'attribute_lastname', 'lastname'),
+        },
+            'TRIGGER': {
+            'BEFORE_LOGIN': 'ratticweb.saml.hooks.sync_user',
+        },
+    }
 
 # [ldap]
 LDAP_ENABLED = 'ldap' in config.sections()

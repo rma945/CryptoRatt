@@ -1,3 +1,6 @@
+#saml
+import django_saml2_auth.views
+
 from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from tastypie.api import Api
@@ -15,8 +18,18 @@ v1_api.register(CredResource())
 v1_api.register(TagResource())
 v1_api.register(GroupResource())
 
+base_urlpatterns = []
+
+# SAML
+if settings.SAML_ENABLED:
+    base_urlpatterns += patterns('',
+        url(r'^saml2_auth/', include('django_saml2_auth.urls')),
+        url(r'^accounts/login/$', django_saml2_auth.views.signin),
+        url(r'^admin/login/$', django_saml2_auth.views.signin),
+    )
+
 # Setup the base paths for applications, and the API
-base_urlpatterns = patterns('',
+base_urlpatterns += patterns('',
     # Apps:
     url(r'^$', 'ratticweb.views.home', name='home'),
     url(r'^account/', include('account.urls')),

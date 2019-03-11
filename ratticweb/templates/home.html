@@ -13,6 +13,12 @@
     <h1>{% trans "Welcome to Rattic" %}</h1>
 	<img class="biglogo" alt="{% trans "RatticDB Logo" %}" src="{% static rattic_logo %}">
     <p>{% trans "It does passwords." %}</p>
-    <p class="visible-phone"><a class='btn btn-primary' href="{% url "login" %}" >{% trans "Login" %}</a></p>
+
+    {% if SAML_ENABLED %}
+        <p class="visible-phone"><a class='btn btn-primary' href="{{SAML_IDP_URL}}" >Login by SSO</a></p>
+    {% else %}
+        <p class="visible-phone"><a class='btn btn-primary' href="{% url "login" %}" >{% trans "Login" %}</a></p>
+	{% endif %}
+
 </div>
 {% endblock %}

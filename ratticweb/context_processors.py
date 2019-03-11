@@ -7,15 +7,19 @@ def base_template_reqs(request):
     cntx = {
         'pageurl': request.path,
         'LDAP_ENABLED': settings.LDAP_ENABLED,
+        'SAML_ENABLED': settings.SAML_ENABLED,
         'GOAUTH2_ENABLED': settings.GOAUTH2_ENABLED,
         'USE_LDAP_GROUPS': settings.USE_LDAP_GROUPS,
         'EXPORT_ENABLED': not settings.RATTIC_DISABLE_EXPORT,
         'TEMPLATE_DEBUG': settings.TEMPLATE_DEBUG,
         'ALLOWPWCHANGE': not (settings.LDAP_ENABLED
-            and not settings.AUTH_LDAP_ALLOW_PASSWORD_CHANGE),
+            and not settings.AUTH_LDAP_ALLOW_PASSWORD_CHANGE) and not settings.SAML_ENABLED,
         'rattic_icon': 'rattic/img/rattic_icon_normal.png',
         'rattic_logo': 'rattic/img/rattic_logo_normal.svg',
     }
+
+    if settings.SAML_ENABLED:
+        cntx.update({'SAML_IDP_URL': settings.SAML_IDP_URL})
 
     if settings.HELP_SYSTEM_FILES:
         cntx['helplinks'] = True
