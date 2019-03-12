@@ -313,28 +313,29 @@ def edit(request, cred_id):
         form = CredForm(request.user, request.POST, request.FILES, instance=cred)
 
         # Password change possible only for owner group
-        if form.is_valid() and cred.group in request.user.groups.all():
-            # Assume metedata change
-            chgtype = CredAudit.CREDMETACHANGE
+        if form.is_valid():
+            if cred.group in request.user.groups.all() or request.user.is_staff:
+                # Assume metedata change
+                chgtype = CredAudit.CREDMETACHANGE
 
-            # Unless something thats not metadata changes
-            for c in form.changed_data:
-                if c not in Cred.METADATA:
-                    chgtype = CredAudit.CREDCHANGE
+                # Unless something thats not metadata changes
+                for c in form.changed_data:
+                    if c not in Cred.METADATA:
+                        chgtype = CredAudit.CREDCHANGE
 
-            # Clear pre-existing change queue items
-            if chgtype == CredAudit.CREDCHANGE:
-                CredChangeQ.objects.filter(cred=cred).delete()
+                # Clear pre-existing change queue items
+                if chgtype == CredAudit.CREDCHANGE:
+                    CredChangeQ.objects.filter(cred=cred).delete()
 
-            # Create audit log
-            CredAudit(audittype=chgtype, cred=cred, user=request.user).save()
-            form.save()
+                # Create audit log
+                CredAudit(audittype=chgtype, cred=cred, user=request.user).save()
+                form.save()
 
-            # If we dont have anywhere to go, go to the details page
-            if next is None:
-                return HttpResponseRedirect(reverse('cred.views.detail', args=(cred.id,)))
-            else:
-                return HttpResponseRedirect(next)
+                # If we dont have anywhere to go, go to the details page
+                if next is None:
+                    return HttpResponseRedirect(reverse('cred.views.detail', args=(cred.id,)))
+                else:
+                    return HttpResponseRedirect(next)
     else:
         form = CredForm(request.user, instance=cred)
         CredAudit(audittype=CredAudit.CREDPASSVIEW, cred=cred, user=request.user).save()
