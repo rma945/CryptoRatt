@@ -66,6 +66,7 @@ class CredForm(ModelForm):
             'tags': SelectMultiple(attrs={'class': 'rattic-tag-selector'}),
             'group': Select(attrs={'class': 'rattic-group-selector'}),
             'groups': SelectMultiple(attrs={'class': 'rattic-group-selector'}),
+            'users': SelectMultiple(attrs={'class': 'rattic-group-selector'}),
             'password': PasswordInput(render_value=True, attrs={'class': 'btn-password-generator btn-password-visibility', 'autocomplete': 'off'}),
             'ssh_key': CredAttachmentInput,
             'attachment': CredAttachmentInput,
