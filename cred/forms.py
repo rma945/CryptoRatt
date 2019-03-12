@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from django.forms import ModelForm, SelectMultiple, Select, PasswordInput
+from django.forms import ModelForm, SelectMultiple, Select, PasswordInput, CharField
 
 import paramiko
 from ssh_key import SSHKey
@@ -27,8 +27,9 @@ class CredForm(ModelForm):
 
         super(CredForm, self).__init__(*args, **kwargs)
 
-        # Limit the group options to groups that the user is in
-        self.fields['group'].queryset = Group.objects.filter(user=requser)
+        # Limit the group options to groups that the user is in, for non staff users
+        if not requser.is_staff:
+            self.fields['group'].queryset = Group.objects.filter(user=requser)
 
         self.fields['group'].label = _('Owner Group')
         self.fields['groups'].label = _('Viewers Groups')
@@ -65,7 +66,7 @@ class CredForm(ModelForm):
             'tags': SelectMultiple(attrs={'class': 'rattic-tag-selector'}),
             'group': Select(attrs={'class': 'rattic-group-selector'}),
             'groups': SelectMultiple(attrs={'class': 'rattic-group-selector'}),
-            'password': PasswordInput(render_value=True, attrs={'class': 'btn-password-generator btn-password-visibility'}),
+            'password': PasswordInput(render_value=True, attrs={'class': 'btn-password-generator btn-password-visibility', 'autocomplete': 'off'}),
             'ssh_key': CredAttachmentInput,
             'attachment': CredAttachmentInput,
             'iconname': CredIconChooser,

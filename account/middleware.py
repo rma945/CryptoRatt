@@ -15,7 +15,7 @@ class StrictAuthentication:
 class PasswordExpirer:
     def process_view(self, request, view_func, view_args, view_kwargs):
         # If there is no password expiry, or LDAP is enabled do nothing
-        if not settings.PASSWORD_EXPIRY or settings.LDAP_ENABLED:
+        if not settings.PASSWORD_EXPIRY or settings.LDAP_ENABLED or settings.SAML_ENABLED:
             return
 
         # If no user is logged in do nothing

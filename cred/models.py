@@ -38,11 +38,15 @@ class SearchManager(models.Manager):
         if not historical:
             qs = qs.filter(latest=None)
 
-        qs = qs.filter(Q(group__in=usergroups)
-                     | Q(latest__group__in=usergroups)
-                     | Q(groups__in=usergroups)
-                     | Q(users__in=[user.id])
-                     | Q(latest__groups__in=usergroups)).distinct()
+        # return all secrets if user in a staff group
+        if user.is_staff:
+            return qs
+        else:
+            qs = qs.filter(Q(group__in=usergroups)
+                        | Q(latest__group__in=usergroups)
+                        | Q(groups__in=usergroups)
+                        | Q(users__in=[user.id])
+                        | Q(latest__groups__in=usergroups)).distinct()
 
         return qs
 

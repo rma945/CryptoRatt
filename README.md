@@ -21,3 +21,4 @@ This fork change
 * add JS based copy button
 * add per-user based access to credentials
 * fix staff access to not owned credentials
+* add multi-staff groups support
