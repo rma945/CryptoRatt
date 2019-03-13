@@ -183,13 +183,22 @@ class Cred(models.Model):
         if user.is_staff:
             return True
 
-        # If its the latest and (in your group or it belongs to a viewer group you also belong to) you can see it
-        if not self.is_deleted and self.latest is None and (self.group in user.groups.all() or any([g in user.groups.all() for g in self.groups.all()])):
-            return True
+        # If its not deleted
+        if not self.is_deleted:
 
-        # If the latest is in your group you can see it
-        if not self.is_deleted and self.latest is not None and (self.latest.group in user.groups.all() or any([g in user.groups.all() for g in self.latest.groups.all()])):
-            return True
+            # get latest version of credentials object
+            if self.latest is None:
+                cred_latest = self
+            else:
+                cred_latest = self.latest
+
+            # if it have a personal share
+            if user in cred_latest.users.all():
+                return True
+
+            # if it in your group or it belongs to a viewer group you can see it
+            if cred_latest.group in user.groups.all() or any([g in user.groups.all() for g in cred_latest.groups.all()]):
+                return True
 
         return False
 
