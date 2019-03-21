@@ -108,7 +108,7 @@
 <strong>{% trans "Description:" %}</strong>
 {% if cred.descriptionmarkdown %}
   <div class="creddescription">
-   {% markdown_cred cred.description %}
+  {% markdown_cred cred.description %}
   </div>
 {% else %}
   <pre>{{ cred.description }}</pre>

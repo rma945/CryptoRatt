@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from django.forms import ModelForm, SelectMultiple, Select, PasswordInput, CharField
+from django.forms import ModelForm, SelectMultiple, Select, PasswordInput, CharField, TextInput
 
 import paramiko
 from ssh_key import SSHKey
@@ -33,6 +33,7 @@ class CredForm(ModelForm):
 
         self.fields['group'].label = _('Owner Group')
         self.fields['groups'].label = _('Viewers Groups')
+        self.fields['users'].label = _('Viewers Users')
 
         # Make the URL invalid message a bit more clear
         self.fields['url'].error_messages['invalid'] = _("Please enter a valid HTTP/HTTPS URL")
@@ -67,6 +68,7 @@ class CredForm(ModelForm):
             'group': Select(attrs={'class': 'rattic-group-selector'}),
             'groups': SelectMultiple(attrs={'class': 'rattic-group-selector'}),
             'users': SelectMultiple(attrs={'class': 'rattic-group-selector'}),
+            'username': TextInput(attrs={'autocomplete': 'off'}),
             'password': PasswordInput(render_value=True, attrs={'class': 'btn-password-generator btn-password-visibility', 'autocomplete': 'off'}),
             'ssh_key': CredAttachmentInput,
             'attachment': CredAttachmentInput,

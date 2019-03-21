@@ -84,7 +84,7 @@ class Cred(models.Model):
     url = models.URLField(verbose_name=_('URL'), blank=True, null=True, db_index=True)
     username = models.CharField(verbose_name=_('Username'), max_length=250, blank=True, null=True, db_index=True)
     password = models.CharField(verbose_name=_('Password'), max_length=250, blank=True, null=True)
-    descriptionmarkdown = models.BooleanField(verbose_name=_('Markdown Description'), default=False, )
+    descriptionmarkdown = models.BooleanField(verbose_name=_('Markdown Description'), default=True, )
     description = models.TextField(verbose_name=_('Description'), blank=True, null=True)
     group = models.ForeignKey(Group, verbose_name=_('Group'))
     groups = models.ManyToManyField(Group, verbose_name=_('Groups'), related_name="child_creds", blank=True, null=True, default=None)

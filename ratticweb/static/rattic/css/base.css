@@ -90,6 +90,18 @@ img.biglogo {
     word-wrap: break-word;
 }
 
+.creddescription th {
+  border: 1px solid #7c8087;
+}
+
+.creddescription tr {
+  border: 1px solid #7c8087;
+}
+
+.creddescription td {
+  border: 1px solid #7c8087;
+}
+
 /* Make the filter modal allow overflow of the selectize box */
 #filterModal .modal-body {
     overflow-y: visible;

@@ -11,6 +11,7 @@ def markdown_cred(description):
         extensions=[
             'fenced_code',
             'nl2br',
+            'tables',
         ],
         safe_mode='escape',
     )
