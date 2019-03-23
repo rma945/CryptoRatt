@@ -2,6 +2,7 @@
 {% load static from staticfiles %}
 {% load url_root from ratticweb %}
 {% load i18n %}
+{% url "cred.views.project_list" as cred_views_project_list %}
 {% url "cred.views.list" as cred_views_list %}
 {% url "cred.views.search" as cred_views_search %}
 {% url "cred.views.list" "special" "changeq" as cred_views_viewqueue %}
@@ -12,14 +13,16 @@
         <a class="brand" href="{% url_root %}"><img class="logo" src="{% static rattic_icon %}" /><span class="hidden-phone"> {% trans "RatticDB" %}</span></a>
 
         <ul class="nav visible-desktop">
+          {% if user.is_authenticated %}
+            <li {% if pageurl == cred_views_project_list %}class="active"{% endif %}>
+              <a href="{{ cred_views_project_list }}">{% trans "Projects" %}</a>
+            </li>
             <li {% if pageurl == cred_views_list %}class="active"{% endif %}>
               <a href="{{ cred_views_list }}">{% trans "Passwords" %}</a>
             </li>
-            {% if user.is_authenticated %}
               <li {% if pageurl == cred_views_viewqueue %}class="active"{% endif %}>
                 <a href="{{ cred_views_viewqueue }}">{% trans "Change Queue" %}{% if changeqcount > 0 %} <span class="badge">{{ changeqcount }}</span>{% endif %}</a>
               </li>
-            {% endif %}
             {% if user.is_staff %}
               <li {% if pageurl == staff_views_home %}class="active"{% endif %}>
                 <a href="{{ staff_views_home }}">{% trans "Staff Management" %}</a>
@@ -30,6 +33,7 @@
                 <a href="{{ help_views_home }}">{% trans "Help" %}</a>
               </li>
             {% endif %}
+          {% endif %}
         </ul>
 
         <ul class="nav hidden-desktop">
@@ -39,6 +43,9 @@
               {% if user.is_authenticated %}
                 <li>
                   <a href="{% url "cred.views.tags" %}">{% trans "Tags" %}</a>
+                </li>
+                <li>
+                  <a href="{{ project_views_list }}">{% trans "All Projects" %}</a>
                 </li>
                 <li>
                   <a href="{{ cred_views_list }}">{% trans "All Passwords" %}</a>

@@ -2,6 +2,14 @@ from django.conf.urls import patterns, url
 from django.conf import settings
 
 urlpatterns = patterns('cred.views',
+    # Project views
+    url(r'^project/$', 'project_list'),
+    url(r'^project/page-(?P<page>\d+)/$', 'project_list'),
+    url(r'^project/add/$', 'project_add'),
+    url(r'^project/edit/(?P<project_id>\d+)/$', 'project_edit'),
+    url(r'^project/detail/(?P<project_id>\d+)/$', 'project_detail'),
+    url(r'^project/delete/(?P<project_id>\d+)/$', 'project_delete'),
+
     # New list views
     url(r'^list/$', 'list'),
     url(r'^list-by-(?P<cfilter>\w+)/(?P<value>[^/]*)/$', 'list'),

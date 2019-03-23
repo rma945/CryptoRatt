@@ -9,7 +9,7 @@ from django.conf import settings
 
 from ratticweb.util import DictDiffer, field_file_compare
 from ssh_key import SSHKey
-from fields import SizedFileField
+from fields import SizedFileField, SizedImageFileField
 from storage import CredAttachmentStorage
 
 
@@ -72,6 +72,21 @@ class SearchManager(models.Manager):
         # Fetch the list of credentials to change from the DB for the view
         return Cred.objects.filter(id__in=tochange)
 
+class Project(models.Model):
+    title = models.CharField(verbose_name=_('Title'), max_length=128, db_index=True)
+    url = models.URLField(verbose_name=_('URL'), blank=True, null=True)
+    icon = SizedImageFileField(verbose_name=_('Icon'), max_upload_size=100000, null=True, blank=True, upload_to='icons/project')
+    description = models.TextField(verbose_name=_('Description'), blank=True, null=True)
+
+    def getAllCreds(self):
+        return self.cred_set.filter(latest=None)
+
+    def delete(self):
+        self.cred_set.update(project=None, is_expired=True)
+        super(Project, self).delete()
+
+    def __str__(self):
+        return self.title
 
 class Cred(models.Model):
     METADATA = ('description', 'descriptionmarkdown', 'group', 'groups', 'tags', 'iconname', 'latest', 'id', 'modified', 'attachment_name', 'ssh_key_name')
@@ -80,6 +95,7 @@ class Cred(models.Model):
     objects = SearchManager()
 
     # User changable fields
+    project = models.ForeignKey(Project, verbose_name=_('Project'), blank=True, null=True, default=None)
     title = models.CharField(verbose_name=_('Title'), max_length=64, db_index=True)
     url = models.URLField(verbose_name=_('URL'), blank=True, null=True, db_index=True)
     username = models.CharField(verbose_name=_('Username'), max_length=250, blank=True, null=True, db_index=True)
@@ -96,6 +112,7 @@ class Cred(models.Model):
 
     # Application controlled fields
     is_deleted = models.BooleanField(default=False, db_index=True)
+    is_expired = models.BooleanField(default=False, db_index=True)
     latest = models.ForeignKey('Cred', related_name='history', blank=True, null=True, db_index=True)
     modified = models.DateTimeField(db_index=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -207,7 +224,6 @@ class Cred(models.Model):
 
     def __unicode__(self):
         return self.title.encode('utf-8')
-
 
 class CredAdmin(admin.ModelAdmin):
     list_display = ('title', 'username', 'group')
