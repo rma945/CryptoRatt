@@ -77,7 +77,7 @@
   </thead>
   <tbody>
     {% for c in credlist %}
-    <tr class="{% if c.on_changeq %}warning{% endif %} {% if not c.is_latest %}info{% endif %}">
+    <tr class="{% if c.on_changeq  or c.is_expired %}warning{% endif %} {% if not c.is_latest %}info{% endif %}">
       <td class="credcheck"><input type="checkbox" name="credcheck" value="{{ c.id }}" class="list-checktarget cred-list-check" /></td>
       <td>{% cred_icon c.iconname %} <a href="{% url "cred.views.detail" c.id %}">{{ c.title|default:"(No Title)" }}</a></td>
       <td>{{ c.username }}</td>

@@ -8,9 +8,9 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.translation import ugettext as _
 
-from models import Cred, CredAudit, Tag, CredChangeQ
+from models import Project, Cred, CredAudit, Tag, CredChangeQ
 from search import cred_search
-from forms import ExportForm, CredForm, TagForm
+from forms import ExportForm, ProjectForm, CredForm, TagForm
 from exporters import export_keepass
 from cred.icon import get_icon_list
 
@@ -181,6 +181,91 @@ def list(request, cfilter='special', value='all', sortdir='ascending', sort='tit
 
     return render(request, 'cred_list.html', viewdict)
 
+@login_required
+def project_list(request, page=1):
+    
+    # paginator
+    paginator = Paginator(Project.objects.all(), request.user.profile.items_per_page)
+    try:
+        proj = paginator.page(page)
+    except PageNotAnInteger:
+        proj = paginator.page(1)
+    except EmptyPage:
+        proj = paginator.page(paginator.num_pages)
+    viewdict = { 
+        'projectlist': proj,
+        'page': unicode(page).lower(),
+    }
+
+    return render(request, 'project_list.html', viewdict)
+
+@login_required
+def project_detail(request, project_id):
+    # Restrict project view only to staff members
+    if not request.user.is_staff:
+        raise Http404
+
+    project = get_object_or_404(Project, pk=project_id)
+
+    return render(request, 'project_detail.html', {'project': project})
+
+@login_required
+def project_add(request):
+    # Restrict project add only to staff members
+    if not request.user.is_staff:
+        raise Http404
+
+    if request.method == 'POST':
+        form = ProjectForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('cred.views.project_list'))
+    else:
+        form = ProjectForm(request.user)
+
+    return render(request, 'project_edit.html', {'form': form, 'action':reverse('cred.views.project_add')})
+
+@login_required
+def project_edit(request, project_id):
+    if not request.user.is_staff:
+        raise Http404
+
+    project = get_object_or_404(Project, pk=project_id)
+    next = request.GET.get('next', None)
+
+    if request.method == 'POST':
+        form = ProjectForm(request.user, request.POST, request.FILES, instance=project)
+
+        if form.is_valid():
+            form.save()
+
+        if next is None:
+            return HttpResponseRedirect(reverse('cred.views.project_detail', args=(project.id,)))
+        else:
+            return HttpResponseRedirect(next)
+
+    else:
+        form = ProjectForm(request.user, instance=project)
+
+    return render(request, 'project_edit.html', {'form': form,
+        'action': reverse('cred.views.project_edit', args=(project.id,)),
+        'next': next,
+        'project': project,
+    })
+
+
+@login_required
+def project_delete(request, project_id):
+    # Restrict project delete only to staff members
+    if not request.user.is_staff:
+        raise Http404
+
+    project = get_object_or_404(Project, pk=project_id)
+
+    if request.method == 'GET':
+        project.delete()
+
+    return HttpResponseRedirect(reverse('cred.views.project_list'))
 
 @login_required
 def tags(request):
@@ -294,7 +379,6 @@ def add(request):
 
     return render(request, 'cred_edit.html', {'form': form, 'action':
       reverse('cred.views.add'), 'icons': get_icon_list()})
-
 
 @login_required
 def edit(request, cred_id):

@@ -4,7 +4,7 @@ from django.forms import ModelForm, SelectMultiple, Select, PasswordInput, CharF
 
 import paramiko
 from ssh_key import SSHKey
-from models import Cred, Tag, Group
+from models import Project, Cred, Tag, Group
 from widgets import CredAttachmentInput, CredIconChooser
 
 
@@ -17,6 +17,24 @@ class ExportForm(forms.Form):
 class TagForm(ModelForm):
     class Meta:
         model = Tag
+
+class ProjectForm(ModelForm):
+    def __init__(self, requser, *args, **kwargs):
+        super(ProjectForm, self).__init__(*args, **kwargs)
+
+        self.fields['title'].label = _('Project title')
+        self.fields['url'].label = _('Project URL')
+        self.fields['description'].label = _('Project description')
+
+        # Make the URL invalid message a bit more clear
+        self.fields['url'].error_messages['invalid'] = _("Please enter a valid HTTP/HTTPS URL")
+
+    class Meta:
+        model = Project
+        # These field are not user configurable
+        widgets = {
+            'title': TextInput(attrs={'autocomplete': ''}),
+        }
 
 
 class CredForm(ModelForm):
@@ -64,6 +82,7 @@ class CredForm(ModelForm):
         exclude = Cred.APP_SET
         widgets = {
             # Use chosen for the tag field
+            'project': Select(attrs={'class': 'rattic-group-selector'}),
             'tags': SelectMultiple(attrs={'class': 'rattic-tag-selector'}),
             'group': Select(attrs={'class': 'rattic-group-selector'}),
             'groups': SelectMultiple(attrs={'class': 'rattic-group-selector'}),

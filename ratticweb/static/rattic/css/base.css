@@ -80,7 +80,7 @@ img.biglogo {
     margin: 20px 0;
 }
 
-.creddescription {
+.description {
     background-color: #F5F5F5;
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 4px 4px 4px 4px;
@@ -90,15 +90,15 @@ img.biglogo {
     word-wrap: break-word;
 }
 
-.creddescription th {
+.description th {
   border: 1px solid #7c8087;
 }
 
-.creddescription tr {
+.description tr {
   border: 1px solid #7c8087;
 }
 
-.creddescription td {
+.description td {
   border: 1px solid #7c8087;
 }
 

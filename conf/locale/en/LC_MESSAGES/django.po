@@ -1004,6 +1004,10 @@ msgid "Menu"
 msgstr ""
 
 #: ratticweb/templates/navbar.html:44
+msgid "All Projects"
+msgstr ""
+
+#: ratticweb/templates/navbar.html:47
 msgid "All Passwords"
 msgstr ""
 
