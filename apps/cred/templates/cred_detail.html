@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load cred_markdown %}
+{% load credicons %}
+
+{% block title %}{{ cred.title }} - {% trans "Rattic" %}{% endblock %}
+
+{% block headarea %}
+<meta name="rattic_cred_id" content="{{ cred.id }}" />
+{% endblock %}
+
+{% block content %}
+{% cred_icon cred.iconname %}
+  <h1>{{ cred.title }}</h1>
+{% if delete %}
+  <div class="alert alert-error">{% blocktrans %}You are about to delete this password. A staff member will be required if you want to undelete it.{% endblocktrans %}</div>
+{% endif %}
+{% if cred.is_deleted and cred.is_latest %}
+  <div class="alert alert-error">{% blocktrans %}This credential has been deleted and is in the trash can. It is only visible to staff. You can alter it if you wish, its history will still be recorded. Click the undelete button to restore it. If you click the Delete Permanently button then the password, its entire history and all its audit logs will be removed.{% endblocktrans %}</div>
+{% endif %}
+{% if not cred.is_latest %}
+  <div class="alert alert-info"><strong>{% trans "Hey there!" %}</strong> {% blocktrans %}This credential is an historical version.{% endblocktrans %} <a href="{% url 'cred:cred_detail' cred.latest.id %}">{% trans "Click here" %}</a> {% blocktrans %}to see the latest version.{% endblocktrans %}</div>
+{% endif %}
+{% if cred.on_changeq and not readonly %}
+  <div class="alert alert-warning"><strong>{% trans "Change Required" %}</strong> {% blocktrans %}This credential is on the change queue and should have its password changed as soon as possible.{% endblocktrans %} {% trans "Why not" %} <a href="{% url "cred:cred_edit" cred.id %}">{% trans "do it now" %}</a>{% trans "?" %}</div>
+{% endif %}
+{% if cred.is_expired %}
+  <div class="alert alert-danger">{% blocktrans %}This credential is expired.{% endblocktrans %}</div>
+{% endif %}
+
+{% if cred.is_latest and not readonly %}
+  <div class="btn-group">
+    <a class="btn" href="{% url 'cred:cred_edit' cred.id %}">{% trans "Edit" %}</a>
+    <a class="btn" href="{% url 'cred:cred_list' 'history' cred.id 'ascending' 'id' %}">{% trans "History" %}</a>
+    {% if not delete %}
+      <a class="btn btn-danger" href="{% url 'cred:cred_delete' cred.id %}">{% trans "Delete" %}</a>
+    {% endif %}
+    {% if not cred.is_deleted %}
+        <a class="btn" href="{% url 'cred:cred_add_to_queue' cred.id %}">{% trans "Add to Change Queue" %}</a>
+    {% endif %}
+    {% if cred.is_deleted and not undelete %}
+    <a class="btn btn-success" href="{% url 'staff:cred_undelete' cred.id %}">{% trans "Undelete" %}</a>
+    {% endif %}
+  </div>
+  <p></p>
+{% endif %}
+
+<table class="table table-striped table-bordered table-condensed">
+{% if cred.project %}<tr><th>{% trans "Project" %}</th><td><a href="{% url "cred:project_detail" cred.project.id %}">{{ cred.project.title }}</a></td></tr>{% endif %}
+{% if cred.url %}<tr><th>{% trans "URL" %}</th><td><a href="{{ cred.url }}">{{ cred.url }}</a></td></tr>{% endif %}
+<tr>
+  <th>{% trans "Username" %}</th>
+  <td id="usertd" class="rattic-copy-button">
+    {% if cred.username %}
+      <span id="username">{{ cred.username }}</span>
+      <button class="btn btn-mini" id="js-copy-name" data-clipboard-target="#username">Copy</button>
+    {% endif %}
+  </td>
+</tr>
+<tr>
+  <th>
+      {% trans "Password" %}
+      <button class="btn btn-mini btn-password-show-hide btn-pass-fetchcred" data-target="#password"></button>
+  </th>
+  <td id="passtd" class="rattic-copy-button">
+    <span id="password" class="passhidden">Fetching Password...</span>
+    <button class="btn btn-mini" id="js-copy-passwd" data-clipboard-target="#password">Copy</button>
+  </td>
+</tr>
+
+{% if cred.attachment %}
+  <tr><th>{% trans "Attachment" %}</th><td><a class="btn btn-mini" href="{% url "cred:download_attachment" cred.id %}">{% trans "Download" %} {{ cred.attachment_name }}</a></td></tr>
+{% endif %}
+{% if cred.ssh_key %}
+  <tr><th>{% trans "SSH Key" %}</th><td><a class="btn btn-mini" href="{% url "cred:download_sshkey" cred.id %}">{% trans "Download" %} {{ cred.ssh_key_fingerprint }}</a></td></tr>
+{% endif %}
+
+<tr><th>{% trans "Owner Group" %}</th><td>{% if cred.group in groups.all or user.is_staff %}<a href="{% url 'cred:cred_list' 'group' cred.group.id %}">{{ cred.group.name }}</a>{% else %}{{ cred.group.name }}{% endif %}</td></tr>
+<tr>
+  <th>{% trans "Viewer Groups" %}</th>
+    <td>
+      {% for g in cred.groups.all %}
+        {% if g in groups.all or user.is_staff %}
+          <a href="{% url 'cred:cred_list' 'group' g.id %}">{{ g.name }}</a>
+        {% else %}
+          {{ g.name }}
+        {% endif %}
+        {% if not forloop.last %},{% endif %}
+      {% endfor %}
+    </td>
+</tr>
+<tr>
+  <th>{% trans "Viewer Users" %}</th>
+    <td>
+      {% for u in cred.users.all %}
+        {% if u in users.all or user.is_staff %}
+          <a href="{% url "staff:audit" "user" u.id %}">{{ u.username }}</a>
+        {% else %}
+          {{ u.username }}
+        {% endif %}
+        {% if not forloop.last %},{% endif %}
+      {% endfor %}
+    </td>
+</tr>
+<tr><th>{% trans "Tags" %}</th><td>{% for t in cred.tags.all %}<a href="{% url 'cred:cred_list' 'tag' t.id %}">{{ t.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</td></tr>
+<tr><th>{% trans "Last Changed" %}</th><td>{{ cred.modified }}</td></tr>
+<tr><th>{% trans "Created" %}</th><td>{{ cred.created }}</td></tr>
+</table>
+
+{% if cred.description|length %}
+  <strong>{% trans "Description:" %}</strong>
+  {% if cred.descriptionmarkdown %}
+    <div class="description">
+    {% markdown_cred cred.description %}
+    </div>
+  {% else %}
+    <pre>{{ cred.description }}</pre>
+  {% endif %}
+{% endif %}
+
+{% if delete %}
+    <form action="" method="post">{% csrf_token %}
+        <input type="submit" class="btn btn-danger" value="{% trans "Delete" %}" />
+    </form>
+{% endif %}
+{% if undelete %}
+    <form action="" method="post">{% csrf_token %}
+        <input type="submit" class="btn btn-success" value="{% trans "Undelete" %}" />
+    </form>
+{% endif %}
+{% if not delete %}
+    {% if credlogs %}
+        {% include "credaudit_list.html" with type='user' %}
+    {% endif %}
+{% endif %}
+{% endblock %}

@@ -22,3 +22,10 @@ This fork change
 * add per-user based access to credentials
 * fix staff access to not owned credentials
 * add multi-staff groups support
+
+TODO:
+=====
+replace django-database-files==0.1 replace with BinaryField
+replace keepassdb
+replace tastypie
+add language support to user profile

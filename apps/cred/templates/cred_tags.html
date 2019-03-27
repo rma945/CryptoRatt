@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+
+<h1>{% trans "All Tags" %}</h1>
+{% include "cred_taglist.html" with tags=tags only %}
+
+{% endblock %}
+

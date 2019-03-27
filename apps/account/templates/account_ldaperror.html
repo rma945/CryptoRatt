@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>{% trans "LDAP Error" %}</h1>
+<p>{% blocktrans %}Your LDAP server returned the following error:{% endblocktrans %}<br />
+<strong>{% trans "Description" %}:</strong> {{desc}}<br />
+<strong>{% trans "Further Info" %}:</strong> {{info}}
+</p>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% load help_markdown %}
+
+{% block title %}Help - Rattic{% endblock %}
+
+{% block content %}
+{% markdown_file file %}
+<p class="muted"><small>Latest copy available <a href="{{ latestlink }}">here</a>.</small></p>
+{% endblock %}

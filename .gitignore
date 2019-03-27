@@ -13,5 +13,6 @@ celerybeat-schedule
 django.mo
 .ropeproject
 .env
+.env3
 .vscode
 media

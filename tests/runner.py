@@ -4,8 +4,8 @@ from django.conf import settings
 import logging
 
 # South debug logs are irritating
-south_logger=logging.getLogger('south')
-south_logger.setLevel(logging.INFO)
+# south_logger=logging.getLogger('south')
+# south_logger.setLevel(logging.INFO)
 
 # So are the KeepassDB ones
 keepassdb_logger=logging.getLogger('keepassdb')
