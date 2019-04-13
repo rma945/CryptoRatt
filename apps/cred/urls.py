@@ -13,28 +13,29 @@ urlpatterns = [
     path("project/detail/<int:project_id>)/", project_detail, name="project_detail"),
     path("project/delete/<int:project_id>)/", project_delete, name="project_delete"),
 
-    # credentials list
+    # credentials
     path("list/", list, name="cred_list"),
     re_path(r"^list-by-(?P<cfilter>\w+)/(?P<value>[^/]*)/$", list, name="cred_list" ),
     re_path(r"^list-by-(?P<cfilter>\w+)/(?P<value>[^/]*)/sort-(?P<sortdir>ascending|descending)-by-(?P<sort>\w+)/$", list, name="cred_list"),
     re_path(r"^list-by-(?P<cfilter>\w+)/(?P<value>[^/]*)/sort-(?P<sortdir>ascending|descending)-by-(?P<sort>\w+)/page-(?P<page>\d+)/$", list, name="cred_list"),
 
-    # Search dialog for mobile
+    # credentials 
     path("search/", search, name="search"),
 
-    # Single cred views
+    # credentials 
     path("detail/<int:cred_id>/", detail, name="cred_detail"),
-    path("detail/<int:cred_id>/fingerprint/", ssh_key_fingerprint, name="ssh_key_fingerprint"),
-    path("detail/<int:cred_id>/download/", downloadattachment, name="download_attachment"),
-    path("detail/<int:cred_id>/ssh_key/", downloadsshkey, name="download_sshkey"),
     path("edit/<int:cred_id>/", edit, name="cred_edit"),
     path("delete/<int:cred_id>/", delete, name="cred_delete"),
     path("add/", add, name="cred_add"),
 
+    # attachments
+    path("download/attachment/<int:attachment_id>/", download_attachment, name="download_attachment"),
+    path("delete/attachment/<int:attachment_id>/", delete_attachment, name="delete_attachment"),
+
     # Adding to the change queue
     path("addtoqueue/<int:cred_id>/", addtoqueue, name="cred_add_to_queue"),
 
-    # Bulk views (for buttons on list page)
+    # bulk views (for buttons on list page)
     path("addtoqueue/bulk/", bulkaddtoqueue, name="cred_bulk_add_to_queue"),
     path("delete/bulk/", bulkdelete, name="cred_bulk_delete"),
     path("undelete/bulk/", bulkundelete, name="cred_bulk_undelete"),
@@ -49,7 +50,6 @@ urlpatterns = [
 
 if not settings.RATTIC_DISABLE_EXPORT:
     urlpatterns += [
-        cred.views,
         # Export views
         path(r"^export.kdb$", download, name="download"),
         re_path(r"^export-by-(?P<cfilter>\w+)/(?P<value>[^/]*).kdb$", download),

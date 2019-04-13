@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.translation import ugettext as _
 
-from apps.cred.models import Project, Cred, CredAudit, Tag, CredChangeQ
+from apps.cred.models import Project, Cred, Attachment, CredAudit, Tag, CredChangeQ
 from apps.cred.search import cred_search
 from apps.cred.forms import ExportForm, ProjectForm, CredForm, TagForm
 from apps.cred.exporters import export_keepass
@@ -247,11 +247,15 @@ def project_edit(request, project_id):
     else:
         form = ProjectForm(request.user, instance=project)
 
-    return render(request, 'project_edit.html', {'form': form,
-        'action': reverse('cred:project_edit', args=(project.id,)),
-        'next': next,
-        'project': project,
-    })
+    return render(
+        request, 'project_edit.html',
+        {
+            'form': form,
+            'action': reverse('cred:project_edit', args=(project.id,)),
+            'next': next,
+            'project': project,
+        }
+    )
 
 
 @login_required
@@ -278,6 +282,7 @@ def tags(request):
 @login_required
 def detail(request, cred_id):
     cred = get_object_or_404(Cred, pk=cred_id)
+    attachments = Attachment.objects.filter(credential=cred)
 
     # Check user has perms as owner or viewer
     if not cred.is_visible_by(request.user):
@@ -302,6 +307,7 @@ def detail(request, cred_id):
 
     return render(request, 'cred_detail.html', {
         'cred': cred,
+        'attachments': attachments,
         'credlogs': credlogs,
         'morelink': morelink,
         'readonly': readonly,
@@ -310,75 +316,82 @@ def detail(request, cred_id):
 
 
 @login_required
-def downloadattachment(request, cred_id, typ="attachment"):
-    # Get the credential
-    cred = get_object_or_404(Cred, pk=cred_id)
+def download_attachment(request, attachment_id):
+    # get attachment
+    attachment = get_object_or_404(Attachment, pk=attachment_id)
 
-    # Check user has perms
-    if not cred.is_visible_by(request.user):
+    # check that user has access to credentials 
+    if not attachment.credential.is_visible_by(request.user):
         raise Http404
 
-    # Make sure there is an attachment
-    if getattr(cred, typ) is None:
-        raise Http404
+    # Write the audit that attachment was downloaded
+    CredAudit(
+        audittype=CredAudit.CREDATTACHDOWNLOAD,
+        cred=attachment.credential,
+        user=request.user
+    ).save()
 
-    # Write the audit log, as a password view
-    CredAudit(audittype=CredAudit.CREDPASSVIEW, cred=cred, user=request.user).save()
-
-    # Send the result back in a way that prevents the browser from executing it,
-    # forces a download, and names it the same as when it was uploaded.
-    response = HttpResponse(mimetype='application/octet-stream')
-    response.write(getattr(cred, typ).read())
-    response['Content-Disposition'] = 'attachment; filename="%s"' % getattr(cred, "%s_name" % typ)
+    # download attachment
+    response = HttpResponse(attachment.content, content_type='application/octet-stream')
+    response['Content-Disposition'] = 'attachment; filename="{0}"'.format(attachment.filename)
     response['Content-Length'] = response.tell()
+
     return response
 
+@login_required
+def delete_attachment(request, attachment_id):
+    # get attachment
+    attachment = get_object_or_404(Attachment, pk=attachment_id)
 
-def downloadsshkey(request, cred_id):
-    return downloadattachment(request, cred_id, typ="ssh_key")
+    # check that user has access to credentials
+    if not attachment.credential.is_visible_by(request.user):
+        raise Http404
 
+    # write the audit that attachment was deleted
+    CredAudit(
+        audittype=CredAudit.CREDATTACHDELETED,
+        cred=attachment.credential,
+        user=request.user
+    ).save()
+    
+    # delete attachment
+    attachment.delete()
 
-def ssh_key_fingerprint(request, cred_id):
-    def functionality(req):
-        """Getting the fingerprint itself"""
-        # Get the credential
-        cred = get_object_or_404(Cred, pk=cred_id)
-
-        if not settings.LOGINLESS_SSH_FINGERPRINTS:
-            # Check user has perms
-            if not cred.is_visible_by(request.user):
-                raise Http404
-
-        # Make sure there is an ssh_key
-        if cred.ssh_key is None:
-            raise Http404
-
-        fingerprint = cred.ssh_key_fingerprint()
-        response = HttpResponse()
-        response.write(fingerprint)
-        response['Content-Length'] = response.tell()
-        return response
-
-    # Only require a login depending on the settings
-    if settings.LOGINLESS_SSH_FINGERPRINTS:
-        return functionality(request)
-    else:
-        return login_required(functionality)(request)
+    return HttpResponseRedirect(reverse('cred:cred_edit', args=(attachment.credential.id,)))
 
 
 @login_required
 def add(request):
     if request.method == 'POST':
-        form = CredForm(request.user, request.POST, request.FILES)
+        form = CredForm(request.user, request.POST)
+
         if form.is_valid():
-            form.save()
+            saved_form = form.save()
+            
+            # save attachments
+            files = request.FILES.getlist('uploads')
+            for f in files:
+                if f.size <= settings.RATTIC_MAX_ATTACHMENT_SIZE:
+                    a = Attachment(
+                        credential=saved_form,
+                        filename=f._name,
+                        mime=f.content_type,
+                        content=f.file.read(),
+                    ).save()
+            
             CredAudit(audittype=CredAudit.CREDADD, cred=form.instance, user=request.user).save()
             return HttpResponseRedirect(reverse('cred:cred_list'))
     else:
         form = CredForm(request.user)
 
-    return render(request, 'cred_edit.html', {'form': form, 'action':
-      reverse('cred:cred_add'), 'icons': get_icon_list()})
+    return render(
+        request, 'cred_edit.html',
+        {
+            'form': form,
+            'action':reverse('cred:cred_add'),
+            'icons': get_icon_list()
+        }
+    )
 
 @login_required
 def edit(request, cred_id):
@@ -394,11 +407,12 @@ def edit(request, cred_id):
         raise Http404
 
     if request.method == 'POST':
-        form = CredForm(request.user, request.POST, request.FILES, instance=cred)
+        form = CredForm(request.user, request.POST, instance=cred)
 
         # Password change possible only for owner group
         if form.is_valid():
             if cred.group in request.user.groups.all() or request.user.is_staff:
+                
                 # Assume metedata change
                 chgtype = CredAudit.CREDMETACHANGE
 
@@ -413,7 +427,18 @@ def edit(request, cred_id):
 
                 # Create audit log
                 CredAudit(audittype=chgtype, cred=cred, user=request.user).save()
-                form.save()
+                saved_form = form.save()
+
+                # save attachments
+                files = request.FILES.getlist('uploads')
+                for f in files:
+                    if f.size <= settings.RATTIC_MAX_ATTACHMENT_SIZE:
+                        a = Attachment(
+                            credential=saved_form,
+                            filename=f._name,
+                            mime=f.content_type,
+                            content=f.file.read(),
+                        ).save()
 
                 # If we dont have anywhere to go, go to the details page
                 if next is None:
@@ -421,15 +446,22 @@ def edit(request, cred_id):
                 else:
                     return HttpResponseRedirect(next)
     else:
+        # get all attachments
+        attachments = Attachment.objects.filter(credential=cred)
         form = CredForm(request.user, instance=cred)
         CredAudit(audittype=CredAudit.CREDPASSVIEW, cred=cred, user=request.user).save()
 
-    return render(request, 'cred_edit.html', {'form': form,
-        'action': reverse('cred:cred_edit', args=(cred.id,)),
-        'next': next,
-        'icons': get_icon_list(),
-        'cred': cred,
-    })
+    return render(
+        request, 'cred_edit.html',
+        {
+            'form': form,
+            'action': reverse('cred:cred_edit', args=(cred.id,)),
+            'next': next,
+            'icons': get_icon_list(),
+            'cred': cred,
+            'attachments': attachments,
+        }
+    )
 
 
 @login_required
@@ -457,7 +489,15 @@ def delete(request, cred_id):
 
     CredAudit(audittype=CredAudit.CREDVIEW, cred=cred, user=request.user).save()
 
-    return render(request, 'cred_detail.html', {'cred': cred, 'lastchange': lastchange, 'action': reverse('cred:cred_delete', args=(cred_id,)), 'delete': True})
+    return render(
+        request, 'cred_detail.html',
+        {
+            'cred': cred,
+            'lastchange': lastchange,
+            'action': reverse('cred:cred_delete', args=(cred_id,)),
+            'delete': True
+        }
+    )
 
 
 @login_required

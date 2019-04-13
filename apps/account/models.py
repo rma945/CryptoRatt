@@ -88,7 +88,7 @@ def user_save_handler(sender, instance, **kwargs):
 class ApiKey(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, related_name='rattic_api_key', on_delete=models.DO_NOTHING)
     key = models.CharField(max_length=128, blank=True, default='', db_index=True)
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, blank=True, default='unknown')
     active = models.BooleanField(default=True)
     created = models.DateTimeField(default=now)
     expires = models.DateTimeField(default=now)

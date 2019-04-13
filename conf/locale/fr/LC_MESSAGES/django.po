@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RatticDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-17 09:20+1000\n"
+"POT-Creation-Date: 2019-04-13 18:25+1000\n"
 "PO-Revision-Date: 2015-02-15 16:00+0000\n"
 "Last-Translator: Yvan GODARD <godardyvan@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/ratticdb/language/"
@@ -21,223 +21,225 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: account/models.py:30
+#: apps/account/models.py:30
 msgid "Old password"
 msgstr "Ancien mot de passe"
 
-#: account/models.py:38
+#: apps/account/models.py:38
 msgid "Incorrect password"
 msgstr "Mot de passe incorrect"
 
-#: account/models.py:56
+#: apps/account/models.py:56
 msgid "Items per page"
 msgstr ""
 
-#: account/models.py:57
+#: apps/account/models.py:57
 #, fuzzy
 msgid "Favourite tags"
 msgstr "Ajouter vos tags favoris dans votre "
 
-#: account/templates/account_changepass.html:4
-#: account/templates/password_reset_confirm.html:4
+#: apps/account/templates/account_changepass.html:3
+#: apps/account/templates/password_reset_confirm.html:4
 msgid "Setting New password"
 msgstr "Enregistrer nouveau mot de passe"
 
-#: account/templates/account_changepass.html:7
-#: account/templates/password_reset_confirm.html:8
+#: apps/account/templates/account_changepass.html:6
+#: apps/account/templates/password_reset_confirm.html:8
 msgid "Please enter your new password twice."
 msgstr "Veuillez entre votre nouveau mot de passe deux fois"
 
-#: account/templates/account_changepass.html:8
-#: account/templates/password_reset_confirm.html:9
+#: apps/account/templates/account_changepass.html:7
+#: apps/account/templates/password_reset_confirm.html:9
 msgid "So we can verify you typed it in correctly."
 msgstr "Pour vérifier la saisie."
 
-#: account/templates/account_changepass.html:21
+#: apps/account/templates/account_changepass.html:20
 msgid "Change Password"
 msgstr "Modifier mot de passe"
 
-#: account/templates/account_deleteapikey.html:4
-#: account/templates/account_deleteapikey.html:7
+#: apps/account/templates/account_deleteapikey.html:3
+#: apps/account/templates/account_deleteapikey.html:6
 msgid "Delete API Key"
 msgstr "Supprimer Clé API"
 
-#: account/templates/account_deleteapikey.html:4
-#: account/templates/account_newapikey.html:4
-#: account/templates/account_viewapikey.html:4
-#: account/templates/password_reset.html:5
-#: account/templates/password_reset_complete.html:5
-#: account/templates/password_reset_confirm.html:4
-#: account/templates/password_reset_done.html:5
-#: cred/templates/cred_detail.html:7 cred/templates/cred_list.html:6
-#: ratticweb/templates/base.html:13 staff/templates/staff_home.html:5
+#: apps/account/templates/account_deleteapikey.html:3
+#: apps/account/templates/account_newapikey.html:3
+#: apps/account/templates/account_viewapikey.html:3
+#: apps/account/templates/password_reset.html:5
+#: apps/account/templates/password_reset_complete.html:4
+#: apps/account/templates/password_reset_confirm.html:4
+#: apps/account/templates/password_reset_done.html:5
+#: apps/cred/templates/cred_detail.html:6 apps/cred/templates/cred_list.html:6
+#: apps/cred/templates/project_detail.html:7
+#: apps/ratticweb/templates/base.html:14 apps/staff/templates/staff_home.html:5
 msgid "Rattic"
 msgstr "Rattic"
 
-#: account/templates/account_deleteapikey.html:10
+#: apps/account/templates/account_deleteapikey.html:9
 msgid "Please press confirm if you wish to delete this key"
 msgstr "Veuillez confirmer la suppression de cette clé"
 
-#: account/templates/account_deleteapikey.html:13
-#: account/templates/account_viewapikey.html:17
-#: cred/templates/cred_taglist.html:9
-#: staff/templates/staff_groupdetail.html:20
-#: staff/templates/staff_home.html:47
+#: apps/account/templates/account_deleteapikey.html:12
+#: apps/account/templates/account_viewapikey.html:16
+#: apps/cred/templates/cred_taglist.html:9
+#: apps/staff/templates/staff_groupdetail.html:22
+#: apps/staff/templates/staff_home.html:51
 msgid "Name"
 msgstr "Nom"
 
-#: account/templates/account_deleteapikey.html:14
-#: cred/templates/cred_detail.html:82
+#: apps/account/templates/account_deleteapikey.html:13
+#: apps/cred/templates/cred_detail.html:100
 msgid "Created"
 msgstr "Créé"
 
-#: account/templates/account_deleteapikey.html:19
-#: cred/templates/cred_tagdelete.html:8
+#: apps/account/templates/account_deleteapikey.html:18
+#: apps/cred/templates/cred_tagdelete.html:8
 msgid "Confirm"
 msgstr "Confirmer"
 
-#: account/templates/account_ldaperror.html:6
+#: apps/account/templates/account_ldaperror.html:5
 msgid "LDAP Error"
 msgstr "Erreur LDAP"
 
-#: account/templates/account_ldaperror.html:7
+#: apps/account/templates/account_ldaperror.html:6
 msgid "Your LDAP server returned the following error:"
 msgstr "Votre serveur LDAP a renvoyé l'erreur suivante:"
 
-#: account/templates/account_ldaperror.html:8 cred/models.py:83
-#: cred/templates/cred_part_passgenmodal.html:9
+#: apps/account/templates/account_ldaperror.html:7 apps/cred/models.py:76
+#: apps/cred/models.py:109 apps/cred/templates/cred_part_passgenmodal.html:9
 msgid "Description"
 msgstr "Description"
 
-#: account/templates/account_ldaperror.html:9
+#: apps/account/templates/account_ldaperror.html:8
 msgid "Further Info"
 msgstr "Plus d'infos"
 
-#: account/templates/account_newapikey.html:4
-#: account/templates/account_newapikey.html:7
-#: account/templates/account_profile.html:47
-#: account/templates/account_viewapikey.html:4
-#: account/templates/account_viewapikey.html:7
+#: apps/account/templates/account_newapikey.html:3
+#: apps/account/templates/account_newapikey.html:6
+#: apps/account/templates/account_profile.html:46
+#: apps/account/templates/account_viewapikey.html:3
+#: apps/account/templates/account_viewapikey.html:6
 msgid "New API Key"
 msgstr "Nouvelle Clé API"
 
-#: account/templates/account_newapikey.html:20
-#: cred/templates/cred_part_newtagmodal.html:13
+#: apps/account/templates/account_newapikey.html:19
+#: apps/cred/templates/cred_part_newtagmodal.html:13
 msgid "Create"
 msgstr "Créer"
 
-#: account/templates/account_profile.html:7
+#: apps/account/templates/account_profile.html:6
 msgid "Your Account"
 msgstr "Votre compte"
 
-#: account/templates/account_profile.html:10 cred/models.py:80
-#: cred/templates/cred_detail.html:44 ratticweb/templates/sidebar.html:28
-#: staff/templates/staff_home.html:26
+#: apps/account/templates/account_profile.html:9 apps/cred/models.py:106
+#: apps/cred/templates/cred_detail.html:52
+#: apps/ratticweb/templates/sidebar.html:28
+#: apps/staff/templates/staff_home.html:29
 msgid "Username"
 msgstr "Utilisateur"
 
-#: account/templates/account_profile.html:11
-#: staff/templates/staff_userdetail.html:32
+#: apps/account/templates/account_profile.html:10
+#: apps/staff/templates/staff_userdetail.html:33
 msgid "Email"
 msgstr "Adresse email"
 
-#: account/templates/account_profile.html:15
-#: account/templates/account_profile.html:21
+#: apps/account/templates/account_profile.html:14
+#: apps/account/templates/account_profile.html:20
 msgid "Two Factor Authentication"
 msgstr "Authentification à double facteur"
 
-#: account/templates/account_profile.html:15
+#: apps/account/templates/account_profile.html:14
 msgid "Enabled"
 msgstr "Activé"
 
-#: account/templates/account_profile.html:15
-#: account/templates/account_tfa_disable.html:12
+#: apps/account/templates/account_profile.html:14
+#: apps/account/templates/account_tfa_disable.html:12
 msgid "Disable"
 msgstr "Désactiver"
 
-#: account/templates/account_profile.html:16
+#: apps/account/templates/account_profile.html:15
 msgid "Backup Codes Left"
 msgstr "Codes de sauvegarde perdus."
 
-#: account/templates/account_profile.html:17
+#: apps/account/templates/account_profile.html:16
 msgid "View Codes"
 msgstr "Voir les codes"
 
-#: account/templates/account_profile.html:21
+#: apps/account/templates/account_profile.html:20
 msgid "Disabled"
 msgstr "Désactivé"
 
-#: account/templates/account_profile.html:21
+#: apps/account/templates/account_profile.html:20
 msgid "Enable now"
 msgstr "Activer maintenant"
 
-#: account/templates/account_profile.html:24
+#: apps/account/templates/account_profile.html:23
 msgid "Last Password Change"
 msgstr "Mot de passe modifié le"
 
-#: account/templates/account_profile.html:25 cred/models.py:85
-#: ratticweb/templates/sidebar.html:18
-#: staff/templates/staff_userdetail.html:33
+#: apps/account/templates/account_profile.html:24 apps/cred/models.py:111
+#: apps/ratticweb/templates/sidebar.html:17
+#: apps/staff/templates/staff_userdetail.html:34
 msgid "Groups"
 msgstr "Groupes"
 
-#: account/templates/account_profile.html:30
+#: apps/account/templates/account_profile.html:29
 msgid "Save Changes"
 msgstr "Enregistrer les modifications"
 
-#: account/templates/account_profile.html:35
+#: apps/account/templates/account_profile.html:34
 msgid "Change password"
 msgstr "Modifier mot de passe"
 
-#: account/templates/account_profile.html:37
+#: apps/account/templates/account_profile.html:36
 msgid "Set Password"
 msgstr "Définir le mot de passe"
 
-#: account/templates/account_profile.html:43
+#: apps/account/templates/account_profile.html:42
 msgid "API Keys"
 msgstr "Clés API"
 
-#: account/templates/account_profile.html:51
+#: apps/account/templates/account_profile.html:50
 msgid "Key Name"
 msgstr "Nom de la clé"
 
-#: account/templates/account_profile.html:52
+#: apps/account/templates/account_profile.html:51
 msgid "Date generated"
 msgstr "Date de création"
 
-#: account/templates/account_profile.html:53
+#: apps/account/templates/account_profile.html:52
 msgid "Expiry date"
 msgstr ""
 
-#: account/templates/account_profile.html:73
+#: apps/account/templates/account_profile.html:72
 msgid "No API Keys available yet"
 msgstr "Pas de clés API disponibles pour l'instant"
 
-#: account/templates/account_profile.html:77
+#: apps/account/templates/account_profile.html:76
 msgid "Current Sessions"
 msgstr "Sessions en cours"
 
-#: account/templates/account_profile.html:82
+#: apps/account/templates/account_profile.html:81
 msgid "Device"
 msgstr "Appareil"
 
-#: account/templates/account_profile.html:83
+#: apps/account/templates/account_profile.html:82
 msgid "IP Address"
 msgstr "Adresse IP"
 
-#: account/templates/account_profile.html:84
+#: apps/account/templates/account_profile.html:83
 msgid "Last Activity"
 msgstr "Dernière activité"
 
-#: account/templates/account_profile.html:95
+#: apps/account/templates/account_profile.html:94
 msgid "(This Session)"
 msgstr "(Cette session)"
 
-#: account/templates/account_tfa_backup_tokens.html:5
+#: apps/account/templates/account_tfa_backup_tokens.html:5
 msgid "Backup Tokens"
 msgstr "Sauvegarder les jetons"
 
-#: account/templates/account_tfa_backup_tokens.html:6
+#: apps/account/templates/account_tfa_backup_tokens.html:6
 msgid ""
 "Backup tokens can be used when your primary and backup\n"
 "      phone numbers aren't available. The backup tokens below can be used\n"
@@ -254,27 +256,27 @@ msgstr ""
 "de secours, vous pouvez générer une nouvelle série de jetons de secours.\n"
 "Seuls les jetons de secours ci-dessous seront valables."
 
-#: account/templates/account_tfa_backup_tokens.html:18
+#: apps/account/templates/account_tfa_backup_tokens.html:18
 msgid "Print these tokens and keep them somewhere safe."
 msgstr "Imprimez ces jetons et gardez les à l'abris."
 
-#: account/templates/account_tfa_backup_tokens.html:20
+#: apps/account/templates/account_tfa_backup_tokens.html:20
 msgid "You don't have any backup codes yet."
 msgstr "Vous n'avez encore aucun code de backup."
 
-#: account/templates/account_tfa_backup_tokens.html:25
+#: apps/account/templates/account_tfa_backup_tokens.html:25
 msgid "Back to Account Profile"
 msgstr "Retour au Profil"
 
-#: account/templates/account_tfa_backup_tokens.html:26
+#: apps/account/templates/account_tfa_backup_tokens.html:26
 msgid "Generate Tokens"
 msgstr "Générer des jetons"
 
-#: account/templates/account_tfa_disable.html:5
+#: apps/account/templates/account_tfa_disable.html:5
 msgid "Disable Two-factor Authentication"
 msgstr "Désactiver l'authentification double facteur"
 
-#: account/templates/account_tfa_disable.html:6
+#: apps/account/templates/account_tfa_disable.html:6
 msgid ""
 "You are about to disable two-factor authentication. This\n"
 "    compromises your account security, are you sure?"
@@ -282,18 +284,20 @@ msgstr ""
 "Vous être sur le point de désactiver l'authentification double facteur.\n"
 "Êtes-vous certain de vouloir diminuer la sécurité de votre compte ?"
 
-#: account/templates/account_tfa_login.html:5 ratticweb/templates/home.html:16
-#: ratticweb/templates/navbar.html:59 ratticweb/templates/sidebar.html:26
-#: ratticweb/templates/sidebar.html:30
+#: apps/account/templates/account_tfa_login.html:5
+#: apps/ratticweb/templates/home.html:20
+#: apps/ratticweb/templates/navbar.html:61
+#: apps/ratticweb/templates/sidebar.html:26
+#: apps/ratticweb/templates/sidebar.html:30
 msgid "Login"
 msgstr "Connexion"
 
-#: account/templates/account_tfa_login.html:8
+#: apps/account/templates/account_tfa_login.html:8
 msgid "Enter your credentials."
 msgstr "Entrez vos informations."
 
-#: account/templates/account_tfa_login.html:11
-#: account/templates/account_tfa_setup.html:28
+#: apps/account/templates/account_tfa_login.html:11
+#: apps/account/templates/account_tfa_setup.html:28
 msgid ""
 "We are calling your phone right now, please enter the\n"
 "        digits you hear."
@@ -301,8 +305,8 @@ msgstr ""
 "Nous vous appelons maintenant. Merci de saisir\n"
 "les numéros que vous entendez."
 
-#: account/templates/account_tfa_login.html:14
-#: account/templates/account_tfa_setup.html:31
+#: apps/account/templates/account_tfa_login.html:14
+#: apps/account/templates/account_tfa_setup.html:31
 msgid ""
 "We sent you a text message, please enter the tokens we\n"
 "        sent."
@@ -310,7 +314,7 @@ msgstr ""
 "Un SMS vous a été envoyé. Merci de saisir le code qui\n"
 "vous a été envoyé."
 
-#: account/templates/account_tfa_login.html:17
+#: apps/account/templates/account_tfa_login.html:17
 msgid ""
 "Please enter the tokens generated by your token\n"
 "        generator."
@@ -318,7 +322,7 @@ msgstr ""
 "Merci de saisir le jeton généré par votre générateur\n"
 "de jeton."
 
-#: account/templates/account_tfa_login.html:21
+#: apps/account/templates/account_tfa_login.html:21
 msgid ""
 "Use this form for entering backup tokens for logging in.\n"
 "      These tokens have been generated for you to print and keep safe. "
@@ -331,23 +335,23 @@ msgstr ""
 "Merci de saisir un de ces jetons de secours pour vous connecter à votre "
 "compte."
 
-#: account/templates/account_tfa_login.html:33
+#: apps/account/templates/account_tfa_login.html:33
 msgid "Or, alternatively, use one of your backup phones:"
 msgstr "Ou, sinon, utiliser un des ces téléphones secondaires :"
 
-#: account/templates/account_tfa_login.html:43
+#: apps/account/templates/account_tfa_login.html:43
 msgid "As a last resort, you can use a backup token:"
 msgstr "En dernier recours, vous pouvez utiliser un jeton de secours."
 
-#: account/templates/account_tfa_login.html:46
+#: apps/account/templates/account_tfa_login.html:46
 msgid "Use Backup Token"
 msgstr "Utiliser un jeton de secours"
 
-#: account/templates/account_tfa_setup.html:5
+#: apps/account/templates/account_tfa_setup.html:5
 msgid "Enable Two-Factor Authentication"
 msgstr "Activer l'authentification à double facteur"
 
-#: account/templates/account_tfa_setup.html:7
+#: apps/account/templates/account_tfa_setup.html:7
 msgid ""
 "You are about to take your account security to the\n"
 "        next level. Follow the steps in this wizard to enable two-factor\n"
@@ -357,7 +361,7 @@ msgstr ""
 "votre compte. Suivez les étapes de cet assistant pour activer\n"
 "l'authentification à double facteur."
 
-#: account/templates/account_tfa_setup.html:11
+#: apps/account/templates/account_tfa_setup.html:11
 msgid ""
 "Please select which authentication method you would\n"
 "        like to use."
@@ -365,7 +369,7 @@ msgstr ""
 "Merci de sélectionner la méthode d'authentification\n"
 "que vous souhaitez utiliser."
 
-#: account/templates/account_tfa_setup.html:14
+#: apps/account/templates/account_tfa_setup.html:14
 msgid ""
 "To start using a token generator, please use your\n"
 "        smartphone to scan the QR code below. For example, use Google\n"
@@ -377,7 +381,7 @@ msgstr ""
 "exemple Google Authenticator. Ensuite, saisir le jeton généré par "
 "l'application."
 
-#: account/templates/account_tfa_setup.html:20
+#: apps/account/templates/account_tfa_setup.html:20
 msgid ""
 "Please enter the phone number you wish to receive the\n"
 "      text messages on. This number will be validated in the next step.\n"
@@ -386,7 +390,7 @@ msgstr ""
 "Saisir le numéro de téléphone sur lequel vous souhaitez recevoir\n"
 "les messages SMS. Ce numéro sera validé à l'étape suivante."
 
-#: account/templates/account_tfa_setup.html:24
+#: apps/account/templates/account_tfa_setup.html:24
 msgid ""
 "Please enter the phone number you wish to be called on.\n"
 "      This number will be validated in the next step. "
@@ -394,11 +398,11 @@ msgstr ""
 "Saisir le numéro de téléphone sur lequel vous souhaitez\n"
 "être appelé. Ce numéro sera validé à l'étape suivante."
 
-#: account/templates/account_viewapikey.html:10
+#: apps/account/templates/account_viewapikey.html:9
 msgid "Warning!"
 msgstr "Attention!"
 
-#: account/templates/account_viewapikey.html:11
+#: apps/account/templates/account_viewapikey.html:10
 msgid ""
 "This is the last chance that you will have to access the secret key. You "
 "should save it in a safe place now."
@@ -406,67 +410,67 @@ msgstr ""
 "C'est la dernière fois que vous aurez accès à la clé maître. Vous devriez en "
 "faire une copie et la garder en lieu sûr."
 
-#: account/templates/account_viewapikey.html:14
+#: apps/account/templates/account_viewapikey.html:13
 msgid "Your new API key has been created."
 msgstr "Votre nouvelle clé API a été créée"
 
-#: account/templates/account_viewapikey.html:18
+#: apps/account/templates/account_viewapikey.html:17
 msgid "Secret Key"
 msgstr "Clé secrète"
 
-#: account/templates/account_viewapikey.html:21
+#: apps/account/templates/account_viewapikey.html:20
 msgid "Back to Profile"
 msgstr "Retour au Profil"
 
-#: account/templates/password_reset.html:5
+#: apps/account/templates/password_reset.html:5
 msgid "Reset Password"
 msgstr "Réinitialiser mot de passe"
 
-#: account/templates/password_reset.html:8
+#: apps/account/templates/password_reset.html:8
 msgid ""
 "Please specify your email address to receive instructions for resetting it."
 msgstr ""
 "Veuillez spécifier votre adresse email pour recevoir les instructions "
 "nécessaires."
 
-#: account/templates/password_reset.html:15
+#: apps/account/templates/password_reset.html:15
 msgid "E-mail address"
 msgstr "Adresse email"
 
-#: account/templates/password_reset.html:15
+#: apps/account/templates/password_reset.html:15
 msgid "Reset password"
 msgstr "Réinitialiser mot de passe"
 
-#: account/templates/password_reset_complete.html:5
+#: apps/account/templates/password_reset_complete.html:4
 msgid "Password reset complete"
 msgstr "Réinitialisation du mot de passe est complète"
 
-#: account/templates/password_reset_complete.html:8
+#: apps/account/templates/password_reset_complete.html:7
 msgid "Your password has been set. You may go ahead and log in now."
 msgstr ""
 "Votre mot de passe a été enregistré. Vous pouvez dorénavant vous connecter."
 
-#: account/templates/password_reset_complete.html:9
+#: apps/account/templates/password_reset_complete.html:8
 msgid "Log in"
 msgstr "Connecter"
 
-#: account/templates/password_reset_confirm.html:17
+#: apps/account/templates/password_reset_confirm.html:17
 msgid "New password"
 msgstr "Nouveau mot de passe"
 
-#: account/templates/password_reset_confirm.html:22
+#: apps/account/templates/password_reset_confirm.html:22
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
-#: account/templates/password_reset_confirm.html:27
+#: apps/account/templates/password_reset_confirm.html:27
 msgid "Change my password"
 msgstr "Modifier mon mot de passe"
 
-#: account/templates/password_reset_confirm.html:32
+#: apps/account/templates/password_reset_confirm.html:32
 msgid "Password reset unsuccessful"
 msgstr "Réinitialisation du mot de passe a échoué"
 
-#: account/templates/password_reset_confirm.html:33
+#: apps/account/templates/password_reset_confirm.html:33
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used. Please request a new password reset."
@@ -474,11 +478,11 @@ msgstr ""
 "Le lien pour réinitialiser le mot de passe n'est plus valide et a déjà été "
 "utilisé. Veuillez recommencer le la réinitialisation"
 
-#: account/templates/password_reset_done.html:5
+#: apps/account/templates/password_reset_done.html:5
 msgid "Password reset successful"
 msgstr "Réinitialisation du mot de passe a succédé"
 
-#: account/templates/password_reset_done.html:8
+#: apps/account/templates/password_reset_done.html:8
 msgid ""
 "We've e-mailed you instructions for setting\n"
 "your password to the e-mail address you submitted. You should be\n"
@@ -488,7 +492,7 @@ msgstr ""
 "votre mot de passe à l'adresse email fournie. Vous devriez\n"
 "bientôt les recevoir."
 
-#: account/templates/password_reset_email.html:4
+#: apps/account/templates/password_reset_email.html:4
 #, python-format
 msgid ""
 "\n"
@@ -503,7 +507,7 @@ msgstr ""
 "\n"
 "Veuillez visiter la page suivante pour choisir un nouveau mot de passe.\n"
 
-#: account/templates/password_reset_email.html:12
+#: apps/account/templates/password_reset_email.html:12
 #, python-format
 msgid ""
 "\n"
@@ -520,7 +524,7 @@ msgstr ""
 "\n"
 "L'équipe  %(site_name)s.\n"
 
-#: cred/fields.py:25
+#: apps/cred/fields.py:23 apps/cred/fields.py:43
 #, python-format
 msgid ""
 "File size must be under %(maximumsize)s. Current file size is "
@@ -529,154 +533,135 @@ msgstr ""
 "La taille du fichier doit être inférieure à %(maximumsize)s. Votre fichier "
 "fait actuellement %(currentsize)s."
 
-#: cred/forms.py:33 cred/templates/cred_detail.html:70
-#: cred/templates/cred_list.html:67 cred/templates/cred_list.html.py:69
+#: apps/cred/forms.py:25
+msgid "Project title"
+msgstr ""
+
+#: apps/cred/forms.py:26
+msgid "Project URL"
+msgstr ""
+
+#: apps/cred/forms.py:27
+#, fuzzy
+#| msgid "Description"
+msgid "Project description"
+msgstr "Description"
+
+#: apps/cred/forms.py:30 apps/cred/forms.py:54
+msgid "Please enter a valid HTTP/HTTPS URL"
+msgstr "Veuillez entrer une adresse HTTP/HTTPS conforme"
+
+#: apps/cred/forms.py:49 apps/cred/templates/cred_detail.html:71
+#: apps/cred/templates/cred_list.html:67 apps/cred/templates/cred_list.html:69
 #, fuzzy
 msgid "Owner Group"
 msgstr "Groupe"
 
-#: cred/forms.py:34
+#: apps/cred/forms.py:50
 #, fuzzy
 msgid "Viewers Groups"
 msgstr "Groupes"
 
-#: cred/forms.py:37
-msgid "Please enter a valid HTTP/HTTPS URL"
-msgstr "Veuillez entrer une adresse HTTP/HTTPS conforme"
+#: apps/cred/forms.py:51
+#, fuzzy
+msgid "Viewers Users"
+msgstr "Groupes"
 
-#: cred/models.py:78 cred/templates/cred_list.html:53
-#: cred/templates/cred_list.html.py:55
-#: staff/templates/staff_changeadvice.html:19
-#: staff/templates/staff_import_overview.html:11
+#: apps/cred/models.py:73 apps/cred/models.py:104
+#: apps/cred/templates/cred_list.html:53 apps/cred/templates/cred_list.html:55
+#: apps/staff/templates/staff_changeadvice.html:19
+#: apps/staff/templates/staff_import_overview.html:11
 msgid "Title"
 msgstr "Titre"
 
-#: cred/models.py:79 cred/templates/cred_detail.html:42
+#: apps/cred/models.py:74 apps/cred/models.py:105
+#: apps/cred/templates/cred_detail.html:50
+#: apps/cred/templates/project_list.html:27
 msgid "URL"
 msgstr "Adresse"
 
-#: cred/models.py:81 cred/templates/cred_detail.html:54
-#: ratticweb/templates/sidebar.html:29
-msgid "Password"
-msgstr "Mot de Passe"
-
-#: cred/models.py:82
-msgid "Markdown Description"
-msgstr "Description Markdown"
-
-#: cred/models.py:84 staff/templates/staff_changeadvice.html:21
-#: staff/templates/staff_groupdetail.html:10
-msgid "Group"
-msgstr "Groupe"
-
-#: cred/models.py:86 cred/templates/cred_detail.html:80
-#: cred/templates/cred_list.html:75 ratticweb/templates/navbar.html:41
-#: ratticweb/templates/sidebar.html:10
-#: staff/templates/staff_changeadvice.html:22
-msgid "Tags"
-msgstr "Tags"
-
-#: cred/models.py:87
+#: apps/cred/models.py:75 apps/cred/models.py:114
 #, fuzzy
 msgid "Icon"
 msgstr "Icones"
 
-#: cred/models.py:88
-msgid "SSH key"
+#: apps/cred/models.py:89
+#, fuzzy
+#| msgid "Rename"
+msgid "Filename"
+msgstr "Renommer"
+
+#: apps/cred/models.py:90
+msgid "Mime"
 msgstr ""
 
-#: cred/models.py:89 cred/templates/cred_detail.html:64
-msgid "Attachment"
-msgstr "Pièce Jointe"
+#: apps/cred/models.py:103 apps/cred/templates/cred_detail.html:49
+msgid "Project"
+msgstr ""
 
-#: cred/models.py:211
+#: apps/cred/models.py:107 apps/cred/templates/cred_detail.html:62
+#: apps/ratticweb/templates/sidebar.html:29
+msgid "Password"
+msgstr "Mot de Passe"
+
+#: apps/cred/models.py:108
+msgid "Markdown Description"
+msgstr "Description Markdown"
+
+#: apps/cred/models.py:110 apps/staff/templates/staff_changeadvice.html:21
+#: apps/staff/templates/staff_groupdetail.html:10
+msgid "Group"
+msgstr "Groupe"
+
+#: apps/cred/models.py:112 apps/staff/templates/staff_groupdetail.html:23
+#: apps/staff/templates/staff_home.html:26
+msgid "Users"
+msgstr "Utilisateurs"
+
+#: apps/cred/models.py:113 apps/cred/templates/cred_detail.html:98
+#: apps/ratticweb/templates/navbar.html:40
+#: apps/ratticweb/templates/sidebar.html:9
+#: apps/staff/templates/staff_changeadvice.html:22
+msgid "Tags"
+msgstr "Tags"
+
+#: apps/cred/models.py:115
+msgid "Attachments"
+msgstr ""
+
+#: apps/cred/models.py:233
 msgid "Added"
 msgstr "Ajouté"
 
-#: cred/models.py:212
+#: apps/cred/models.py:234
 msgid "Changed"
 msgstr "Modifié"
 
-#: cred/models.py:213
+#: apps/cred/models.py:235
 msgid "Only Metadata Changed"
 msgstr "Seules les métadonnées ont été modifiées."
 
-#: cred/models.py:214
+#: apps/cred/models.py:236
 msgid "Only Details Viewed"
 msgstr "Consultation des informations uniquement"
 
-#: cred/models.py:215
+#: apps/cred/models.py:237
 msgid "Exported"
 msgstr "Exporté"
 
-#: cred/models.py:216
+#: apps/cred/models.py:238
 msgid "Deleted"
 msgstr "Supprimé"
 
-#: cred/models.py:217
+#: apps/cred/models.py:239
 msgid "Scheduled For Change"
 msgstr "Modification programmée"
 
-#: cred/models.py:218
+#: apps/cred/models.py:240
 msgid "Password Viewed"
 msgstr "Mot de passe vu"
 
-#: cred/views.py:76
-msgid "All passwords"
-msgstr "Tous les mots de passe"
-
-#: cred/views.py:108
-#, python-format
-msgid "Passwords tagged with %(tagname)s"
-msgstr "Mots de passe baliśes avec %(tagname)s"
-
-#: cred/views.py:112
-#, python-format
-msgid "Passwords in group %(groupname)s"
-msgstr "Mots de passe dans le groupe %(groupname)s"
-
-#: cred/views.py:116
-#, python-format
-msgid "Passwords for search \"%(searchstring)s\""
-msgstr "Mots de passe pour : \"%(searchstring)s\""
-
-#: cred/views.py:120
-#, python-format
-msgid "Versions of: \"%(credtitle)s\""
-msgstr "Historique des versions de : \"%(credtitle)s\""
-
-#: cred/views.py:128
-msgid ""
-"That user is now disabled. Here is a list of passwords that they have viewed "
-"that have not since been changed. You probably want to add them all to the "
-"change queue."
-msgstr ""
-"Cet utilisateur a été désactivé. Veuillez trouver la liste des mots de passe "
-"inchangés depuis la dernière fois que cet utilisateur y a eu accès. Il "
-"serait judicieux de les ajouter à la liste de mots de passe à modifier."
-
-#: cred/views.py:131
-#, python-format
-msgid "Changes required for \"%(username)s\""
-msgstr "Modifications nécessaires pour \"%(username)s\""
-
-#: cred/views.py:142
-msgid "Passwords in the trash"
-msgstr "Mots de passe dans la corbeille"
-
-#: cred/views.py:150
-msgid "Passwords on the Change Queue"
-msgstr "Liste des mots de passe à modifier"
-
-#: cred/views.py:361 staff/views.py:352
-msgid "Unknown (Logs deleted)"
-msgstr "Inconnu (Logs effacés)"
-
-#: cred/widgets.py:15
-msgid "Choose"
-msgstr "Choisir"
-
-#: cred/templates/cred_detail.html:16
+#: apps/cred/templates/cred_detail.html:16
 msgid ""
 "You are about to delete this password. A staff member will be required if "
 "you want to undelete it."
@@ -684,7 +669,7 @@ msgstr ""
 "Vous êtes sur le point de supprimer un mot de passe. Un administrateur sera "
 "nécessaire pour le restaurer."
 
-#: cred/templates/cred_detail.html:19
+#: apps/cred/templates/cred_detail.html:19
 msgid ""
 "This credential has been deleted and is in the trash can. It is only visible "
 "to staff. You can alter it if you wish, its history will still be recorded. "
@@ -698,27 +683,27 @@ msgstr ""
 "suppression. Le mot de passe, son historique et tout l'historique seront "
 "effacés si vous cliquez sur \"Supprimer définitivement\"."
 
-#: cred/templates/cred_detail.html:22
+#: apps/cred/templates/cred_detail.html:22
 msgid "Hey there!"
 msgstr "Bonjour!"
 
-#: cred/templates/cred_detail.html:22
+#: apps/cred/templates/cred_detail.html:22
 msgid "This credential is an historical version."
 msgstr "Cet identifiant est une version antérieure."
 
-#: cred/templates/cred_detail.html:22
+#: apps/cred/templates/cred_detail.html:22
 msgid "Click here"
 msgstr "Cliquez ici"
 
-#: cred/templates/cred_detail.html:22
+#: apps/cred/templates/cred_detail.html:22
 msgid "to see the latest version."
 msgstr "pour voir la dernière version."
 
-#: cred/templates/cred_detail.html:25
+#: apps/cred/templates/cred_detail.html:25
 msgid "Change Required"
 msgstr "Modification nécessaire"
 
-#: cred/templates/cred_detail.html:25
+#: apps/cred/templates/cred_detail.html:25
 msgid ""
 "This credential is on the change queue and should have its password changed "
 "as soon as possible."
@@ -726,129 +711,153 @@ msgstr ""
 "Cet identifiant est dans la liste de mots de passe à modifier et devrait "
 "être modifié dès que possible."
 
-#: cred/templates/cred_detail.html:25
+#: apps/cred/templates/cred_detail.html:25
 msgid "Why not"
 msgstr "Pourquoi ne pas"
 
-#: cred/templates/cred_detail.html:25
+#: apps/cred/templates/cred_detail.html:25
 msgid "do it now"
 msgstr "le faire maintenant"
 
-#: cred/templates/cred_detail.html:25
+#: apps/cred/templates/cred_detail.html:25
 msgid "?"
 msgstr " ?"
 
-#: cred/templates/cred_detail.html:29
-#: staff/templates/staff_groupdetail.html:13
-#: staff/templates/staff_home.html:29 staff/templates/staff_home.html.py:38
-#: staff/templates/staff_home.html:47 staff/templates/staff_home.html.py:52
-#: staff/templates/staff_userdetail.html:22
+#: apps/cred/templates/cred_detail.html:28
+#, fuzzy
+#| msgid "This credential is an historical version."
+msgid "This credential is expired."
+msgstr "Cet identifiant est une version antérieure."
+
+#: apps/cred/templates/cred_detail.html:33
+#: apps/cred/templates/project_detail.html:11
+#: apps/staff/templates/staff_groupdetail.html:14
+#: apps/staff/templates/staff_home.html:32
+#: apps/staff/templates/staff_home.html:41
+#: apps/staff/templates/staff_home.html:53
+#: apps/staff/templates/staff_home.html:61
+#: apps/staff/templates/staff_userdetail.html:23
 msgid "Edit"
 msgstr "Modifier"
 
-#: cred/templates/cred_detail.html:30
+#: apps/cred/templates/cred_detail.html:34
 msgid "History"
 msgstr "Historique"
 
-#: cred/templates/cred_detail.html:31 cred/templates/cred_detail.html.py:99
-#: cred/templates/cred_list.html:31 cred/templates/cred_taglist.html:18
-#: staff/templates/staff_groupdetail.html:14
-#: staff/templates/staff_home.html:30 staff/templates/staff_home.html.py:39
-#: staff/templates/staff_home.html:47 staff/templates/staff_home.html.py:53
-#: staff/templates/staff_userdetail.html:24
+#: apps/cred/templates/cred_detail.html:36
+#: apps/cred/templates/cred_detail.html:116
+#: apps/cred/templates/cred_list.html:31
+#: apps/cred/templates/cred_taglist.html:18
+#: apps/cred/templates/project_detail.html:12
+#: apps/staff/templates/staff_groupdetail.html:16
+#: apps/staff/templates/staff_home.html:34
+#: apps/staff/templates/staff_home.html:43
+#: apps/staff/templates/staff_home.html:54
+#: apps/staff/templates/staff_home.html:63
+#: apps/staff/templates/staff_userdetail.html:25
 msgid "Delete"
 msgstr "Supprimer"
 
-#: cred/templates/cred_detail.html:33 cred/templates/cred_list.html:37
-#: staff/templates/staff_changeadvice.html:37
+#: apps/cred/templates/cred_detail.html:39
+#: apps/cred/templates/cred_list.html:37
+#: apps/staff/templates/staff_changeadvice.html:37
 msgid "Add to Change Queue"
 msgstr "Ajouter à la liste de mots de passe à modifier"
 
-#: cred/templates/cred_detail.html:36 cred/templates/cred_detail.html:104
-#: cred/templates/cred_list.html:34
+#: apps/cred/templates/cred_detail.html:42
+#: apps/cred/templates/cred_detail.html:121
+#: apps/cred/templates/cred_list.html:34
 msgid "Undelete"
 msgstr "Restaurer"
 
-#: cred/templates/cred_detail.html:48 cred/templates/cred_detail.html.py:59
-msgid "Copy"
-msgstr "Copier"
-
-#: cred/templates/cred_detail.html:64 cred/templates/cred_detail.html.py:67
-msgid "Download"
-msgstr "Télécharger"
-
-#: cred/templates/cred_detail.html:67
-msgid "SSH Key"
-msgstr ""
-
-#: cred/templates/cred_detail.html:71 cred/templates/cred_list.html:73
+#: apps/cred/templates/cred_detail.html:73
+#: apps/cred/templates/cred_list.html:73
 #, fuzzy
 msgid "Viewer Groups"
 msgstr "Supprimer le groupe"
 
-#: cred/templates/cred_detail.html:81
+#: apps/cred/templates/cred_detail.html:86
+#, fuzzy
+msgid "Viewer Users"
+msgstr "Supprimer le groupe"
+
+#: apps/cred/templates/cred_detail.html:99
 msgid "Last Changed"
 msgstr "Dernière modification"
 
-#: cred/templates/cred_detail.html:87
+#: apps/cred/templates/cred_detail.html:104
+#: apps/cred/templates/project_detail.html:32
 msgid "Description:"
 msgstr "Description:"
 
-#: cred/templates/cred_edit.html:11
+#: apps/cred/templates/cred_edit.html:11
 msgid "Create Password"
 msgstr "Créer un mot de passe"
 
-#: cred/templates/cred_edit.html:11
+#: apps/cred/templates/cred_edit.html:11
 msgid "Edit Password"
 msgstr "Editer le mot de passe"
 
-#: cred/templates/cred_edit.html:24 cred/templates/cred_export.html:18
-#: cred/templates/cred_tagedit.html:17 staff/templates/staff_groupedit.html:18
-#: staff/templates/staff_import_process.html:23
-#: staff/templates/staff_keepassimport.html:30
-#: staff/templates/staff_useredit.html:18
+#: apps/cred/templates/cred_edit.html:24
+#: apps/cred/templates/cred_export.html:18
+#: apps/cred/templates/cred_tagedit.html:17
+#: apps/cred/templates/project_edit.html:20
+#: apps/staff/templates/staff_groupedit.html:18
+#: apps/staff/templates/staff_import_process.html:23
+#: apps/staff/templates/staff_keepassimport.html:30
+#: apps/staff/templates/staff_useredit.html:18
 msgid "Submit"
 msgstr "Soumettre"
 
-#: cred/templates/cred_list.html:28 cred/templates/cred_taglist.html:8
+#: apps/cred/templates/cred_list.html:28
+#: apps/cred/templates/cred_taglist.html:8
 msgid "Add New"
 msgstr "Ajouter"
 
-#: cred/templates/cred_list.html:40
+#: apps/cred/templates/cred_list.html:40
 msgid "Apply a Tag"
 msgstr "Ajouter un tag"
 
-#: cred/templates/cred_list.html:43
+#: apps/cred/templates/cred_list.html:43
 msgid "Download Keepass"
 msgstr "Télécharger Keepass"
 
-#: cred/templates/cred_list.html:60 cred/templates/cred_list.html.py:62
-#: cred/templates/credaudit_list.html:9 staff/templates/staff_audit.html:28
-#: staff/templates/staff_changeadvice.html:20
-#: staff/templates/staff_import_overview.html:12
-#: staff/templates/staff_userdetail.html:14
+#: apps/cred/templates/cred_list.html:60 apps/cred/templates/cred_list.html:62
+#: apps/cred/templates/credaudit_list.html:9
+#: apps/staff/templates/staff_audit.html:28
+#: apps/staff/templates/staff_changeadvice.html:20
+#: apps/staff/templates/staff_import_overview.html:12
+#: apps/staff/templates/staff_userdetail.html:15
 msgid "User"
 msgstr "Utilisateur"
 
-#: cred/templates/cred_list.html:102 cred/templates/cred_list.html.py:104
-#: staff/templates/staff_audit.html:53 staff/templates/staff_audit.html:55
+#: apps/cred/templates/cred_list.html:103
+#: apps/cred/templates/cred_list.html:105
+#: apps/cred/templates/project_list.html:58
+#: apps/cred/templates/project_list.html:60
+#: apps/staff/templates/staff_audit.html:53
+#: apps/staff/templates/staff_audit.html:55
 msgid "Prev"
 msgstr "Préc"
 
-#: cred/templates/cred_list.html:114 cred/templates/cred_list.html.py:116
-#: staff/templates/staff_audit.html:65 staff/templates/staff_audit.html:67
+#: apps/cred/templates/cred_list.html:115
+#: apps/cred/templates/cred_list.html:117
+#: apps/cred/templates/project_list.html:70
+#: apps/cred/templates/project_list.html:72
+#: apps/staff/templates/staff_audit.html:65
+#: apps/staff/templates/staff_audit.html:67
 msgid "Next"
 msgstr "Suiv"
 
-#: cred/templates/cred_list.html:124
+#: apps/cred/templates/cred_list.html:125
 msgid "Matched Tags"
 msgstr "Tags correspondants"
 
-#: cred/templates/cred_part_export.html:10
+#: apps/cred/templates/cred_part_export.html:10
 msgid "Export to Keepass"
 msgstr "Exporter vers Keepass"
 
-#: cred/templates/cred_part_export.html:13
+#: apps/cred/templates/cred_part_export.html:13
 msgid ""
 "Please enter the password you would like the Keepass file to be encrypted "
 "with."
@@ -856,145 +865,245 @@ msgstr ""
 "Entrez le mot de passe avec lequel vous souhaitez chiffrer le fichier "
 "Keepass."
 
-#: cred/templates/cred_part_export.html:27
+#: apps/cred/templates/cred_part_export.html:27
 msgid "Export"
 msgstr "Exporter"
 
-#: cred/templates/cred_part_logomodal.html:14
+#: apps/cred/templates/cred_part_logomodal.html:14
 msgid "Icons"
 msgstr "Icones"
 
-#: cred/templates/cred_part_logomodal.html:24
+#: apps/cred/templates/cred_part_logomodal.html:24
 msgid "Close"
 msgstr "Fermer"
 
-#: cred/templates/cred_part_newtagmodal.html:5
+#: apps/cred/templates/cred_part_newtagmodal.html:5
 msgid "Add New Tag"
 msgstr "Ajouter Tag"
 
-#: cred/templates/cred_part_newtagmodal.html:9
+#: apps/cred/templates/cred_part_newtagmodal.html:9
 msgid "Tag Name:"
 msgstr "Tag:"
 
-#: cred/templates/cred_part_newtagmodal.html:12
+#: apps/cred/templates/cred_part_newtagmodal.html:12
 msgid "Create Another"
 msgstr "Créer un autre"
 
-#: cred/templates/cred_part_passgenmodal.html:5
+#: apps/cred/templates/cred_part_passgenmodal.html:5
 msgid "Password Generator"
 msgstr "Générateur de mot de passe"
 
-#: cred/templates/cred_part_passgenmodal.html:9
+#: apps/cred/templates/cred_part_passgenmodal.html:9
 msgid "Must Have"
 msgstr "doit contenir"
 
-#: cred/templates/cred_part_passgenmodal.html:9
+#: apps/cred/templates/cred_part_passgenmodal.html:9
 msgid "Can Have"
 msgstr "peut contenir"
 
-#: cred/templates/cred_part_passgenmodal.html:13
+#: apps/cred/templates/cred_part_passgenmodal.html:13
 msgid "Lowercase Alphabet"
 msgstr "minuscules"
 
-#: cred/templates/cred_part_passgenmodal.html:18
+#: apps/cred/templates/cred_part_passgenmodal.html:18
 msgid "Uppercase Alphabet"
 msgstr "majuscules"
 
-#: cred/templates/cred_part_passgenmodal.html:23
+#: apps/cred/templates/cred_part_passgenmodal.html:23
 msgid "Numbers"
 msgstr "chiffres"
 
-#: cred/templates/cred_part_passgenmodal.html:28
+#: apps/cred/templates/cred_part_passgenmodal.html:28
 msgid "Special"
 msgstr "caractères spéciaux"
 
-#: cred/templates/cred_part_passgenmodal.html:33
+#: apps/cred/templates/cred_part_passgenmodal.html:33
 msgid "Spaces"
 msgstr "espaces"
 
-#: cred/templates/cred_part_passgenmodal.html:36
+#: apps/cred/templates/cred_part_passgenmodal.html:36
 msgid "Password Length"
 msgstr "Longueur du Mot de passe"
 
-#: cred/templates/cred_part_passgenmodal.html:39
+#: apps/cred/templates/cred_part_passgenmodal.html:39
 msgid "Cancel"
 msgstr "Annuler"
 
-#: cred/templates/cred_part_passgenmodal.html:40
+#: apps/cred/templates/cred_part_passgenmodal.html:40
 msgid "Generate"
 msgstr "Générer "
 
-#: cred/templates/cred_search.html:9
+#: apps/cred/templates/cred_search.html:9
 msgid "Type your Query"
 msgstr "Entrez votre requête"
 
-#: cred/templates/cred_search.html:10 ratticweb/templates/navbar.html:71
-#: ratticweb/templates/navbar.html.py:97
+#: apps/cred/templates/cred_search.html:10
+#: apps/ratticweb/templates/navbar.html:73
+#: apps/ratticweb/templates/navbar.html:79
 msgid "Search"
 msgstr "Rechercher"
 
-#: cred/templates/cred_tagdelete.html:7
+#: apps/cred/templates/cred_tagdelete.html:7
 msgid "Deleting tag"
 msgstr "Supprimer tag"
 
-#: cred/templates/cred_taglist.html:9
+#: apps/cred/templates/cred_taglist.html:9
 msgid "Count"
 msgstr "Compte"
 
-#: cred/templates/cred_taglist.html:9
-#: staff/templates/staff_import_overview.html:10
+#: apps/cred/templates/cred_taglist.html:9
+#: apps/staff/templates/staff_import_overview.html:10
 msgid "Actions"
 msgstr "Actions"
 
-#: cred/templates/cred_taglist.html:17
+#: apps/cred/templates/cred_taglist.html:17
 msgid "Rename"
 msgstr "Renommer"
 
-#: cred/templates/cred_tags.html:7
+#: apps/cred/templates/cred_tags.html:7
 msgid "All Tags"
 msgstr "Tous les tags"
 
-#: cred/templates/credaudit_list.html:3
+#: apps/cred/templates/credaudit_list.html:3
 msgid "Audit Logs"
 msgstr "Historique"
 
-#: cred/templates/credaudit_list.html:7 staff/templates/staff_audit.html:23
+#: apps/cred/templates/credaudit_list.html:7
+#: apps/staff/templates/staff_audit.html:23
 msgid "Action"
 msgstr "Action"
 
-#: cred/templates/credaudit_list.html:11 staff/templates/staff_audit.html:31
+#: apps/cred/templates/credaudit_list.html:11
+#: apps/staff/templates/staff_audit.html:31
 msgid "Credential"
 msgstr "Identifiant"
 
-#: cred/templates/credaudit_list.html:13 staff/templates/staff_audit.html:33
+#: apps/cred/templates/credaudit_list.html:13
+#: apps/staff/templates/staff_audit.html:33
 msgid "When"
 msgstr "Quand"
 
-#: cred/templates/credaudit_list.html:29
+#: apps/cred/templates/credaudit_list.html:29
 msgid "More logs..."
 msgstr "Plus de logs..."
 
-#: ratticweb/settings.py:57
+#: apps/cred/templates/project_detail.html:39
+#, fuzzy
+#| msgid "Credential"
+msgid "Credentials:"
+msgstr "Identifiant"
+
+#: apps/cred/templates/project_edit.html:7
+#, fuzzy
+#| msgid "Create Group"
+msgid "Create project"
+msgstr "Créer un groupe"
+
+#: apps/cred/templates/project_edit.html:7
+#, fuzzy
+#| msgid "Edit Group"
+msgid "Edit Project"
+msgstr "Editer le groupe"
+
+#: apps/cred/templates/project_list.html:6
+msgid "Project list - Rattic"
+msgstr ""
+
+#: apps/cred/templates/project_list.html:10
+#: apps/ratticweb/templates/navbar.html:13
+msgid "Projects"
+msgstr ""
+
+#: apps/cred/templates/project_list.html:14
+msgid "New project"
+msgstr ""
+
+#: apps/cred/templates/project_list.html:24
+msgid "Project Title"
+msgstr ""
+
+#: apps/cred/templates/project_list.html:30
+#, fuzzy
+#| msgid "Credential"
+msgid "Credentials"
+msgstr "Identifiant"
+
+#: apps/cred/views.py:76
+msgid "All passwords"
+msgstr "Tous les mots de passe"
+
+#: apps/cred/views.py:108
+#, python-format
+msgid "Passwords tagged with %(tagname)s"
+msgstr "Mots de passe baliśes avec %(tagname)s"
+
+#: apps/cred/views.py:112
+#, python-format
+msgid "Passwords in group %(groupname)s"
+msgstr "Mots de passe dans le groupe %(groupname)s"
+
+#: apps/cred/views.py:116
+#, python-format
+msgid "Passwords for search \"%(searchstring)s\""
+msgstr "Mots de passe pour : \"%(searchstring)s\""
+
+#: apps/cred/views.py:120
+#, python-format
+msgid "Versions of: \"%(credtitle)s\""
+msgstr "Historique des versions de : \"%(credtitle)s\""
+
+#: apps/cred/views.py:128
+msgid ""
+"That user is now disabled. Here is a list of passwords that they have viewed "
+"that have not since been changed. You probably want to add them all to the "
+"change queue."
+msgstr ""
+"Cet utilisateur a été désactivé. Veuillez trouver la liste des mots de passe "
+"inchangés depuis la dernière fois que cet utilisateur y a eu accès. Il "
+"serait judicieux de les ajouter à la liste de mots de passe à modifier."
+
+#: apps/cred/views.py:131
+#, python-format
+msgid "Changes required for \"%(username)s\""
+msgstr "Modifications nécessaires pour \"%(username)s\""
+
+#: apps/cred/views.py:142
+msgid "Passwords in the trash"
+msgstr "Mots de passe dans la corbeille"
+
+#: apps/cred/views.py:150
+msgid "Passwords on the Change Queue"
+msgstr "Liste des mots de passe à modifier"
+
+#: apps/cred/views.py:415 apps/staff/views.py:344
+msgid "Unknown (Logs deleted)"
+msgstr "Inconnu (Logs effacés)"
+
+#: apps/cred/widgets.py:14
+msgid "Choose"
+msgstr "Choisir"
+
+#: apps/ratticweb/settings.py:60
 msgid "English"
 msgstr "Anglais"
 
-#: ratticweb/settings.py:58
+#: apps/ratticweb/settings.py:61
 msgid "French"
 msgstr "Français"
 
-#: ratticweb/settings.py:59
+#: apps/ratticweb/settings.py:62
 msgid "German"
 msgstr "Allemand"
 
-#: ratticweb/settings.py:60
+#: apps/ratticweb/settings.py:63
 msgid "Italian"
 msgstr ""
 
-#: ratticweb/templates/404.html:6
+#: apps/ratticweb/templates/404.html:6
 msgid "Page not found"
 msgstr "Page non trouvée"
 
-#: ratticweb/templates/404.html:7
+#: apps/ratticweb/templates/404.html:7
 msgid ""
 "This is not the page you are looking for, contact your systems administrator "
 "if you believe you have recieved this in error."
@@ -1002,11 +1111,11 @@ msgstr ""
 "Ce n'est pas la page que vous cherchez. Contactez votre administrateur "
 "système si vous pensez avoir reçu ceci par error."
 
-#: ratticweb/templates/500.html:6
+#: apps/ratticweb/templates/500.html:6
 msgid "Something went Splork!"
 msgstr "Quelque chose a planté !"
 
-#: ratticweb/templates/500.html:7
+#: apps/ratticweb/templates/500.html:7
 msgid ""
 "Something went wrong and the server was unable to process this request. "
 "Check your servers error logs for more details."
@@ -1015,159 +1124,143 @@ msgstr ""
 "traiter cette requête. Vérifiez les journaux d'erreurs du serveur pour plus "
 "de détails."
 
-#: ratticweb/templates/500.html:8
+#: apps/ratticweb/templates/500.html:8
 msgid "If you would like to report an issue with RatticDB please visit"
 msgstr ""
 "Si vous voulez rapporter un problème rencontré avec RatticDB, merci de "
 "visiter"
 
-#: ratticweb/templates/500.html:8
+#: apps/ratticweb/templates/500.html:8
 msgid "Github Issues"
 msgstr "Gestionnaire d'incidents Github"
 
-#: ratticweb/templates/base.html:51
-msgid "Password management powered by"
-msgstr "Gestionnaire de mots de passe propulsé par"
-
-#: ratticweb/templates/base.html:51 ratticweb/templates/navbar.html:12
-msgid "RatticDB"
-msgstr "RatticDB"
-
-#: ratticweb/templates/base.html:51
-msgid "built by"
-msgstr "développé par"
-
-#: ratticweb/templates/base.html:51
-msgid "and"
-msgstr "et"
-
-#: ratticweb/templates/base.html:51
-msgid "Report an issue"
-msgstr "Soummettre un problème"
-
-#: ratticweb/templates/base.html:51
-msgid "Contact Us"
-msgstr "Nous Contacter"
-
-#: ratticweb/templates/home.html:9
+#: apps/ratticweb/templates/home.html:8
 msgid "Your username and password didn't match. Please try again."
 msgstr ""
 "Votre nom d'utilisateur et mot de passe ne correspondent pas. Veuillez "
 "réessayer."
 
-#: ratticweb/templates/home.html:13
+#: apps/ratticweb/templates/home.html:13
 msgid "Welcome to Rattic"
 msgstr "Bienvenue sur Rattic"
 
-#: ratticweb/templates/home.html:14
+#: apps/ratticweb/templates/home.html:14
 msgid "RatticDB Logo"
 msgstr "Logo RatticDB"
 
-#: ratticweb/templates/home.html:15
+#: apps/ratticweb/templates/home.html:15
 msgid "It does passwords."
 msgstr "It does passwords."
 
-#: ratticweb/templates/navbar.html:16
-#: staff/templates/staff_groupdetail.html:22
+#: apps/ratticweb/templates/navbar.html:8
+msgid "RatticDB"
+msgstr "RatticDB"
+
+#: apps/ratticweb/templates/navbar.html:16
+#: apps/staff/templates/staff_groupdetail.html:24
 msgid "Passwords"
 msgstr "Mots de passe"
 
-#: ratticweb/templates/navbar.html:20 ratticweb/templates/navbar.html.py:47
+#: apps/ratticweb/templates/navbar.html:19
+#: apps/ratticweb/templates/navbar.html:49
 msgid "Change Queue"
 msgstr "Liste de mots de passe à modifier"
 
-#: ratticweb/templates/navbar.html:25 ratticweb/templates/navbar.html.py:51
+#: apps/ratticweb/templates/navbar.html:23
+#: apps/ratticweb/templates/navbar.html:53
 msgid "Staff Management"
 msgstr "Gestion des utilisateurs"
 
-#: ratticweb/templates/navbar.html:30 ratticweb/templates/navbar.html.py:64
+#: apps/ratticweb/templates/navbar.html:28
+#: apps/ratticweb/templates/navbar.html:66
 msgid "Help"
 msgstr "Aide"
 
-#: ratticweb/templates/navbar.html:37
+#: apps/ratticweb/templates/navbar.html:36
 msgid "Menu"
 msgstr "Menu"
 
-#: ratticweb/templates/navbar.html:44
+#: apps/ratticweb/templates/navbar.html:43
+msgid "All Projects"
+msgstr ""
+
+#: apps/ratticweb/templates/navbar.html:46
 msgid "All Passwords"
 msgstr "Tous les mots de passe"
 
-#: ratticweb/templates/navbar.html:55 ratticweb/templates/sidebar.html:9
+#: apps/ratticweb/templates/navbar.html:57
+#: apps/ratticweb/templates/sidebar.html:8
 msgid "Logout"
 msgstr "Déconnexion"
 
-#: ratticweb/templates/sidebar.html:6
+#: apps/ratticweb/templates/sidebar.html:5
 msgid "You"
 msgstr "Vous"
 
-#: ratticweb/templates/sidebar.html:7
+#: apps/ratticweb/templates/sidebar.html:6
 #, python-format
 msgid "Welcome %(username)s."
 msgstr "Bienvenue %(username)s"
 
-#: ratticweb/templates/sidebar.html:8
+#: apps/ratticweb/templates/sidebar.html:7
 msgid "Profile"
 msgstr "Profil"
 
-#: ratticweb/templates/sidebar.html:15
+#: apps/ratticweb/templates/sidebar.html:14
 msgid "Add Favourite Tags on the "
 msgstr "Ajouter vos tags favoris dans votre "
 
-#: ratticweb/templates/sidebar.html:16
+#: apps/ratticweb/templates/sidebar.html:15
 msgid "profile"
 msgstr "profil"
 
-#: ratticweb/templates/sidebar.html:16
+#: apps/ratticweb/templates/sidebar.html:15
 msgid "page to see them here."
 msgstr "pour les faire apparaître ici."
 
-#: ratticweb/templates/sidebar.html:22
+#: apps/ratticweb/templates/sidebar.html:21
 msgid "If you are a member of any groups, you will see them listed here. "
 msgstr "Si vous être membre de certains groupes, vous les verrez listés ici."
 
-#: ratticweb/templates/sidebar.html:31
+#: apps/ratticweb/templates/sidebar.html:32
 msgid "Forgotten password?"
 msgstr "Mot de passe oublié ?"
 
-#: ratticweb/templates/sidebar.html:36
-msgid "Google Sign-in"
-msgstr "Google Sign-in"
-
-#: staff/models.py:47
+#: apps/staff/models.py:47
 msgid "Passwords do not match"
 msgstr "Les mots de passe ne sont pas identiques"
 
-#: staff/models.py:83
+#: apps/staff/models.py:83
 msgid "Could not read keepass file, the password you gave may not be correct."
 msgstr ""
 "Impossible de lire le fichier Keepass, le mot de passe fourni est peut-être "
 "incorrect."
 
-#: staff/models.py:88
+#: apps/staff/models.py:88
 msgid "That file does not appear to be a valid KeePass file."
 msgstr "Ce fichier ne semble pas être un fichier Keepass valide."
 
-#: staff/templates/staff_audit.html:10
+#: apps/staff/templates/staff_audit.html:10
 #, python-format
 msgid "Audit Logs for password &apos;%(cred_title)s&apos;"
 msgstr "Consulter l'historique pour le mot de passe &apos;%(cred_title)s&apos;"
 
-#: staff/templates/staff_audit.html:13
+#: apps/staff/templates/staff_audit.html:13
 #, python-format
 msgid "Audit Logs for user &apos;%(username)s&apos;"
 msgstr "Consulter l'historique pour l'utilisateur &apos;%(username)s&apos;"
 
-#: staff/templates/staff_audit.html:16
+#: apps/staff/templates/staff_audit.html:16
 #, python-format
 msgid "Audit Logs going back %(item)s days ago"
 msgstr "Voir l'historique pour les %(item)s derniers jours"
 
-#: staff/templates/staff_changeadvice.html:6
+#: apps/staff/templates/staff_changeadvice.html:6
 #, python-format
 msgid "Changes for user: %(username)s"
 msgstr "Modifications pour l'utilisateur : %(username)s"
 
-#: staff/templates/staff_changeadvice.html:7
+#: apps/staff/templates/staff_changeadvice.html:7
 msgid ""
 "We noticed that you are disabling a user account, or removing groups\n"
 "from a user. To help you RatticDB has analysed the auditlogs to see what\n"
@@ -1187,88 +1280,83 @@ msgstr ""
 "vous ne voulez\n"
 " pas ajouter certains mots de passe à la liste, veuillez les décocher."
 
-#: staff/templates/staff_groupdetail.html:7
+#: apps/staff/templates/staff_groupdetail.html:7
 msgid "Delete Group"
 msgstr "Supprimer le groupe"
 
-#: staff/templates/staff_groupdetail.html:8
+#: apps/staff/templates/staff_groupdetail.html:8
 msgid "Deleting this group will delete every password underneath it."
 msgstr "Supprimer ce groupe supprimera tous les mots de passe inclus."
 
-#: staff/templates/staff_groupdetail.html:21
-#: staff/templates/staff_home.html:23
-msgid "Users"
-msgstr "Utilisateurs"
-
-#: staff/templates/staff_groupdetail.html:26
+#: apps/staff/templates/staff_groupdetail.html:28
 msgid "Delete forever"
 msgstr "Supprimer définitivement"
 
-#: staff/templates/staff_groupedit.html:6
+#: apps/staff/templates/staff_groupedit.html:6
 msgid "Create Group"
 msgstr "Créer un groupe"
 
-#: staff/templates/staff_groupedit.html:6
+#: apps/staff/templates/staff_groupedit.html:6
 msgid "Edit Group"
 msgstr "Editer le groupe"
 
-#: staff/templates/staff_home.html:5
+#: apps/staff/templates/staff_home.html:5
 msgid "Staff"
 msgstr "Administrateurs"
 
-#: staff/templates/staff_home.html:8
+#: apps/staff/templates/staff_home.html:8
 msgid "Staff Manage"
 msgstr "Gestion des utilisateurs"
 
-#: staff/templates/staff_home.html:12
+#: apps/staff/templates/staff_home.html:12
 msgid "Add User"
 msgstr "Ajouter Utilisateur"
 
-#: staff/templates/staff_home.html:16
+#: apps/staff/templates/staff_home.html:16
 msgid "Add Group"
 msgstr "Ajouter Groupe"
 
-#: staff/templates/staff_home.html:18
+#: apps/staff/templates/staff_home.html:20
 msgid "Import Keepass"
 msgstr "Importer depuis Keepass"
 
-#: staff/templates/staff_home.html:19
+#: apps/staff/templates/staff_home.html:22
 msgid "View Trash"
 msgstr "Voir la corbeille"
 
-#: staff/templates/staff_home.html:20
+#: apps/staff/templates/staff_home.html:23
 msgid "Audit One Week"
 msgstr "Historique de la semaine"
 
-#: staff/templates/staff_home.html:27
+#: apps/staff/templates/staff_home.html:30
 msgid "email"
 msgstr "adresse email"
 
-#: staff/templates/staff_home.html:45
+#: apps/staff/templates/staff_home.html:48
 msgid "Access Groups"
 msgstr "Groupes"
 
-#: staff/templates/staff_import_overview.html:6
+#: apps/staff/templates/staff_import_overview.html:6
 msgid "Import Overview"
 msgstr "Importer"
 
-#: staff/templates/staff_import_overview.html:19
+#: apps/staff/templates/staff_import_overview.html:19
 msgid "Import"
 msgstr "Importer"
 
-#: staff/templates/staff_import_overview.html:20
+#: apps/staff/templates/staff_import_overview.html:20
 msgid "Skip"
 msgstr "Ignorer"
 
-#: staff/templates/staff_import_process.html:10
+#: apps/staff/templates/staff_import_process.html:10
 msgid "Password Import"
 msgstr "Importer un mot de passe"
 
-#: staff/templates/staff_keepassimport.html:16
+#: apps/staff/templates/staff_keepassimport.html:16
 msgid "Keepass Import"
 msgstr "Importer depuis Keepass"
 
-#: staff/templates/staff_keepassimport.html:17
+#: apps/staff/templates/staff_keepassimport.html:17
 msgid ""
 "We recommend that you import your keepass data into a\n"
 "seperate group, then adjust the group on each password as required."
@@ -1276,7 +1364,7 @@ msgstr ""
 "Il est recommandé d'importer vos données Keepass dans un groupe \n"
 "distinct, et de définir le groupe sur chaque mot de passe au besoin."
 
-#: staff/templates/staff_userdetail.html:8
+#: apps/staff/templates/staff_userdetail.html:9
 msgid ""
 "\n"
 "    Deleting this user will remove any associated auditlogs, maybe "
@@ -1289,18 +1377,42 @@ msgstr ""
 "devriez-vous\n"
 "désactiver leur compte?"
 
-#: staff/templates/staff_userdetail.html:19
+#: apps/staff/templates/staff_userdetail.html:20
 msgid "Confirm Delete"
 msgstr "Confirmer la suppression"
 
-#: staff/templates/staff_userdetail.html:23
+#: apps/staff/templates/staff_userdetail.html:24
 msgid "Disable Two Factor"
 msgstr "Désactiver l'authentification double facteur"
 
-#: staff/templates/staff_useredit.html:6
+#: apps/staff/templates/staff_useredit.html:6
 msgid "Create User"
 msgstr "Créer un utilisateur"
 
-#: staff/templates/staff_useredit.html:6
+#: apps/staff/templates/staff_useredit.html:6
 msgid "Edit User"
 msgstr "Modifier l'utilisateur"
+
+#~ msgid "Copy"
+#~ msgstr "Copier"
+
+#~ msgid "Download"
+#~ msgstr "Télécharger"
+
+#~ msgid "Password management powered by"
+#~ msgstr "Gestionnaire de mots de passe propulsé par"
+
+#~ msgid "built by"
+#~ msgstr "développé par"
+
+#~ msgid "and"
+#~ msgstr "et"
+
+#~ msgid "Report an issue"
+#~ msgstr "Soummettre un problème"
+
+#~ msgid "Contact Us"
+#~ msgstr "Nous Contacter"
+
+#~ msgid "Google Sign-in"
+#~ msgstr "Google Sign-in"

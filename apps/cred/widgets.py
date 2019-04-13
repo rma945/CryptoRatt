@@ -4,13 +4,6 @@ from apps.cred.templatetags.credicons import cred_icon
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
 
-
-class CredAttachmentInput(ClearableFileInput):
-    template_with_initial = '%(clear_template)s<br />%(input_text)s: %(input)s'
-    template_with_clear = '<label class="force-inline" for="%(clear_checkbox_id)s">%(clear)s %(clear_checkbox_label)s</label>'
-    url_markup_template = '{1}'
-
-
 class CredIconChooser(HiddenInput):
     button_text = _('Choose')
 

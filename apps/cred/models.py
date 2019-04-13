@@ -8,10 +8,7 @@ from django.utils.timezone import now
 from django.conf import settings
 
 from apps.ratticweb.util import DictDiffer, field_file_compare
-from apps.cred.ssh_key import SSHKey
-from apps.cred.fields import SizedFileField, SizedImageFileField
-from apps.cred.storage import CredAttachmentStorage
-
+from apps.cred.fields import SizedImageFileField
 
 class Tag(models.Model):
     name = models.CharField(max_length=64, unique=True)
@@ -89,36 +86,31 @@ class Project(models.Model):
         return self.title
 
 class Cred(models.Model):
-    METADATA = ('description', 'descriptionmarkdown', 'group', 'groups', 'tags', 'iconname', 'latest', 'id', 'modified', 'attachment_name', 'ssh_key_name')
+    METADATA = ('project', 'description', 'descriptionmarkdown', 'group', 'groups', 'tags', 'iconname', 'latest', 'id', 'modified')
     SORTABLES = ('title', 'username', 'group', 'id', 'modified')
-    APP_SET = ('is_deleted', 'latest', 'modified', 'attachment_name', 'ssh_key_name')
+    APP_SET = ('is_deleted', 'latest', 'modified', 'attachments')
     objects = SearchManager()
 
     # User changable fields
-    project = models.ForeignKey(Project, verbose_name=_('Project'), blank=True, null=True, default=None, on_delete=models.SET_DEFAULT)
+    project = models.ForeignKey(Project, verbose_name=_('Project'), blank=True, null=True, default=None, on_delete=models.SET_NULL)
     title = models.CharField(verbose_name=_('Title'), max_length=64, db_index=True)
     url = models.URLField(verbose_name=_('URL'), blank=True, null=True, db_index=True)
     username = models.CharField(verbose_name=_('Username'), max_length=250, blank=True, null=True, db_index=True)
     password = models.CharField(verbose_name=_('Password'), max_length=250, blank=True, null=True)
     descriptionmarkdown = models.BooleanField(verbose_name=_('Markdown Description'), default=True, )
     description = models.TextField(verbose_name=_('Description'), blank=True, null=True)
-    group = models.ForeignKey(Group, verbose_name=_('Group'),on_delete=models.DO_NOTHING)
+    group = models.ForeignKey(Group, verbose_name=_('Group'), null=True, on_delete=models.SET_NULL)
     groups = models.ManyToManyField(Group, verbose_name=_('Groups'), related_name="child_creds", blank=True, default=None)
     users = models.ManyToManyField(User, verbose_name=_('Users'), related_name="child_creds", blank=True, default=None)
     tags = models.ManyToManyField(Tag, verbose_name=_('Tags'), related_name='child_creds', blank=True, default=None)
     iconname = models.CharField(verbose_name=_('Icon'), default='Key.png', max_length=64)
-    ssh_key = SizedFileField(verbose_name=_('SSH key'), max_upload_size=settings.RATTIC_MAX_ATTACHMENT_SIZE, null=True, blank=True, upload_to='not required')
-    attachment = SizedFileField(verbose_name=_('Attachment'), max_upload_size=settings.RATTIC_MAX_ATTACHMENT_SIZE, null=True, blank=True, upload_to='not required')
 
     # Application controlled fields
     is_deleted = models.BooleanField(default=False, db_index=True)
     is_expired = models.BooleanField(default=False, db_index=True)
     latest = models.ForeignKey('Cred', related_name='history', blank=True, null=True, db_index=True, on_delete=models.SET_NULL)
-    modified = models.DateTimeField(db_index=True)
-    created = models.DateTimeField(auto_now_add=True)
-
-    ssh_key_name = models.CharField(max_length=64, null=True, blank=True)
-    attachment_name = models.CharField(max_length=64, null=True, blank=True)
+    modified = models.DateTimeField(db_index=True, auto_now_add=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True, blank=True)
 
     def save(self, *args, **kwargs):
         try:
@@ -146,13 +138,6 @@ class Cred(models.Model):
             oldcred = model_to_dict(old)
             newcred = model_to_dict(self)
             diff = DictDiffer(newcred, oldcred).changed()
-
-            # Ohhhkaaay, so the attachment field looks like its changed every
-            # time, so we do a deep comparison, if the files match we remove
-            # it from the list of changed fields.
-            for field in ('attachment', 'ssh_key'):
-                if field_file_compare(oldcred[field], newcred[field]):
-                    diff = diff - set((field, ))
 
             # Check if some non-metadata was changed
             chg = diff - set(Cred.METADATA)
@@ -219,11 +204,17 @@ class Cred(models.Model):
 
         return False
 
-    def ssh_key_fingerprint(self):
-        return SSHKey(self.ssh_key.read(), self.password).fingerprint()
-
     def __str__(self):
         return self.title
+
+class Attachment(models.Model):
+    credential = models.ForeignKey(Cred, on_delete=models.CASCADE)
+    filename = models.CharField(verbose_name=_('Filename'), max_length=256)
+    mime = models.CharField(verbose_name=_('Mime'), max_length=64, blank=True, null=True, default=None)
+    content = models.BinaryField(null=True, default=None)
+
+    def __str__(self):
+        return self.filename
 
 class CredAdmin(admin.ModelAdmin):
     list_display = ('title', 'username', 'group')
@@ -236,6 +227,9 @@ class CredAudit(models.Model):
     CREDVIEW = 'V'
     CREDEXPORT = 'X'
     CREDPASSVIEW = 'P'
+    CREDATTACHADDED = 'AD'
+    CREDATTACHDOWNLOAD = 'AV'
+    CREDATTACHDELETED = 'AD'
     CREDDELETE = 'D'
     CREDSCHEDCHANGE = 'S'
     CREDAUDITCHOICES = (
@@ -247,12 +241,15 @@ class CredAudit(models.Model):
         (CREDDELETE, _('Deleted')),
         (CREDSCHEDCHANGE, _('Scheduled For Change')),
         (CREDPASSVIEW, _('Password Viewed')),
+        (CREDATTACHADDED, _('Attachment Added')),
+        (CREDATTACHDOWNLOAD, _('Attachment Download')),
+        (CREDATTACHDELETED, _('Attachment Deleted')),
     )
 
-    audittype = models.CharField(max_length=1, choices=CREDAUDITCHOICES)
-    cred = models.ForeignKey(Cred, related_name='logs', on_delete=models.DO_NOTHING)
-    user = models.ForeignKey(User, related_name='credlogs', on_delete=models.DO_NOTHING)
-    time = models.DateTimeField(auto_now_add=True)
+    audittype = models.CharField(max_length=5, choices=CREDAUDITCHOICES)
+    cred = models.ForeignKey(Cred, related_name='logs', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='credlogs', null=True, on_delete=models.SET_NULL)
+    time = models.DateTimeField(auto_now_add=True, blank=True)
 
     class Meta:
         get_latest_by = 'time'
@@ -274,8 +271,8 @@ class CredChangeQManager(models.Manager):
 class CredChangeQ(models.Model):
     objects = CredChangeQManager()
 
-    cred = models.ForeignKey(Cred, on_delete=models.DO_NOTHING)
-    time = models.DateTimeField(auto_now_add=True)
+    cred = models.ForeignKey(Cred, on_delete=models.CASCADE)
+    time = models.DateTimeField(auto_now_add=True, blank=True)
 
 
 class CredChangeQAdmin(admin.ModelAdmin):

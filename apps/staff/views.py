@@ -279,10 +279,7 @@ def import_process(request, import_id):
     if request.method == 'POST':
         # Try and import what we have now
 
-        # Did the user upload a new attachment
-        if entry['filename'] and 'attachment' not in request.FILES.keys():
-            sfile = SimpleUploadedFile(entry['filename'], bytes(entry['filecontent']))
-            request.FILES['attachment'] = sfile
+        # TODO: implement file uploads
 
         # Build the form
         form = CredForm(request.user, request.POST, request.FILES)
@@ -324,11 +321,6 @@ def import_process(request, import_id):
         # If the icon is empty set it
         if 'iconname' not in processed.keys():
             processed['iconname'] = 'Key.png'
-
-        # Remove the attachment
-        if processed['filename']:
-            del processed['filename']
-            del processed['filecontent']
 
         # Create the form
         form = CredForm(request.user, processed, {})

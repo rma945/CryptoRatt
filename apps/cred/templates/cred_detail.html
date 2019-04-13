@@ -57,6 +57,7 @@
     {% endif %}
   </td>
 </tr>
+
 <tr>
   <th>
       {% trans "Password" %}
@@ -68,14 +69,33 @@
   </td>
 </tr>
 
-{% if cred.attachment %}
-  <tr><th>{% trans "Attachment" %}</th><td><a class="btn btn-mini" href="{% url "cred:download_attachment" cred.id %}">{% trans "Download" %} {{ cred.attachment_name }}</a></td></tr>
-{% endif %}
-{% if cred.ssh_key %}
-  <tr><th>{% trans "SSH Key" %}</th><td><a class="btn btn-mini" href="{% url "cred:download_sshkey" cred.id %}">{% trans "Download" %} {{ cred.ssh_key_fingerprint }}</a></td></tr>
+{% if cred.project %}
+  <tr>
+    <th>
+        {% trans "Attachments" %}
+    </th>
+    <td>
+      <ul class="unstyled">
+        {% for a in attachments.all %}
+          <li><a class="btn btn-mini" href="{% url 'cred:download_attachment' a.id %}" role="button">{{ a.filename }}</a></li>
+        {% endfor %}
+      </ul>
+    </td>
+  </tr>
 {% endif %}
 
-<tr><th>{% trans "Owner Group" %}</th><td>{% if cred.group in groups.all or user.is_staff %}<a href="{% url 'cred:cred_list' 'group' cred.group.id %}">{{ cred.group.name }}</a>{% else %}{{ cred.group.name }}{% endif %}</td></tr>
+<tr>
+  <th>
+    {% trans "Owner Group" %}
+  </th>
+  <td>
+    {% if cred.group in groups.all or user.is_staff %}
+      <a href="{% url 'cred:cred_list' 'group' cred.group.id %}">{{ cred.group.name }}</a>
+    {% else %}
+      {{ cred.group.name }}
+    {% endif %}
+  </td>
+</tr>
 <tr>
   <th>{% trans "Viewer Groups" %}</th>
     <td>

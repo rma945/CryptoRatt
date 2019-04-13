@@ -182,8 +182,6 @@ class CredViewTests(TestCase):
             if i.value() is not None:
                 post[i.name] = i.value()
         post['title'] = 'New Title'
-        del post['attachment']
-        del post['ssh_key']
         resp = self.data.norm.post(reverse('cred:cred_edit', args=(self.data.cred.id,)), post, follow=True)
         self.assertEqual(resp.status_code, 200)
         newcred = Cred.objects.get(id=self.data.cred.id)

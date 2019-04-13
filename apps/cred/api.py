@@ -12,7 +12,6 @@ from tastypie.exceptions import Unauthorized
 from apps.account.authentication import MultiApiKeyAuthentication
 from apps.cred.models import Cred, Tag, CredAudit
 from apps.cred.forms import TagForm
-from apps.cred.ssh_key import SSHKey
 
 import paramiko
 
@@ -102,20 +101,9 @@ class CredResource(ModelResource):
         if self.get_resource_uri(bundle) != bundle.request.path:
             del bundle.data['password']
 
-        # Expand the ssh key
-        if bundle.obj.ssh_key:
-            bundle.data['ssh_key'] = bundle.obj.ssh_key.read()
-        else:
-            del bundle.data['ssh_key']
-
         return bundle
 
     def post_detail(self, request, **kwargs):
-        if 'ssh_key' not in request.FILES:
-            res = HttpResponse("Please upload an ssh_key file")
-            res.status_code = 500
-            return res
-
         basic_bundle = self.build_bundle(request=request)
 
         try:
@@ -125,17 +113,6 @@ class CredResource(ModelResource):
         except MultipleObjectsReturned:
             return http.HttpMultipleChoices("More than one resource is found at this URI.")
 
-        ssh_key = request.FILES['ssh_key']
-        got = ssh_key.read()
-        ssh_key.seek(0)
-        try:
-            SSHKey(got, obj.password).key_obj
-        except paramiko.ssh_exception.SSHException as error:
-            res = HttpResponse(error)
-            res.status_code = 500
-            return res
-
-        obj.ssh_key = File(ssh_key)
         obj.save()
 
         if not self._meta.always_return_data:
@@ -150,7 +127,7 @@ class CredResource(ModelResource):
         queryset = Cred.objects.filter(is_deleted=False, latest=None)
         always_return_data = True
         resource_name = 'cred'
-        excludes = ['username', 'is_deleted', 'attachment']
+        excludes = ['username', 'is_deleted']
         authentication = MultiAuthentication(SessionAuthentication(), MultiApiKeyAuthentication())
         authorization = CredAuthorization()
         filtering = {
