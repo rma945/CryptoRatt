@@ -3,80 +3,64 @@
 {% load i18n %}
 {% url "cred:cred_list" "special" "changeq" as cred_views_viewqueue %}
 
-<div class="navbar">
-    <div class="navbar-inner">
-        <a class="brand" href="{% url_root %}"><img class="logo" src="{% static rattic_icon %}" /><span class="hidden-phone"> {% trans "RatticDB" %}</span></a>
-
-        <ul class="nav visible-desktop">
-          {% if user.is_authenticated %}
-            <li {% if pageurl == "cred:project_list" %}class="active"{% endif %}>
-              <a href="{% url "cred:project_list" %}">{% trans "Projects" %}</a>
-            </li>
-            <li {% if pageurl == "cred:cred_list" %}class="active"{% endif %}>
-              <a href="{% url "cred:cred_list" %}">{% trans "Passwords" %}</a>
-            </li>
-              <li {% if pageurl == "cred_views_viewqueue" %}class="active"{% endif %}>
-                <a href="{{ cred_views_viewqueue }}">{% trans "Change Queue" %}{% if changeqcount > 0 %} <span class="badge">{{ changeqcount }}</span>{% endif %}</a>
-              </li>
-            {% if user.is_staff %}
-              <li {% if pageurl == "staff:home" %}class="active"{% endif %}>
-                <a href="{% url "staff:home" %}">{% trans "Staff Management" %}</a>
-              </li>
-            {% endif %}
-            {% if helplinks %}
-              <li {% if pageurl == "help:home" %}class="active"{% endif %}>
-                <a href="{% url "help:home" %}">{% trans "Help" %}</a>
-              </li>
-            {% endif %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="{% url_root %}">
+    <img style="height: 32px" src="{% static rattic_icon %}" />
+  </a>
+  
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item {% if pageurl == "cred:project_list" %}active{% endif %}">
+        <a class="nav-link" href="{% url "cred:project_list" %}">{% trans "Projects" %}</a>
+      </li>
+      <li class="nav-item {% if pageurl == "cred:cred_list" %}active{% endif %}">
+        <a class="nav-link" href="{% url "cred:cred_list" %}">{% trans "Passwords" %}</a>
+      </li>
+      <li class="nav-item {% if pageurl == "cred_views_viewqueue" %}active{% endif %}">
+        <a class="nav-link" href="{{ cred_views_viewqueue }}">{% trans "Change Queue" %}
+        {% if changeqcount > 0 %}<span class="badge badge-primary">{{ changeqcount }}</span>{% endif %}
+        </a>
+      </li>
+      {% if user.is_staff %}
+        <li class="nav-item {% if pageurl == "staff:home" %}active{% endif %}">
+          <a class="nav-link" href="{% url "staff:home" %}">{% trans "Staff Management" %}</a>
+        </li>
+      {% endif %}
+      {% if helplinks %}
+        <li class="nav-item {% if pageurl == "help:home" %}active{% endif %}">
+          <a class="nav-link" href="{% url "help:home" %}">{% trans "Help" %}</a>
+        </li>
+      {% endif %}
+      
+      {% comment %} dropdown start {% endcomment %}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Account
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url "cred:project_list" %}">{% trans "Projects" %}</a>
+          <a class="dropdown-item" href="{% url "cred:cred_list" %}">{% trans "Passwords" %}</a>
+          <a class="dropdown-item" href="{% url "cred:tags" %}">{% trans "Tags" %}</a>
+          
+          {% if user.is_staff %}
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{{ staff_views_home }}">{% trans "Management" %}</a>
+            <a class="dropdown-item" href="{{ cred_views_viewqueue }}">{% trans "Change Queue" %}
+            {% if changeqcount > 0 %}<span class="badge badge-primary">{{ changeqcount }}</span>{% endif %}</a>
           {% endif %}
-        </ul>
 
-        <ul class="nav hidden-desktop">
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">{% trans "Menu" %} <b class="caret"></b></a>
-            <ul class="dropdown-menu" role="menu">
-              {% if user.is_authenticated %}
-                <li>
-                  <a href="{% url "cred:tags" %}">{% trans "Tags" %}</a>
-                </li>
-                <li>
-                  <a href="{% url "cred:project_list" %}">{% trans "All Projects" %}</a>
-                </li>
-                <li>
-                  <a href="{% url "cred:cred_list" %}">{% trans "All Passwords" %}</a>
-                </li>
-                <li>
-                  <a href="{{ cred_views_viewqueue }}">{% trans "Change Queue" %}{% if changeqcount > 0 %} <span class="badge">{{ changeqcount }}</span>{% endif %}</a>
-                </li>
-                {% if user.is_staff %}
-                  <li>
-                    <a href="{{ staff_views_home }}">{% trans "Staff Management" %}</a>
-                  </li>
-                {% endif %}
-                <li>
-                  <a href="{% url "account:logout" %}">{% trans "Logout" %}</a>
-                </li>
-              {% else %}
-                <li>
-                  <a href="{% url "account:login" %}">{% trans "Login" %}</a>
-                </li>
-              {% endif %}
-              {% if helplinks %}
-                <li>
-                  <a href="{{ help_views_home }}">{% trans "Help" %}</a>
-                </li>
-              {% endif %}
-            </ul>
-          </li>
-          {% if user.is_authenticated %}
-          <li {% if pageurl == "cred:search" %}class="active"{% endif %}>
-            <a href="{% url "cred:search" %}">{% trans "Search" %}</a>
-          </li>
+          {% if helplinks %}
+            <a class="dropdown-item" href="{{ help_views_home }}">{% trans "Help" %}</a>
           {% endif %}
-        </ul>
 
-        <form class="navbar-search pull-right hidden-phone rattic-cred-search">
-             <input id="search-box" type="search" name="box" class="search-query" placeholder="{% trans "Search" %}">
-        </form>
-    </div>
-</div>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url "account:logout" %}">{% trans "Logout" %}</a>
+        </div>
+      </li>
+      {% comment %} dropdown end {% endcomment %}
+
+    </ul>
+    
+  </div>
+
+</nav>
