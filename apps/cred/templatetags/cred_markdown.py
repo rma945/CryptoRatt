@@ -1,4 +1,5 @@
 from django import template
+from django.utils.html import format_html
 import markdown
 
 register = template.Library()
@@ -16,4 +17,4 @@ def markdown_cred(description):
         safe_mode='escape',
     )
 
-    return out
+    return format_html(out)

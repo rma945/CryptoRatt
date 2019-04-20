@@ -227,11 +227,12 @@ class CredAudit(models.Model):
     CREDVIEW = 'V'
     CREDEXPORT = 'X'
     CREDPASSVIEW = 'P'
-    CREDATTACHADDED = 'AD'
-    CREDATTACHDOWNLOAD = 'AV'
-    CREDATTACHDELETED = 'AD'
     CREDDELETE = 'D'
     CREDSCHEDCHANGE = 'S'
+    CREDATTACHADDED = 'AD'
+    CREDATTACHVIEW = 'AV'
+    CREDATTACHDELETED = 'AD'
+
     CREDAUDITCHOICES = (
         (CREDADD, _('Added')),
         (CREDCHANGE, _('Changed')),
@@ -242,7 +243,7 @@ class CredAudit(models.Model):
         (CREDSCHEDCHANGE, _('Scheduled For Change')),
         (CREDPASSVIEW, _('Password Viewed')),
         (CREDATTACHADDED, _('Attachment Added')),
-        (CREDATTACHDOWNLOAD, _('Attachment Download')),
+        (CREDATTACHVIEW, _('Attachment Viewed')),
         (CREDATTACHDELETED, _('Attachment Deleted')),
     )
 

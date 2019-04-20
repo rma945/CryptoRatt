@@ -326,7 +326,7 @@ def download_attachment(request, attachment_id):
 
     # Write the audit that attachment was downloaded
     CredAudit(
-        audittype=CredAudit.CREDATTACHDOWNLOAD,
+        audittype=CredAudit.CREDATTACHVIEW,
         cred=attachment.credential,
         user=request.user
     ).save()
