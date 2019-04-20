@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load cred_markdown %}
+{% load static %}
+
+{% block title %}{{ project.title }} - {% trans "Rattic" %}{% endblock %}
+
+{% block content %}
+  <div class="btn-group">
+    <a class="btn" href="{% url "cred:project_edit" project.id %}">{% trans "Edit" %}</a>
+    <a class="btn btn-danger" href="{% url "cred:project_delete" project.id %}">{% trans "Delete" %}</a>
+  </div>
+  <p></p>
+
+  <table class="table table-striped table-bordered">
+    <tr>
+      <th style="width: 64px;">Title</th><td>{{ project.title }}</td>
+    </tr>
+    <tr>
+      <th style="width: 64px;">URL</th><td><a href="{{ project.url }}">{{ project.url }}</a></td>
+    </tr>
+      <tr>
+      <th style="width: 64px;">Icon</th>
+      <td>
+        <img style="width: 48px;" src="{% if project.icon %} {{ project.icon.url }} {% else %} {% static "rattic/img/project-default.png" %} {% endif %}" alt="{{ project.title }}">
+      </td> 
+    </tr>
+  </table>
+
+  {% if project.description|length %}
+    <strong>{% trans "Description:" %}</strong>
+      <div class="description">
+        {% markdown_cred project.description %}
+      </div>
+  {% endif %}
+
+  {% if project.cred_set.all|length %}
+    <strong>{% trans "Credentials:" %}</strong>
+    <div class="description">
+      <ul class="list-group">
+        {% for c in project.getAllCreds %}
+          <li class="list-group-item"><a href="{% url "cred:cred_detail" c.id %}">{{ c.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+{% endblock %}
