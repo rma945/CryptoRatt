@@ -8,67 +8,92 @@
 {% block content %}
 
 {% if user.is_staff%} 
-  <div class="btn-group p-2" role="group" aria-label="project-buttons">
+  <div class="btn-group pt-2 pb-2" role="group" aria-label="project-buttons">
     <a class="btn btn-primary" href="{% url "cred:project_add" %}">{% trans "New project" %}</a>
   </div>
 {% endif %}
 
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th style="width: 48px; height: 48px" class="d-none d-sm-table-cell"></th>
-      <th>
-        {% trans "Project Title" %}
-      </th>
-      <th class="d-none d-sm-table-cell">
-        {% trans "URL" %}
-      </th>
-      <th class="d-none d-sm-table-cell">
-        {% trans "Credentials" %}
-      </th>
-    </tr>
-  </thead>
-
-  <tbody>
-    {% for project in projectlist %}
-      <tr>        
-          <td class="d-none d-sm-table-cell">
-            <img style="width: 48px;" src="{% if project.icon %} {{ project.icon.url }} {% else %} {% static "rattic/img/project-default.png" %} {% endif %}" alt="{{ project.title }}">
-          </td>
-        <td>
-          <a href="{% url "cred:project_detail" project.id %}"><b>{{ project.title }}</b></a>
-        </td>
-        <td class="d-none d-sm-table-cell">
-          <a href="{{ project.url }}">{{ project.url }}</a>
-        </td>
-        <td class="d-none d-sm-table-cell">
-          <a class="badge badge-primary" href="{% url "cred:project_detail" project.id %}">{{ project.getAllCreds.count}}</a>
-        </td>
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th style="width: 48px; height: 48px" class="d-none d-sm-table-cell"></th>
+        <th>
+          {% trans "Project Title" %}
+        </th>
+        <th class="d-none d-sm-table-cell">
+          {% trans "URL" %}
+        </th>
+        <th class="d-none d-sm-table-cell">
+          {% trans "Credentials" %}
+        </th>
       </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    </thead>
 
-<div class="pagination pagination-centered">
-  <ul>
-    {% if projectlist.has_previous %}
-    <li><a href="{% url "cred:project_list" projectlist.previous_page_number %}">{% trans "Prev" %}</a></li>
-    {% else %}
-      <li class="disabled"><a href="#">{% trans "Prev" %}</a></li>
-    {% endif %}
-    {% for p in projectlist.paginator.page_range %}
-      {% if projectlist.number == p %}
-        <li class="active"><a href="#">{{ p }}</a></li>
-      {% else %}
-        <li><a href="{% url "cred:project_list" p %}">{{ p }}</a></li>
-      {% endif %}
-    {% endfor %}
-    {% if projectlist.has_next %}
-      <li><a href="{% url "cred:project_list" projectlist.next_page_number %}">{% trans "Next" %}</a></li>
-    {% else %}
-      <li class="disabled"><a href="#">{% trans "Next" %}</a></li>
-    {% endif %}
-  </ul>
+    <tbody>
+      {% for project in projectlist %}
+        <tr>        
+            <td class="d-none d-sm-table-cell">
+              <img style="width: 48px;" src="{% if project.icon %} {{ project.icon.url }} {% else %} {% static "rattic/img/project-default.png" %} {% endif %}" alt="{{ project.title }}">
+            </td>
+          <td>
+            <a href="{% url "cred:project_detail" project.id %}"><b>{{ project.title }}</b></a>
+          </td>
+          <td class="d-none d-sm-table-cell">
+            <a href="{{ project.url }}">{{ project.url }}</a>
+          </td>
+          <td class="d-none d-sm-table-cell">
+            <a class="badge badge-primary" href="{% url "cred:project_detail" project.id %}">{{ project.getAllCreds.count}}</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
+
+<!-- paginator start -->
+<nav aria-label="pagination">
+  <ul class="pagination justify-content-center">
+    <!--paginator  previous button-->
+    <li class="page-item {% if not projectlist.has_previous %} disabled {% endif %}">
+        <a class="page-link"
+      {% if projectlist.has_previous %}
+        href="{% url "cred:project_list" projectlist.previous_page_number %}"
+      {% else %}
+        href="#"
+      {% endif %}
+      aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">{% trans "Prev" %}</span>
+      </a>
+    </li>
+
+    <!--paginator pages button-->
+    {% for l in  projectlist.paginator.page_range %}
+        {% if l <= projectlist.number|add:20 and l >= projectlist.number|add:-10 %}
+          {% if projectlist.number == p %}
+            <li class="d-none d-sm-block page-item active"><a class="page-link" href="#"><b>{{ forloop.counter }}</b></a></li>
+          {% else %}
+            <li class="d-none d-sm-block page-item"><a class="page-link" href="{% url "cred:project_list" forloop.counter  %}">{{ forloop.counter }}</a></li>
+          {% endif %}
+        {% endif %}
+    {% endfor %}
+    
+    <!--paginator next button-->
+    <li class="page-item {% if not projectlist.has_next %} disabled {% endif %}">
+        <a class="page-link"
+      {% if projectlist.has_next %}
+        href="{% url "cred:project_list" projectlist.next_page_number %}"
+      {% else %}
+        href="#"
+      {% endif %}
+      aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">{% trans "Next" %}</span>
+      </a>
+    </li>
+
+  </ul>
+</nav>
 
 {% endblock %}

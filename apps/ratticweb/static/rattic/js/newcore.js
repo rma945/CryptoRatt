@@ -261,6 +261,7 @@ var RATTIC = (function ($, ZeroClipboard) {
             if (me.data('dismiss') == 'modal') {
               document.location.reload();
             } else {
+              message.css("display", "block");
               message.text(inputval + ' has been created.');
             }
           }

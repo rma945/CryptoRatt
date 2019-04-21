@@ -14,24 +14,27 @@
 
   <div class="collapse navbar-collapse" id="navigation-bar">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item {% if pageurl == "cred:project_list" %}active{% endif %}">
+      <li class="nav-item {% if request.resolver_match.view_name == "cred:project_list" %}active{% endif %}">
         <a class="nav-link" href="{% url "cred:project_list" %}">{% trans "Projects" %}</a>
       </li>
-      <li class="nav-item {% if pageurl == "cred:cred_list" %}active{% endif %}">
+      <li class="nav-item {% if request.resolver_match.view_name == "cred:cred_list" %}active{% endif %}">
         <a class="nav-link" href="{% url "cred:cred_list" %}">{% trans "Passwords" %}</a>
       </li>
-      <li class="nav-item {% if pageurl == "cred_views_viewqueue" %}active{% endif %}">
+      <li class="nav-item {% if request.resolver_match.view_name == "cred:tags" %}active{% endif %}">
+        <a class="nav-link" href="{% url "cred:tags" %}">{% trans "Tags" %}</a>
+      </li>
+      <li class="nav-item {% if request.resolver_match.view_name == "cred_views_viewqueue" %}active{% endif %}">
         <a class="nav-link" href="{{ cred_views_viewqueue }}">{% trans "Change Queue" %}
         {% if changeqcount > 0 %}<span class="badge badge-primary">{{ changeqcount }}</span>{% endif %}
         </a>
       </li>
       {% if user.is_staff %}
-        <li class="nav-item {% if pageurl == "staff:home" %}active{% endif %}">
+        <li class="nav-item {% if request.resolver_match.view_name == "staff:home" %}active{% endif %}">
           <a class="nav-link" href="{% url "staff:home" %}">{% trans "Settings" %}</a>
         </li>
       {% endif %}
       {% if helplinks %}
-        <li class="nav-item {% if pageurl == "help:home" %}active{% endif %}">
+        <li class="nav-item {% if request.resolver_match.view_name == "help:home" %}active{% endif %}">
           <a class="nav-link" href="{% url "help:home" %}">{% trans "Help" %}</a>
         </li>
       {% endif %}

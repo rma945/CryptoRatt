@@ -3,21 +3,36 @@
 
 {% include "cred_part_newtagmodal.html" %}
 
-<table class="table table-striped table-bordered table-condensed">
-<thead>
-    <tr><td colspan="3"><a class="btn" data-toggle="modal" href="#newtagmodal" >{% trans "Add New" %}</a></td></tr>
-    <tr><th>{% trans "Name" %}</th><th>{% trans "Count" %}</th><th>{% trans "Actions" %}</th></tr>
-</thead>
-<tbody>
-    {% for t,c in tags.items %}
-    <tr>
+<div class="pt-2 pb-2 btn-group" role="group" aria-label="tag-tools-buttons">
+  <a class="btn btn-primary" data-toggle="modal" href="#new-tag-modal" >{% trans "Add New" %}</a>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>{% trans "Name" %}</th>
+        <th class="d-none d-sm-table-cell">{% trans "Count" %}</th>
+        <th>{% trans "Actions" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t,c in tags.items %}
+      <tr>
         <td><a href="{% url "cred:cred_list" 'tag' t.id %}">{{ t.name }}</a></td>
-        <td>{{ c }}</td>
+        <td class="d-none d-sm-table-cell">
+          <a href="{% url "cred:cred_list" 'tag' t.id %}">
+            <span class="badge badge-pill badge-primary">{{ c }}</span>
+          </a>
+        </td>     
         <td>
-          <a href="{% url "cred.views.tagedit" t.id %}" class="btn btn-mini">{% trans "Rename" %}</a>
-          <a href="{% url "cred.views.tagdelete" t.id %}" class="btn btn-mini">{% trans "Delete" %}</a>
+          <div class="btn-group" role="group" aria-label="tag-buttons">
+            <a class="btn btn-primary" href="{% url "cred:tag_edit" t.id %}" role="button">{% trans "Rename" %}</a>
+            <a class="btn btn-danger" href="{% url "cred:tag_delete" t.id %}" role="button">{% trans "Delete" %}</a>
+          </div>
         </td>
-    </tr>
-    {% endfor %}
-</tbody>
-</table>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

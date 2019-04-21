@@ -1,15 +1,22 @@
 {% load i18n %}
-<div id="newtagmodal" class="modal hide fade">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3>{% trans "Add New Tag" %}</h3>
-  </div>
-  <div class="modal-body">
-      <p class="text-success" id="tagcreatedmessage"></p>
-      <label for="tagname">{% trans "Tag Name:" %}</label> <input autocomplete="off" type="text" id="tagname" />
-  </div>
-  <div class="modal-footer">
-    <a href="#" data-input="#tagname" data-message="#tagcreatedmessage" class="btn rattic-new-tag">{% trans "Create Another" %}</a>
-    <a href="#" data-input="#tagname" data-dismiss="modal" class="btn btn-primary rattic-new-tag">{% trans "Create" %}</a>
+
+<div id="new-tag-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{% trans "Add New Tag" %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="tag-created-alert" class="alert alert-success" role="alert" style="display: none;">
+        </div>
+        <input id="tagname" autocomplete="off" type="text" class="form-control" placeholder="Tag" aria-label="Tag" aria-describedby="Tag">
+      </div>
+      <div class="modal-footer justify-content-center">
+        <a href="#" data-input="#tagname" data-message="#tag-created-alert" role="button" class="btn btn-primary rattic-new-tag">{% trans "Create" %}</a>
+      </div>
+    </div>
   </div>
 </div>
