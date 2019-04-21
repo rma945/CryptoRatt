@@ -8,7 +8,11 @@
     <img style="height: 32px" src="{% static rattic_icon %}" />
   </a>
   
-  <div class="collapse navbar-collapse">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation-bar" aria-controls="navigation-bar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navigation-bar">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item {% if pageurl == "cred:project_list" %}active{% endif %}">
         <a class="nav-link" href="{% url "cred:project_list" %}">{% trans "Projects" %}</a>
@@ -23,7 +27,7 @@
       </li>
       {% if user.is_staff %}
         <li class="nav-item {% if pageurl == "staff:home" %}active{% endif %}">
-          <a class="nav-link" href="{% url "staff:home" %}">{% trans "Staff Management" %}</a>
+          <a class="nav-link" href="{% url "staff:home" %}">{% trans "Settings" %}</a>
         </li>
       {% endif %}
       {% if helplinks %}
@@ -31,9 +35,15 @@
           <a class="nav-link" href="{% url "help:home" %}">{% trans "Help" %}</a>
         </li>
       {% endif %}
-      
-      {% comment %} dropdown start {% endcomment %}
-      <li class="nav-item dropdown">
+      <li class="nav-item d-block d-sm-none">
+        <a class="nav-link" href="{% url "account:profile" %}">{% trans "Profile" %}</a>
+      </li>
+      <li class="nav-item d-block d-sm-none">
+        <a class="nav-link" href="{% url "account:logout" %}">{% trans "Logout" %}</a>
+      </li>
+
+      <!--dropdown start-->
+      <li class="nav-item dropdown d-none d-sm-block">
         <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Account
         </a>
@@ -44,7 +54,7 @@
           
           {% if user.is_staff %}
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{{ staff_views_home }}">{% trans "Management" %}</a>
+            <a class="dropdown-item" href="{% url "staff:home" %}">{% trans "Settings" %}</a>
             <a class="dropdown-item" href="{{ cred_views_viewqueue }}">{% trans "Change Queue" %}
             {% if changeqcount > 0 %}<span class="badge badge-primary">{{ changeqcount }}</span>{% endif %}</a>
           {% endif %}
@@ -54,13 +64,21 @@
           {% endif %}
 
           <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url "account:profile" %}">{% trans "Profile" %}</a>
           <a class="dropdown-item" href="{% url "account:logout" %}">{% trans "Logout" %}</a>
         </div>
       </li>
-      {% comment %} dropdown end {% endcomment %}
-
+      <!--dropdown end-->
     </ul>
+
+    <form class="form-inline rattic-cred-search">
+      <div class="input-group">
+        <input id="search-box" type="search" name="box" class="form-control search-query" aria-label="Search" placeholder="{% trans "Search" %}">
+        <div class="input-group-append">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </div>
+      </div>
+    </form>
     
   </div>
-
 </nav>

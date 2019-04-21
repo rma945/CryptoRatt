@@ -12,23 +12,15 @@
 
 <div class="row justify-content-center align-items-center">
   <div class="col mx-auto">
-    <h1 class="text-center" style="padding: 16px">{% trans "Welcome to CryptoRatt" %}</h1>
+    <h1 class="text-center m-4">{% trans "Welcome to CryptoRatt" %}</h1>
     <img class="mx-auto d-block" style="width: 256px;" alt="{% trans "RatticDB Logo" %}" src="{% static rattic_logo %}"/>
   </div> 
 </div>
 
-{% if SAML_ENABLED %}
-<div class="row justify-content-center align-items-center" style="padding: 32px">
-  <div class="col-md text-center">
-    <a class="btn btn-primary" href="{{SAML_IDP_URL}}" >Login by SSO</a>
-  </div>
-</div>
-{% endif %}
-
-{% if not SAML_ENABLED or DEBUG_ENABLED %}
 <div class="row justify-content-center align-items-center" style="padding: 32px">
   <div class="col-md-4">
     
+    {% if not SAML_ENABLED or DEBUG_ENABLED %}
     <form method="post" action="{% url "account:login" %}?next={{ next|default:"" }}">{% csrf_token %}
       <div class="form-group">
         <input class="form-control" id="id_username" type="text" name="auth-username" maxlength="30" placeholder="Username"/>
@@ -44,9 +36,14 @@
     
       </div>
     </form>
+    {% endif %}
+
+    {% if SAML_ENABLED %}
+      <a class="btn btn-primary col-12" href="{{SAML_IDP_URL}}" >Login by SSO</a>
+    {% endif %}
 
   </div>  
 </div>
-{% endif %}
+
 
 {% endblock %}

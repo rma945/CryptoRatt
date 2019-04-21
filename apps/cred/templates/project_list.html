@@ -7,26 +7,23 @@
 
 {% block content %}
 
-<h1>{% trans "Projects" %}</h1>
-
 {% if user.is_staff%} 
-  <div class="btn-group">
-    <a class="btn" href="{% url "cred:project_add" %}">{% trans "New project" %}</a>
+  <div class="btn-group p-2" role="group" aria-label="project-buttons">
+    <a class="btn btn-primary" href="{% url "cred:project_add" %}">{% trans "New project" %}</a>
   </div>
-  <p></p>
 {% endif %}
 
-<table class="table table-striped table-bordered">
+<table class="table table-hover">
   <thead>
     <tr>
-      <th style="width: 48px; height: 48px" class="hidden-phone"></th>
+      <th style="width: 48px; height: 48px" class="d-none d-sm-table-cell"></th>
       <th>
         {% trans "Project Title" %}
       </th>
-      <th class="hidden-phone">
+      <th class="d-none d-sm-table-cell">
         {% trans "URL" %}
       </th>
-      <th class="hidden-phone">
+      <th class="d-none d-sm-table-cell">
         {% trans "Credentials" %}
       </th>
     </tr>
@@ -35,17 +32,17 @@
   <tbody>
     {% for project in projectlist %}
       <tr>        
-          <td class="hidden-phone">
+          <td class="d-none d-sm-table-cell">
             <img style="width: 48px;" src="{% if project.icon %} {{ project.icon.url }} {% else %} {% static "rattic/img/project-default.png" %} {% endif %}" alt="{{ project.title }}">
           </td>
         <td>
           <a href="{% url "cred:project_detail" project.id %}"><b>{{ project.title }}</b></a>
         </td>
-        <td class="hidden-phone">
+        <td class="d-none d-sm-table-cell">
           <a href="{{ project.url }}">{{ project.url }}</a>
         </td>
-        <td class="hidden-phone">
-          <a href="{% url "cred:project_detail" project.id %}">{{ project.getAllCreds.count}}</a>
+        <td class="d-none d-sm-table-cell">
+          <a class="badge badge-primary" href="{% url "cred:project_detail" project.id %}">{{ project.getAllCreds.count}}</a>
         </td>
       </tr>
     {% endfor %}

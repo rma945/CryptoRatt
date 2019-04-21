@@ -86,6 +86,7 @@ def list(request, cfilter='special', value='all', sortdir='ascending', sort='tit
         'buttons': {
             'add': True,
             'delete': True,
+            'bulkchange': True,
             'changeq': True,
             'tagger': True,
             'export': False,

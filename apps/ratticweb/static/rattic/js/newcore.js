@@ -190,7 +190,7 @@ var RATTIC = (function ($, ZeroClipboard) {
   }
 
   function _performCredSearch() {
-    var searchstr = $(this).children('input[type=search]').val();
+    var searchstr = $(this).find('input[type=search]').val();
 
     if (searchstr.length > 0) {
       window.location = my.page.getURLRoot() + "cred/list-by-search/" + searchstr + "/";
@@ -579,7 +579,7 @@ var RATTIC = (function ($, ZeroClipboard) {
 
   /* Creates a password show and hide button */
   my.controls.searchForm = function (form) {
-    form.on('submit', _performCredSearch);
+    form.on('submit', _performCredSearch);    
   };
 
   /* Creates a checkbox that controls other checkboxes */

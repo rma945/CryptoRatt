@@ -11,7 +11,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="rattic_url_root" content="{% url_root %}" />
-  {% if user.is_staff and USE_LDAP_GROUPS %}
+  {% if user.is_staff and USE_LDAP_GROUPS %}E
     <meta name="rattic_user_staff" content="true" />
   {% else %}
     <meta name="rattic_user_staff" content="false" />
@@ -23,19 +23,18 @@
   <link href="{% static "rattic/css/icons.css" %}" rel="stylesheet" media="screen">
   <link href="{% static "favicon_new.ico" %}" rel="shortcut icon">
 </head>
+
 <body>
 {% if user.is_authenticated %}
   {% include "navbar.html" %}
 {% endif %}
 
-<div class="container">
+<div class="container col-lg-10 col-sm-10 column">
   {% block content %}{% endblock %}
 </div>
 
-<div id="footer">
-</div>
 <script type="application/javascript" src="{% static "jquery/jquery.min.js" %}"></script>
-<script type="application/javascript" src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+<script type="application/javascript" src="{% static "bootstrap/js/bootstrap.bundle.min.js" %}"></script>
 <script type="application/javascript" src="{% static "selectize/js/selectize.min.js" %}"></script>
 <script type="application/javascript" src="{% static "clipboard/clipboard.min.js" %}"></script>
 <script type="application/javascript" src="{% static "sjcl/sjcl.js" %}"></script>
