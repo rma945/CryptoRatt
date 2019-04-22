@@ -8,7 +8,7 @@
 {% block content %}
 
 {% if user.is_staff%} 
-  <div class="btn-group pt-2 pb-2" role="group" aria-label="project-buttons">
+  <div class="btn-group btn-group-sm pt-2 pb-2" role="group" aria-label="project-buttons">
     <a class="btn btn-primary" href="{% url "cred:project_add" %}">{% trans "New project" %}</a>
   </div>
 {% endif %}

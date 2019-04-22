@@ -43,16 +43,28 @@
 
 <div class="row pt-2">
   <div class="col-md-1 d-flex flex-wrap align-items-center">
-    <img class="mx-auto d-block img-thumbnail" style="width: 64px;" alt="{% trans "RatticDB Logo" %}" src="{% static rattic_logo %}"/>
+    <img class="mx-auto d-block img-thumbnail" style="width: 128px;" alt="{% trans "RatticDB Logo" %}" src="{% static rattic_logo %}"/>
   </div>
   <div class="col-md-8">
-    <div class="row">
-      <div class="col-md-12">
+    
+    <div class="row align-items-center">
+      <div class="col-md">
         <div class="well">
-          <h3>{{ cred.title }}</h3>
+          <h2>{{ cred.title }}</h2>
         </div>
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="well">
+          {% if cred.project %}
+            <h2><a href="{% url "cred:project_detail" cred.project.id %}" class="badge badge-primary">{{ cred.project.title }}</a></h2>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-md-12">
         <div class="well">
@@ -62,25 +74,73 @@
         </div>
       </div>
     </div>
+
   </div>
 </div>
 
 {% if cred.is_latest and not readonly %}
-  <div class="pb-2 pt-2 btn-group" role="group" aria-label="credential-tools-buttons">
-    <a class="btn btn-primary" href="{% url 'cred:cred_edit' cred.id %}" role="button">{% trans "Edit" %}</a>
-    <a class="btn btn-secondary" href="{% url 'cred:cred_list' 'history' cred.id 'ascending' 'id' %}" role="button">{% trans "History" %}</a>
-    {% if not delete %}
-      <a class="btn btn-danger" href="{% url 'cred:cred_delete' cred.id %}" role="button">{% trans "Delete" %}</a>
-    {% endif %}
-    {% if not cred.is_deleted %}
-      <a class="btn btn-info" href="{% url 'cred:cred_add_to_queue' cred.id %}" role="button">{% trans "Change Queue" %}</a>
-    {% endif %}
-    {% if cred.is_deleted and not undelete %}
-      <a class="btn btn-success" href="{% url 'staff:cred_undelete' cred.id %}" role="button">{% trans "Undelete" %}</a>
-    {% endif %}
-  </div>
+<div class="pb-2 pt-2 btn-group btn-group-sm" role="group" aria-label="credential-tools-buttons">
+  <a class="btn btn-primary" href="{% url 'cred:cred_edit' cred.id %}" role="button">{% trans "Edit" %}</a>
+  <a class="btn btn-secondary" href="{% url 'cred:cred_list' 'history' cred.id 'ascending' 'id' %}" role="button">{% trans "History" %}</a>
+  {% if not delete %}
+    <a class="btn btn-danger" href="{% url 'cred:cred_delete' cred.id %}" role="button">{% trans "Delete" %}</a>
+  {% endif %}
+  {% if not cred.is_deleted %}
+    <a class="btn btn-info" href="{% url 'cred:cred_add_to_queue' cred.id %}" role="button">{% trans "Change Queue" %}</a>
+  {% endif %}
+  {% if cred.is_deleted and not undelete %}
+    <a class="btn btn-success" href="{% url 'staff:cred_undelete' cred.id %}" role="button">{% trans "Undelete" %}</a>
+  {% endif %}
+</div>
 {% endif %}
 
+<div class="card mt-2">
+  <div class="card-body">
+    {% if cred.username %}
+    <div class="row h-100 align-items-center pb-2">
+      <div class="col-md-1 align-items-center"><b>{% trans "Username" %}</b></div>
+      <div class="col-md-4">
+        <div class="input-group input-group-sm">
+          <input type="text" id="username-field" readonly class="form-control" aria-label="input-username" aria-describedby="input-buttons">
+          <div class="input-group-append" id="input-buttons">
+            <button class="btn btn-primary" type="button">copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}   
+    {% if cred.password %}
+    <div class="row h-100 align-items-center">
+      <div class="col-md-1 align-items-center"><b>Password</b></div>
+      <div class="col-md-4">
+        <div class="input-group input-group-sm">
+          <input type="password" id="password-field" readonly class="form-control" aria-label="input-password" aria-describedby="input-buttons">
+          <div class="input-group-append" id="input-buttons">
+            <button class="btn btn-secondary" type="button">view</button>
+            <button class="btn btn-primary" type="button">copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% if cred.tags %}
+<div class="card mt-2">
+  <div class="card-body">
+    <div class="row h-100 align-items-center pb-2">
+      <div class="col-md">
+        {% for t in cred.tags.all %}
+          <a class="badge badge-primary" href="{% url 'cred:cred_list' 'tag' t.id %}">{{ t.name }}</a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% comment %} 
 <div class="table-responsive">
   <table class="table table-striped">
   {% if cred.project %}
@@ -125,6 +185,7 @@
       {% endif %}
     </td>
   </tr>
+
   <tr>
     <th>{% trans "Viewer Groups" %}</th>
       <td>
@@ -138,6 +199,7 @@
         {% endfor %}
       </td>
   </tr>
+
   {% if not cred.users %}
     <tr>
       <th>{% trans "Viewer Users" %}</th>
@@ -153,7 +215,8 @@
         </td>
     </tr>
   {% endif %}
-  {% if not cred.tags %}
+
+  {% if cred.tags %}
     <tr>
       <th>{% trans "Tags" %}</th>
       <td>
@@ -163,56 +226,82 @@
       </td>
     </tr>
   {% endif %}
+
   <tr><th>{% trans "Last Changed" %}</th><td>{{ cred.modified }}</td></tr>
   <tr><th>{% trans "Created" %}</th><td>{{ cred.created }}</td></tr>
   </table>
-</div>
+</div> {% endcomment %}
 
 {% if cred.description|length %}
-  <div class="card mt-2">
-    <div class="card-header">
-      {% trans "Description" %}
-    </div>
-    <div class="card-body">
+<div class="card mt-2">
+  <div class="card-header">{% trans "Description" %}</div>
+  <div class="card-body">
     {% if cred.descriptionmarkdown %}
       {% markdown_cred cred.description %}
     {% else %}
       {{ cred.description }}
-    </div>
     {% endif %}
   </div>
+</div>
 {% endif %}
-  
+
 {% if attachments %}
-  <div class="card pt-2">
-    <div class="card-header">
-      {% trans "Attachments" %}
+<div class="accordion mt-2" id="attachments-collapse">
+  <div class="card">
+    <div class="card-header" id="attachments-header" data-toggle="collapse" data-target="#attachments-collapse-body" aria-expanded="false" aria-controls="attachments-collapse-body">
+      <b>{% trans "Attachments" %}</b>
+      <span class="badge badge-pill badge-secondary pull-right">{{ attachments.all|length }}</span>
     </div>
-    <ul class="list-unstyled">
-      {% for a in attachments.all %}
-        <li>
-          <a class="badge badge-primary mt-2 ml-2" href="{% url 'cred:download_attachment' a.id %}" role="button">{{ a.filename }}</a>
-        </li>
-      {% endfor %}
-    </ul>
+    <!-- attachments-start -->
+    <div id="attachments-collapse-body" class="collapse" aria-labelledby="attachments-header" data-parent="#attachments-collapse">
+      <div class="card-body">
+          <ul class="list-unstyled">
+            {% for a in attachments.all %}
+              <li>
+                <a class="badge badge-primary mt-2 ml-2" href="{% url 'cred:download_attachment' a.id %}" role="button">{{ a.filename }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+      </div>
+    </div>
+    <!-- attachments-end -->
   </div>
+</div>
+{% endif %}
+
+<div class="accordion mt-2" id="permissions-collapse">
+  <div class="card">
+    <div class="card-header" id="permissions-header" data-toggle="collapse" data-target="#permissions-collapse-body" aria-expanded="false" aria-controls="permissions-collapse-body">
+      <b>{% trans "Permissions" %}</b>
+    </div>
+    <!-- permissions-start -->
+    <div id="attachments-collapse-body" class="collapse" aria-labelledby="permissions-header" data-parent="#permissions-collapse">
+      <div class="card-body">
+
+      </div>
+    </div>
+    <!-- permissions-end -->
+  </div>
+</div>
+
+<!-- Audit logs -->
+{% if not delete %}
+  {% if credlogs %}
+    {% include "credaudit_list.html" with type='user' %}
+  {% endif %}
 {% endif %}
 
 
 {% comment %} {% if delete %}
-    <form action="" method="post">{% csrf_token %}
-        <input type="submit" class="btn btn-danger" value="{% trans "Delete" %}" />
-    </form>
+  <form action="" method="post">{% csrf_token %}
+    <input type="submit" class="btn btn-danger" value="{% trans "Delete" %}" />
+  </form>
 {% endif %}
+
 {% if undelete %}
-    <form action="" method="post">{% csrf_token %}
-        <input type="submit" class="btn btn-success" value="{% trans "Undelete" %}" />
-    </form>
-{% endif %}
-{% if not delete %}
-    {% if credlogs %}
-        {% include "credaudit_list.html" with type='user' %}
-    {% endif %}
+  <form action="" method="post">{% csrf_token %}
+    <input type="submit" class="btn btn-success" value="{% trans "Undelete" %}" />
+  </form>
 {% endif %} {% endcomment %}
 
 {% endblock %}

@@ -19,7 +19,7 @@
 
 <form id="credchecksubmitform" action="" method="post">{% csrf_token %}
   <input type='hidden' name='next' value="{% url "cred:cred_list" filter value sortdir sort page %}" />
-  <div class="pt-2 pb-2 btn-group" role="group" aria-label="credential-buttons">
+  <div class="pt-2 pb-2 btn-group btn-group-sm" role="group" aria-label="credential-buttons">
     {% if buttons.add %}
       <a class="btn btn-primary" href="{% url "cred:cred_add" %}">{% trans "Add New" %}</a>
     {% endif %}

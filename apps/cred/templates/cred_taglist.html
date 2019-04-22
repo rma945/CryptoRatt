@@ -3,7 +3,7 @@
 
 {% include "cred_part_newtagmodal.html" %}
 
-<div class="pt-2 pb-2 btn-group" role="group" aria-label="tag-tools-buttons">
+<div class="pt-2 pb-2 btn-group btn-group-sm" role="group" aria-label="tag-tools-buttons">
   <a class="btn btn-primary" data-toggle="modal" href="#new-tag-modal" >{% trans "Add New" %}</a>
 </div>
 
@@ -26,7 +26,7 @@
           </a>
         </td>     
         <td>
-          <div class="btn-group" role="group" aria-label="tag-buttons">
+          <div class="btn-group btn-group-sm" role="group" aria-label="tag-buttons">
             <a class="btn btn-primary" href="{% url "cred:tag_edit" t.id %}" role="button">{% trans "Rename" %}</a>
             <a class="btn btn-danger" href="{% url "cred:tag_delete" t.id %}" role="button">{% trans "Delete" %}</a>
           </div>

@@ -5,14 +5,14 @@
 {% block content %}
 
 {% if form.errors %}
-    <div id="loginfailed" class="alert alert-error">
-        {% blocktrans %}Your username and password didn't match. Please try again.{% endblocktrans %}
-    </div>
+  <div id="loginfailed" class="alert alert-error">
+    {% blocktrans %}Your username and password didn't match. Please try again.{% endblocktrans %}
+  </div>
 {% endif %}
 
 <div class="row justify-content-center align-items-center">
-  <div class="col mx-auto">
-    <h1 class="text-center m-4">{% trans "Welcome to CryptoRatt" %}</h1>
+  <div class="col mx-auto pt-4">
+    <h1 class="text-center d-none d-sm-block">{% trans "Welcome to CryptoRatt" %}</h1>
     <img class="mx-auto d-block" style="width: 256px;" alt="{% trans "RatticDB Logo" %}" src="{% static rattic_logo %}"/>
   </div> 
 </div>
@@ -44,6 +44,5 @@
 
   </div>  
 </div>
-
 
 {% endblock %}
