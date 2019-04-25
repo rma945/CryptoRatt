@@ -47,10 +47,3 @@ urlpatterns = [
     path("tag/edit/<int:tag_id>/", tagedit, name="tag_edit"),
     path("tag/delete/<int:tag_id>/", tagdelete, name="tag_delete"),
 ]
-
-if not settings.RATTIC_DISABLE_EXPORT:
-    urlpatterns += [
-        # Export views
-        path(r"^export.kdb$", download, name="download"),
-        re_path(r"^export-by-(?P<cfilter>\w+)/(?P<value>[^/]*).kdb$", download),
-    ]

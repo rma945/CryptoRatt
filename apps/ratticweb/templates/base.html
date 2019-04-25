@@ -16,28 +16,38 @@
   {% else %}
     <meta name="rattic_user_staff" content="false" />
   {% endif %}
+  
   {% block headarea %}
   {% endblock %}
+
   <link href="{% static "bootstrap/css/bootstrap.default.min.css" %}" rel="stylesheet" media="screen">
+  <link href="{% static "rattic/css/custom.css" %}" rel="stylesheet">
   <link href="{% static "selectize/css/selectize.css" %}" rel="stylesheet" media="screen">
   <link href="{% static "rattic/css/icons.css" %}" rel="stylesheet" media="screen">
   <link href="{% static "favicon_new.ico" %}" rel="shortcut icon">
 </head>
-
 <body>
-{% if user.is_authenticated %}
-  {% include "navbar.html" %}
-{% endif %}
+  <div class="d-flex" {% if user.is_authenticated %} id="wrapper" {% endif %}>
+    {% if user.is_authenticated %}
+      {% include "sidebar.html" %}
+    {% endif %}
 
-<div class="container col-lg-10 col-sm-10 column">
-  {% block content %}{% endblock %}
-</div>
+    <div id="page-content-wrapper">
+      {% if user.is_authenticated %}
+        {% include "navbar.html" %}
+      {% endif %}
 
-<script type="application/javascript" src="{% static "jquery/jquery.min.js" %}"></script>
-<script type="application/javascript" src="{% static "bootstrap/js/bootstrap.bundle.min.js" %}"></script>
-<script type="application/javascript" src="{% static "selectize/js/selectize.min.js" %}"></script>
-<script type="application/javascript" src="{% static "clipboard/clipboard.min.js" %}"></script>
-<script type="application/javascript" src="{% static "sjcl/sjcl.js" %}"></script>
-<script type="application/javascript" src="{% static "rattic/js/newcore.js" %}"></script>
+      <div class="container col-lg-12 col-sm-12 pr-2">
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+  </div>
+
+  <script type="application/javascript" src="{% static "jquery/jquery.min.js" %}"></script>
+  <script type="application/javascript" src="{% static "bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+  <script type="application/javascript" src="{% static "selectize/js/selectize.min.js" %}"></script>
+  <script type="application/javascript" src="{% static "clipboard/clipboard.min.js" %}"></script>
+  <script type="application/javascript" src="{% static "sjcl/sjcl.js" %}"></script>
+  <script type="application/javascript" src="{% static "rattic/js/newcore.js" %}"></script>
 </body>
 </html>

@@ -16,9 +16,6 @@
     <a class="btn" href="{% url "staff:group_add" %}">{% trans "Add Group" %}</a>
   {% endif %}
   
-  {% if EXPORT_ENABLED == True %}
-    <a class="btn" href="{% url "staff:upload_keepass" %}">{% trans "Import Keepass" %}</a>
-  {% endif %}
   <a class="btn" href="{% url "cred:cred_list" 'special' 'trash' %}">{% trans "View Trash" %}</a>
   <a class="btn" href="{% url "staff:audit" "days" 7 %}">{% trans "Audit One Week" %}</a>
 </div>

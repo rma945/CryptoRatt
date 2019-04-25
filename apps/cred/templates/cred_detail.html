@@ -75,6 +75,18 @@
       </div>
     </div>
 
+      <div class="row justify-content-md-left pt-2">
+        <div class="col-sm">
+          {% trans "Created" %} : {{ cred.created|date:"Y/m/d H:m:s" }}
+        </div>
+      </div>
+
+      <div class="row justify-content-md-left">
+        <div class="col-sm">
+          {% trans "Updated" %} : {{ cred.created|date:"Y/m/d H:m:s" }}
+        </div>
+      </div>
+
   </div>
 </div>
 
@@ -126,7 +138,7 @@
   </div>
 </div>
 
-{% if cred.tags %}
+{% if cred.tags.all|length %}
 <div class="card mt-2">
   <div class="card-body">
     <div class="row h-100 align-items-center pb-2">
@@ -139,98 +151,6 @@
   </div>
 </div>
 {% endif %}
-
-{% comment %} 
-<div class="table-responsive">
-  <table class="table table-striped">
-  {% if cred.project %}
-    <tr>
-      <th>{% trans "Project" %}</th>
-      <td>
-        <h5><a href="{% url "cred:project_detail" cred.project.id %}" class="">{{ cred.project.title }}</a><h5>
-      </td>
-    </tr>
-  {% endif %}
-  
-  <tr>
-    <th>{% trans "Username" %}</th>
-    <td id="usertd" class="rattic-copy-button">
-      {% if cred.username %}
-        <span id="username">{{ cred.username }}</span>
-        <button class="btn btn-primary btn-sm" id="js-copy-name" data-clipboard-target="#username">Copy</button>
-      {% endif %}
-    </td>
-  </tr>
-
-  <tr>
-    <th>
-        {% trans "Password" %}
-        <button class="btn btn-primary btn-sm btn-password-show-hide btn-pass-fetchcred" data-target="#password"></button>
-    </th>
-    <td id="passtd" class="rattic-copy-button">
-      <span id="password" class="passhidden">Fetching Password...</span>
-      <button class="btn btn-primary btn-sm" id="js-copy-passwd" data-clipboard-target="#password">Copy</button>
-    </td>
-  </tr>
-
-  <tr>
-    <th>
-      {% trans "Owner Group" %}
-    </th>
-    <td>
-      {% if cred.group in groups.all or user.is_staff %}
-        <a href="{% url 'cred:cred_list' 'group' cred.group.id %}">{{ cred.group.name }}</a>
-      {% else %}
-        {{ cred.group.name }}
-      {% endif %}
-    </td>
-  </tr>
-
-  <tr>
-    <th>{% trans "Viewer Groups" %}</th>
-      <td>
-        {% for g in cred.groups.all %}
-          {% if g in groups.all or user.is_staff %}
-            <a href="{% url 'cred:cred_list' 'group' g.id %}">{{ g.name }}</a>
-          {% else %}
-            {{ g.name }}
-          {% endif %}
-          {% if not forloop.last %},{% endif %}
-        {% endfor %}
-      </td>
-  </tr>
-
-  {% if not cred.users %}
-    <tr>
-      <th>{% trans "Viewer Users" %}</th>
-        <td>
-          {% for u in cred.users.all %}
-            {% if u in users.all or user.is_staff %}
-              <a href="{% url "staff:audit" "user" u.id %}">{{ u.username }}</a>
-            {% else %}
-              {{ u.username }}
-            {% endif %}
-            {% if not forloop.last %},{% endif %}
-          {% endfor %}
-        </td>
-    </tr>
-  {% endif %}
-
-  {% if cred.tags %}
-    <tr>
-      <th>{% trans "Tags" %}</th>
-      <td>
-        {% for t in cred.tags.all %}
-          <a class="badge badge-primary" href="{% url 'cred:cred_list' 'tag' t.id %}">{{ t.name }}</a>
-        {% endfor %}
-      </td>
-    </tr>
-  {% endif %}
-
-  <tr><th>{% trans "Last Changed" %}</th><td>{{ cred.modified }}</td></tr>
-  <tr><th>{% trans "Created" %}</th><td>{{ cred.created }}</td></tr>
-  </table>
-</div> {% endcomment %}
 
 {% if cred.description|length %}
 <div class="card mt-2">
@@ -275,8 +195,75 @@
       <b>{% trans "Permissions" %}</b>
     </div>
     <!-- permissions-start -->
-    <div id="attachments-collapse-body" class="collapse" aria-labelledby="permissions-header" data-parent="#permissions-collapse">
+    <div id="permissions-collapse-body" class="collapse" aria-labelledby="permissions-header" data-parent="#permissions-collapse">
       <div class="card-body">
+
+      <!-- owner -->
+      <div class="row justify-content-md-left">
+        <div class="col col-md-2">
+          {% if cred.group in groups.all or user.is_staff %}
+            <a href="{% url 'cred:cred_list' 'group' cred.group.id %}">{{ cred.group.name }}</a>
+          {% else %}
+            {{ cred.group.name }}
+          {% endif %}
+        </div>
+        <div class="col-sm-1">
+          <span class="badge badge-pill badge-danger">Write</span>
+        </div>
+        <div class="col-sm-1">
+          <span class="badge badge-pill badge-primary">Read</span>
+        </div>
+        <div class="col-sm-1">
+          <span class="badge badge-pill badge-primary">List</span>
+        </div>
+      </div>
+
+      <!-- group view -->
+      {% for g in cred.groups.all %}
+        <div class="row justify-content-md-left">
+          <div class="col col-md-2">
+            {% if user.is_staff %}
+              <a href="{% url 'cred:cred_list' 'group' g.id %}">{{ g.name }}</a>
+            {% else %}
+              {{ g.name }}
+            {% endif %}
+          </div>
+        <div class="col-sm-1">
+        </div>
+        <div class="col-sm-1">
+          <span class="badge badge-pill badge-primary">Read</span>
+        </div>
+        <div class="col-sm-1">
+          <span class="badge badge-pill badge-primary">List</span>
+        </div>
+      </div>
+      {% endfor %}
+
+      {% if cred.users|length %}
+        <hr>
+      {% endif %}
+
+      <!-- users view -->
+      {% for u in cred.users.all %}
+        <div class="row justify-content-md-left">
+          <div class="col col-md-2">
+            {% if user.is_staff %}
+              <a href="{% url 'cred:cred_list' 'user' u.id %}">{{ u.username }}</a>
+            {% else %}
+              {{ u.username }}
+            {% endif %}
+          </div>
+        <div class="col-sm-1">
+        </div>
+        <div class="col-sm-1">
+          <span class="badge badge-pill badge-primary">Read</span>
+        </div>
+        <div class="col-sm-1">
+          <span class="badge badge-pill badge-primary">List</span>
+        </div>
+      </div>
+      {% endfor %}
+
 
       </div>
     </div>
@@ -287,7 +274,7 @@
 <!-- Audit logs -->
 {% if not delete %}
   {% if credlogs %}
-    {% include "credaudit_list.html" with type='user' %}
+    {% include "cred_audit_list.html" with type='user' %}
   {% endif %}
 {% endif %}
 

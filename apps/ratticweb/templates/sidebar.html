@@ -1,26 +1,59 @@
-{% comment %} {% load static from staticfiles %}
+{% load static from staticfiles %}
 {% load i18n %}
 
-{% if user.is_authenticated %}
-    <h4>{% trans "You" %}</h4>
-        <p>{% blocktrans with username=user.username|title %}Welcome {{ username }}.{% endblocktrans %}<p>
-        <a class="btn" href="{% url "account:profile" %}">{% trans "Profile" %}</a>
-        <a class="btn btn-danger" href="{% url "account:logout" %}">{% trans "Logout" %}</a>
-    <h4><a href="{% url "cred:tags"  %}">{% trans "Tags" %}</a></h4>
-    {% if user.is_authenticated %}
-        {% for tag in user.profile.favourite_tags.all %}
-        <p><i class="icon-minus"></i> <a href="{% url "cred:cred_list" "tag" tag.id %}">{{ tag.name }}</a></p>
-        {% empty %}
-        <p>{% blocktrans %}Add Favourite Tags on the {% endblocktrans %}
-        <a href="{% url 'account:profile' %}">{% trans "profile" %}</a> {% blocktrans %}page to see them here.{% endblocktrans %}</p>
-        {% endfor %}
-		<h4>{% trans "Groups" %}</h4>
-        {% for g in user.groups.all %}
-        <p><i class="icon-minus"></i> <a href="{% url "cred:cred_list" "group" g.id %}">{{ g.name }}</a></p>
-        {% empty %}
-        <p>{% blocktrans %}If you are a member of any groups, you will see them listed here. {% endblocktrans %}</p>
-        {% endfor %}
-    {% endif %}
-{% else %}
+<div class="bg-light border-right d-none d-sm-block" id="sidebar-wrapper">
+ <div class="accordion" id="accordionExample">
+ 
+  <div class="card">
+    <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+      <h6 class="mb-0">Projects</h6>
+    </div>
+    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Morbi leo risus</li>
+          <li class="list-group-item">Porta ac consectetur ac</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+        </ul>
+      </div>
+    </div>
+  </div>
 
-{% endif %} {% endcomment %}
+  <div class="card">
+    <div class="card-header" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+      <h6 class="mb-0">Credentials</h6>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Morbi leo risus</li>
+          <li class="list-group-item">Porta ac consectetur ac</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+      <h6 class="mb-0">Groups</h6>
+    </div>
+    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Morbi leo risus</li>
+          <li class="list-group-item">Porta ac consectetur ac</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>

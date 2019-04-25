@@ -719,6 +719,15 @@ var RATTIC = (function ($, ZeroClipboard) {
 }(jQuery));
 
 $(document).ready(function () {
+
+  console.log("FFFF")
+  $("#menu-toggle").click(function (e) {
+    console.log("FFFzzF")
+    e.preventDefault();
+    $("#wrapper").toggleClass("toggled");
+  });
+
+
   // Setup Icons
   $('.rattic-icon').css('background-image',
     'url(' + RATTIC.page.getStaticURL('rattic/img/sprite.png') + ')');

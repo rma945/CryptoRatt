@@ -4,40 +4,40 @@
 {% url "cred:cred_list" "special" "changeq" as cred_views_viewqueue %}
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="{% url_root %}">
-    <img style="height: 32px" src="{% static rattic_icon %}" />
-  </a>
-  
+  <a class="btn d-none d-sm-block" id="menu-toggle"><img style="width:16px" src="{% static 'open-iconic/menu.svg' %}"></a>
+    
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation-bar" aria-controls="navigation-bar" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navigation-bar">
     <ul class="navbar-nav mr-auto">
+
       <li class="nav-item {% if request.resolver_match.view_name == "cred:project_list" %}active{% endif %}">
         <a class="nav-link" href="{% url "cred:project_list" %}">{% trans "Projects" %}</a>
       </li>
+
       <li class="nav-item {% if request.resolver_match.view_name == "cred:cred_list" %}active{% endif %}">
         <a class="nav-link" href="{% url "cred:cred_list" %}">{% trans "Passwords" %}</a>
       </li>
-      <li class="nav-item {% if request.resolver_match.view_name == "cred:tags" %}active{% endif %}">
-        <a class="nav-link" href="{% url "cred:tags" %}">{% trans "Tags" %}</a>
-      </li>
+
+      {% if user.is_staff %}
       <li class="nav-item {% if request.resolver_match.view_name == "cred_views_viewqueue" %}active{% endif %}">
         <a class="nav-link" href="{{ cred_views_viewqueue }}">{% trans "Change Queue" %}
         {% if changeqcount > 0 %}<span class="badge badge-primary">{{ changeqcount }}</span>{% endif %}
         </a>
       </li>
-      {% if user.is_staff %}
-        <li class="nav-item {% if request.resolver_match.view_name == "staff:home" %}active{% endif %}">
-          <a class="nav-link" href="{% url "staff:home" %}">{% trans "Settings" %}</a>
-        </li>
+      <li class="nav-item {% if request.resolver_match.view_name == "staff:home" %}active{% endif %}">
+        <a class="nav-link" href="{% url "staff:home" %}">{% trans "Settings" %}</a>
+      </li>
       {% endif %}
+
       {% if helplinks %}
         <li class="nav-item {% if request.resolver_match.view_name == "help:home" %}active{% endif %}">
           <a class="nav-link" href="{% url "help:home" %}">{% trans "Help" %}</a>
         </li>
       {% endif %}
+      
       <li class="nav-item d-block d-sm-none">
         <a class="nav-link" href="{% url "account:profile" %}">{% trans "Profile" %}</a>
       </li>

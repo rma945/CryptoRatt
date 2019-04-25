@@ -10,7 +10,6 @@ def base_template_reqs(request):
         'SAML_ENABLED': settings.SAML_ENABLED,
         'DEBUG_ENABLED': settings.DEBUG,
         'USE_LDAP_GROUPS': settings.USE_LDAP_GROUPS,
-        'EXPORT_ENABLED': not settings.RATTIC_DISABLE_EXPORT,
         'TEMPLATE_DEBUG': settings.TEMPLATES[0]['OPTIONS']['debug'],
         'ALLOWPWCHANGE': not (settings.LDAP_ENABLED and not settings.AUTH_LDAP_ALLOW_PASSWORD_CHANGE) and not settings.SAML_ENABLED,
         'rattic_icon': 'rattic/img/rattic_icon_normal.png',

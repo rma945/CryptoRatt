@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% load i18n %}
 {% load credicons %}
 {% load static %}
@@ -8,10 +7,6 @@
 
 {% block content %}
 
-{% if buttons.export and EXPORT_ENABLED %}
-    {% include "cred_part_export.html" %}
-{% endif %}
-
 {% if not hidecredlist %}
 {% for alert in alerts %}
   <div class="alert alert-{{ alert.type }}" role="alert">{{ alert.message }}</div>
@@ -19,6 +14,7 @@
 
 <form id="credchecksubmitform" action="" method="post">{% csrf_token %}
   <input type='hidden' name='next' value="{% url "cred:cred_list" filter value sortdir sort page %}" />
+
   <div class="pt-2 pb-2 btn-group btn-group-sm" role="group" aria-label="credential-buttons">
     {% if buttons.add %}
       <a class="btn btn-primary" href="{% url "cred:cred_add" %}">{% trans "Add New" %}</a>
@@ -34,34 +30,34 @@
   </div>
 
   <div class="table-responsive">
-    <table class="table table-hover">
+    <table class="table table-hover table-sm">
       <thead>
         <tr>
-          <th class="d-none d-sm-table-cell" scope="col">
+          <th class="d-none d-sm-table-cell" style="width: 35%">
             {% if sort == 'title' %}
-              <a href="{% url "cred:cred_list" filter value revsortdir 'title' page %}">{% trans "Title" %} {% if sortdir == 'ascending' %}<i class='icon-chevron-up'></i>{% else %}<i class='icon-chevron-down'></i>{% endif %}</a>
+              <a href="{% url "cred:cred_list" filter value revsortdir 'title' page %}">{% trans "Title" %}</a>
             {% else %}
               <a href="{% url "cred:cred_list" filter value sortdir 'title' page %}">{% trans "Title" %}</a>
             {% endif %}
           </th>
           <th class="d-none d-sm-table-cell">
             {% if sort == 'username' %}
-              <a href="{% url 'cred:cred_list' filter value revsortdir 'username' page %}">{% trans "User" %} {% if sortdir == 'ascending' %}<i class='icon-chevron-up'></i>{% else %}<i class='icon-chevron-down'></i>{% endif %}</a>
+              <a href="{% url 'cred:cred_list' filter value revsortdir 'username' page %}">{% trans "User" %}</a>
             {% else %}
               <a href="{% url 'cred:cred_list' filter value sortdir 'username' page %}">{% trans "User" %}</a>
             {% endif %}
           </th>
-          <th  class="d-none d-sm-table-cell" scope="col">
+          <th  class="d-none d-sm-table-cell">
             {% if sort == 'group' %}
-              <a href="{% url 'cred:cred_list' filter value revsortdir 'group' page %}">{% trans "Owner" %} {% if sortdir == 'ascending' %}<i class='icon-chevron-up'></i>{% else %}<i class='icon-chevron-down'></i>{% endif %}</a>
+              <a href="{% url 'cred:cred_list' filter value revsortdir 'group' page %}">{% trans "Owner" %}</a>
             {% else %}
               <a href="{% url 'cred:cred_list' filter value sortdir 'group' page %}">{% trans "Owner" %}</a>
             {% endif %}
           </th>
-          <th class="d-none d-sm-table-cell" scope="col">
+          <th class="d-none d-sm-table-cell">
             {% trans "Viewer" %}
           </th>
-          <th class="d-none d-sm-table-cell" scope="col">
+          <th class="d-none d-sm-table-cell">
             {% trans "Tags" %}
           </th>
         </tr>
@@ -69,13 +65,15 @@
       
       <tbody>
         {% for c in credlist %}
-        <tr class="{% if c.on_changeq  or c.is_expired %}warning{% endif %} {% if not c.is_latest %}info{% endif %}">
+        <tr class="{% if c.on_changeq or c.is_expired %}table-warning{% endif %} {% if not c.is_latest %}table-info{% endif %}">
           <td>
             <a href="{% url "cred:cred_detail" c.id %}">
-              <img class="pr-2" src="{% static "rattic/img/credential-default.png" %}">{{ c.title|default:"(No Title)" }}
+              <img class="pr-2" src="{% static "rattic/img/credential-default.png" %}">{{ c.title|default:"No Title" }}
             </a>
           </td>
-          <td class="d-none d-sm-table-cell">{{ c.username }}</td>
+          <td class="d-none d-sm-table-cell">
+            {{ c.username }}
+          </td>
           <td class="d-none d-sm-table-cell">
             {% if c.group in groups.all %}
               <a href="{% url "cred:cred_list" "group" c.group.id %}">{{ c.group.name }}</a>
