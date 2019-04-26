@@ -1,3 +1,4 @@
+// depricated
 var RATTIC = (function ($, ZeroClipboard) {
   var my = {
     api: {},
@@ -658,10 +659,6 @@ var RATTIC = (function ($, ZeroClipboard) {
     button.on('click', _genPassClick);
   };
 
-  /* Add functionality to the password generator form */
-  my.controls.clickableIcons = function (icons) {
-    icons.on('click', _clickableIconClick);
-  };
 
   /* Make the tag select boxes be awesome */
   my.controls.tagSelectors = function (selectors) {
@@ -719,19 +716,7 @@ var RATTIC = (function ($, ZeroClipboard) {
 }(jQuery));
 
 $(document).ready(function () {
-
-  console.log("FFFF")
-  $("#menu-toggle").click(function (e) {
-    console.log("FFFzzF")
-    e.preventDefault();
-    $("#wrapper").toggleClass("toggled");
-  });
-
-
-  // Setup Icons
-  $('.rattic-icon').css('background-image',
-    'url(' + RATTIC.page.getStaticURL('rattic/img/sprite.png') + ')');
-
+  
   // Search boxes
   RATTIC.controls.searchForm($('.rattic-cred-search'));
 
@@ -764,9 +749,6 @@ $(document).ready(function () {
 
   // Add functionality to the password generator form
   RATTIC.controls.genPasswordModal($('.rattic-password-generator'));
-
-  // Add functionality to clickable icons
-  RATTIC.controls.clickableIcons($('.rattic-icon-clickable'));
 
   // Tag selectors that can create tags
   RATTIC.controls.tagSelectors($('.rattic-tag-selector'));

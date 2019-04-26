@@ -12,11 +12,6 @@
 
 {% block content %}
 
-{% if delete %}
-  <div class="alert alert-danger mt-2" role="alert">
-    {% blocktrans %}You are about to delete this password. A staff member will be required if you want to undelete it.{% endblocktrans %}
-  </div>
-{% endif %}
 {% if cred.is_deleted and cred.is_latest %}
   <div class="alert alert-danger mt-2" role="alert">
     {% blocktrans %}This credential has been deleted and is in the trash can. It is only visible to staff. You can alter it if you wish, its history will still be recorded. Click the undelete button to restore it. If you click the Delete Permanently button then the password, its entire history and all its audit logs will be removed.{% endblocktrans %}
@@ -41,12 +36,12 @@
   </div>
 {% endif %}
 
-<div class="row pt-2">
+<div class="row pt-2 col-md">
   <div class="col-md-1 d-flex flex-wrap align-items-center">
     <img class="mx-auto d-block img-thumbnail" style="width: 128px;" alt="{% trans "RatticDB Logo" %}" src="{% static rattic_logo %}"/>
   </div>
+
   <div class="col-md-8">
-    
     <div class="row align-items-center">
       <div class="col-md">
         <div class="well">
@@ -74,34 +69,41 @@
         </div>
       </div>
     </div>
-
-      <div class="row justify-content-md-left pt-2">
-        <div class="col-sm">
-          {% trans "Created" %} : {{ cred.created|date:"Y/m/d H:m:s" }}
-        </div>
+    <div class="row justify-content-md-left pt-2">
+      <div class="col-sm">
+        <b>{% trans "Created" %}</b> : {{ cred.created|date:"Y/m/d H:m" }}
       </div>
-
-      <div class="row justify-content-md-left">
-        <div class="col-sm">
-          {% trans "Updated" %} : {{ cred.created|date:"Y/m/d H:m:s" }}
-        </div>
+    </div>  
+    <div class="row justify-content-md-left">
+      <div class="col-sm">
+        <b>{% trans "Updated" %}</b> : {{ cred.created|date:"Y/m/d H:m" }}
       </div>
-
+    </div>
+    {% if cred.tags.all|length %}
+    <div class="row justify-content-md-left">
+      <div class="col-sm">
+        <b>{% trans "Tags" %}</b> : 
+        {% for t in cred.tags.all %}
+          <a class="badge badge-secondary" href="{% url 'cred:cred_list' 'tag' t.id %}">{{ t.name }}</a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
   </div>
 </div>
 
 {% if cred.is_latest and not readonly %}
 <div class="pb-2 pt-2 btn-group btn-group-sm" role="group" aria-label="credential-tools-buttons">
   <a class="btn btn-primary" href="{% url 'cred:cred_edit' cred.id %}" role="button">{% trans "Edit" %}</a>
-  <a class="btn btn-secondary" href="{% url 'cred:cred_list' 'history' cred.id 'ascending' 'id' %}" role="button">{% trans "History" %}</a>
-  {% if not delete %}
-    <a class="btn btn-danger" href="{% url 'cred:cred_delete' cred.id %}" role="button">{% trans "Delete" %}</a>
+  <a class="btn btn-success" href="{% url 'cred:cred_list' 'history' cred.id 'ascending' 'id' %}" role="button">{% trans "History" %}</a>
+  {% if not cred.is_deleted %}
+    <button class="btn btn-danger" id="delete-credential-button" role="button">{% trans "Delete" %}</button>
   {% endif %}
   {% if not cred.is_deleted %}
     <a class="btn btn-info" href="{% url 'cred:cred_add_to_queue' cred.id %}" role="button">{% trans "Change Queue" %}</a>
   {% endif %}
   {% if cred.is_deleted and not undelete %}
-    <a class="btn btn-success" href="{% url 'staff:cred_undelete' cred.id %}" role="button">{% trans "Undelete" %}</a>
+    <button class="btn btn-danger" id="undelete-credential-button" role="button">{% trans "Undelete" %}</button>
   {% endif %}
 </div>
 {% endif %}
@@ -109,58 +111,48 @@
 <div class="card mt-2">
   <div class="card-body">
     {% if cred.username %}
-    <div class="row h-100 align-items-center pb-2">
+    <div class="row align-items-center pb-2">
       <div class="col-md-1 align-items-center"><b>{% trans "Username" %}</b></div>
       <div class="col-md-4">
         <div class="input-group input-group-sm">
-          <input type="text" id="username-field" readonly class="form-control" aria-label="input-username" aria-describedby="input-buttons">
+          <input type="text" id="username-field" value="{{ cred.username }}" readonly class="form-control" aria-label="input-username" aria-describedby="input-buttons">
           <div class="input-group-append" id="input-buttons">
-            <button class="btn btn-primary" type="button">copy</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    {% endif %}   
-    {% if cred.password %}
-    <div class="row h-100 align-items-center">
-      <div class="col-md-1 align-items-center"><b>Password</b></div>
-      <div class="col-md-4">
-        <div class="input-group input-group-sm">
-          <input type="password" id="password-field" readonly class="form-control" aria-label="input-password" aria-describedby="input-buttons">
-          <div class="input-group-append" id="input-buttons">
-            <button class="btn btn-secondary" type="button">view</button>
-            <button class="btn btn-primary" type="button">copy</button>
+            <button class="btn btn-primary" id="copy-username-button" type="button" data-clipboard-target="#username-field">copy</button>
           </div>
         </div>
       </div>
     </div>
     {% endif %}
+    {% if cred.password %}
+      <button style="display: none;" id="copy-password-button-hidden" type="button" data-clipboard-target="#password-field"></button>
+      <div class="row align-items-center">
+        <div class="col-md-1 align-items-center"><b>Password</b></div>
+        <div class="col-md-4">
+          <div class="input-group input-group-sm">
+            <input type="password" id="password-field" value="all-passwords-are-encrypted" readonly class="form-control" aria-label="input-password" aria-describedby="input-buttons">
+            <div class="input-group-append" id="credentials-input-buttons">
+              <button class="btn btn-info"id="show-password-field-button" type="button">view</button>
+              <button class="btn btn-primary"id="copy-password-button" type="button">copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
   </div>
 </div>
 
-{% if cred.tags.all|length %}
-<div class="card mt-2">
-  <div class="card-body">
-    <div class="row h-100 align-items-center pb-2">
-      <div class="col-md">
-        {% for t in cred.tags.all %}
-          <a class="badge badge-primary" href="{% url 'cred:cred_list' 'tag' t.id %}">{{ t.name }}</a>
-        {% endfor %}
-      </div>
-    </div>
-  </div>
-</div>
-{% endif %}
 
 {% if cred.description|length %}
-<div class="card mt-2">
-  <div class="card-header">{% trans "Description" %}</div>
-  <div class="card-body">
-    {% if cred.descriptionmarkdown %}
-      {% markdown_cred cred.description %}
-    {% else %}
-      {{ cred.description }}
-    {% endif %}
+<div class="accordion mt-2" id="description-collapse">
+  <div class="card">
+    <div class="card-header" id="description-header" data-toggle="collapse" data-target="#description-collapse-body" aria-expanded="true" aria-controls="description-collapse-body">
+      <b>{% trans "Description" %}</b>
+    </div>
+    <div id="description-collapse-body" class="collapse show" aria-labelledby="attachments-header" data-parent="#description-collapse">
+      <div class="card-body">
+        {% markdown_cred cred.description %}
+      </div>
+    </div>
   </div>
 </div>
 {% endif %}
@@ -172,7 +164,6 @@
       <b>{% trans "Attachments" %}</b>
       <span class="badge badge-pill badge-secondary pull-right">{{ attachments.all|length }}</span>
     </div>
-    <!-- attachments-start -->
     <div id="attachments-collapse-body" class="collapse" aria-labelledby="attachments-header" data-parent="#attachments-collapse">
       <div class="card-body">
           <ul class="list-unstyled">
@@ -184,7 +175,6 @@
           </ul>
       </div>
     </div>
-    <!-- attachments-end -->
   </div>
 </div>
 {% endif %}
@@ -279,16 +269,27 @@
 {% endif %}
 
 
-{% comment %} {% if delete %}
-  <form action="" method="post">{% csrf_token %}
-    <input type="submit" class="btn btn-danger" value="{% trans "Delete" %}" />
-  </form>
-{% endif %}
-
-{% if undelete %}
-  <form action="" method="post">{% csrf_token %}
-    <input type="submit" class="btn btn-success" value="{% trans "Undelete" %}" />
-  </form>
-{% endif %} {% endcomment %}
+<!-- delete\undelete modal window -->
+<div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="delete-action-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="delete-action-label">title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        text
+      </div>
+      <div class="modal-footer">
+        <form id="delete-modal-form" action="" method="post">{% csrf_token %}
+          <button type="submit" class="btn btn-danger">Action</button>
+        </form>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
