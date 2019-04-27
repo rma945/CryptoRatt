@@ -1,10 +1,8 @@
 from django.utils.translation import ugettext_lazy as _
-from django.forms import Form, ModelForm, SelectMultiple, Select, PasswordInput, CharField, TextInput, ClearableFileInput, FileField
+from django.forms import Form, ModelForm, SelectMultiple, Select, PasswordInput, CharField, TextInput, ClearableFileInput, FileField, Textarea
 
 import paramiko
 from apps.cred.models import Project, Cred, Tag, Group
-from apps.cred.widgets import CredIconChooser
-
 
 class ExportForm(Form):
     password = CharField(widget=PasswordInput(
@@ -63,12 +61,17 @@ class CredForm(ModelForm):
         exclude = Cred.APP_SET
         widgets = {
             # Use chosen for the tag field
-            'project': Select(attrs={'class': 'rattic-group-selector'}),
-            'tags': SelectMultiple(attrs={'class': 'rattic-tag-selector'}),
-            'group': Select(attrs={'class': 'rattic-group-selector'}),
-            'groups': SelectMultiple(attrs={'class': 'rattic-group-selector'}),
-            'users': SelectMultiple(attrs={'class': 'rattic-group-selector'}),
-            'username': TextInput(attrs={'autocomplete': 'off'}),
-            'password': PasswordInput(render_value=True, attrs={'class': 'btn-password-generator btn-password-visibility', 'autocomplete': 'off'}),
-            'iconname': CredIconChooser,
+            'project': Select(attrs={'class': 'custom-select'}),
+            'title': TextInput(attrs={'class': 'form-control'}),
+            'url': TextInput(attrs={'class': 'form-control'}),
+            'username': TextInput(attrs={'autocomplete': 'off', 'class': 'form-control'}),
+            'password': PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'off'}),
+            # 'description': Textarea(attrs={'style': 'display: none;'}),
+            'description': Textarea(attrs={'rows': 4}),
+            'tags': SelectMultiple(attrs={'class': 'custom-select'}),
+            'group': Select(attrs={'class': 'custom-select'}),
+            'groups': SelectMultiple(attrs={'class': 'custom-select'}),
+            'users': SelectMultiple(attrs={'class': 'custom-select'}),
         }
+
+

@@ -12,7 +12,6 @@ from apps.cred.models import Project, Cred, Attachment, CredAudit, Tag, CredChan
 from apps.cred.search import cred_search
 from apps.cred.forms import ExportForm, ProjectForm, CredForm, TagForm
 from apps.cred.exporters import export_keepass
-from apps.cred.icon import get_icon_list
 
 from django.contrib.auth.models import Group
 
@@ -390,7 +389,6 @@ def add(request):
         {
             'form': form,
             'action':reverse('cred:cred_add'),
-            'icons': get_icon_list()
         }
     )
 
@@ -458,7 +456,6 @@ def edit(request, cred_id):
             'form': form,
             'action': reverse('cred:cred_edit', args=(cred.id,)),
             'next': next,
-            'icons': get_icon_list(),
             'cred': cred,
             'attachments': attachments,
         }
@@ -481,12 +478,13 @@ def delete(request, cred_id):
         lastchange = _("Unknown (Logs deleted)")
 
     # Check user has perms (user must be member of the password owner group)
-    if not cred.is_owned_by(request.user):
+    if cred.is_owned_by(request.user) or request.user.is_staff:
+        if request.method == 'POST':
+            CredAudit(audittype=CredAudit.CREDDELETE, cred=cred, user=request.user).save()
+            cred.delete()
+            return HttpResponseRedirect(reverse('cred:cred_list'))
+    else:
         raise Http404
-    if request.method == 'POST':
-        CredAudit(audittype=CredAudit.CREDDELETE, cred=cred, user=request.user).save()
-        cred.delete()
-        return HttpResponseRedirect(reverse('cred:cred_list'))
 
     CredAudit(audittype=CredAudit.CREDVIEW, cred=cred, user=request.user).save()
 
@@ -495,11 +493,30 @@ def delete(request, cred_id):
         {
             'cred': cred,
             'lastchange': lastchange,
-            'action': reverse('cred:cred_delete', args=(cred_id,)),
-            'delete': True
+            'action': reverse('cred:cred_edit', args=(cred_id,)),
         }
     )
 
+
+@login_required
+def cred_undelete(request, cred_id):
+    if request.method == 'POST':
+        if request.user.is_staff:
+            cred = get_object_or_404(Cred, pk=cred_id)
+
+            if cred.latest is not None:
+                raise Http404
+
+            cred.is_deleted = False
+            cred.save()
+
+            CredAudit(audittype=CredAudit.CREDUNDELETE,
+                      cred=cred, user=request.user).save()
+            CredAudit(audittype=CredAudit.CREDVIEW,
+                      cred=cred, user=request.user).save()
+        return HttpResponseRedirect(reverse('cred:cred_detail', args=(cred_id,)))
+
+    return HttpResponseRedirect(reverse('cred:cred_list'))
 
 @login_required
 def search(request):

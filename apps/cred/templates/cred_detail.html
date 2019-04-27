@@ -2,7 +2,6 @@
 {% load static from staticfiles %}
 {% load i18n %}
 {% load cred_markdown %}
-{% load credicons %}
 
 {% block title %}{{ cred.title }} - {% trans "Rattic" %}{% endblock %}
 
@@ -169,7 +168,10 @@
           <ul class="list-unstyled">
             {% for a in attachments.all %}
               <li>
-                <a class="badge badge-primary mt-2 ml-2" href="{% url 'cred:download_attachment' a.id %}" role="button">{{ a.filename }}</a>
+                <a class="btn btn-outline-primary btn-sm mt-2 ml-2" href="{% url 'cred:download_attachment' a.id %}" role="button">
+                  <img height="24px" src="{{ a.get_icon }}">
+                  {{ a.filename }}
+                </a>
               </li>
             {% endfor %}
           </ul>
@@ -254,7 +256,6 @@
       </div>
       {% endfor %}
 
-
       </div>
     </div>
     <!-- permissions-end -->
@@ -292,4 +293,6 @@
   </div>
 </div>
 
+<div class="pb-2">
+</div>
 {% endblock %}

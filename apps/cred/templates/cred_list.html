@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load credicons %}
 {% load static %}
 
 {% block title %}{{ credtitle }} - {% trans "Rattic" %}{% endblock %}
@@ -20,12 +19,8 @@
       <a class="btn btn-primary" href="{% url "cred:cred_add" %}">{% trans "Add New" %}</a>
     {% endif %}
     
-    {% if buttons.delete %}
-      <button class="btn btn-danger rattic-check-enabled rattic-form-submit" data-target=".cred-list-check" data-action="{% url "cred:cred_bulk_delete" %}">{% trans "Delete" %}</button>
-    {% endif %}
-
     {% if buttons.bulkchange %}
-      <button class="btn btn-success" data-target=".cred-list-check" data-action="{% url "cred:cred_bulk_delete" %}">{% trans "Bulk update" %}</button>
+      <button class="btn btn-secondary" data-target=".cred-list-check" data-action="{% url "cred:cred_bulk_delete" %}">{% trans "Bulk update" %}</button>
     {% endif %}
   </div>
 

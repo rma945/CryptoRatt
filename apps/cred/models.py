@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.forms.models import model_to_dict
 from django.utils.timezone import now
 from django.conf import settings
+from django.templatetags.static import static
 
 from apps.ratticweb.util import DictDiffer, field_file_compare
 from apps.cred.fields import SizedImageFileField
@@ -210,11 +211,27 @@ class Cred(models.Model):
 class Attachment(models.Model):
     credential = models.ForeignKey(Cred, on_delete=models.CASCADE)
     filename = models.CharField(verbose_name=_('Filename'), max_length=256)
+    created = models.DateTimeField(auto_now_add=True, null=True)
     mime = models.CharField(verbose_name=_('Mime'), max_length=64, blank=True, null=True, default=None)
     content = models.BinaryField(null=True, default=None)
 
     def __str__(self):
         return self.filename
+
+    def get_icon(self):
+        icon = static("rattic/img/attachment-default.png")
+        
+        if self.mime in ('application/x-x509-ca-cert'):
+            icon = static("rattic/img/attachment-sshkey.png")
+        elif self.mime in ('application/pkix-crl', 'application/x-pkcs12', 'application/x-iwork-keynote-sffkey', 'application/pkix-cert', 'application/pkcs10'):
+            icon = static("rattic/img/attachment-certificate.png")
+        elif self.mime in ('image/png', 'image/jpeg', 'image/gif'):
+            icon = static("rattic/img/attachment-image.png")
+        elif self.mime in ('application/zip', 'application/x-bzip', 'application/x-tar'):
+            icon = static("rattic/img/attachment-archive.png")
+
+        return icon
+
 
 class CredAdmin(admin.ModelAdmin):
     list_display = ('title', 'username', 'group')
@@ -228,6 +245,7 @@ class CredAudit(models.Model):
     CREDEXPORT = 'X'
     CREDPASSVIEW = 'P'
     CREDDELETE = 'D'
+    CREDUNDELETE = 'R'
     CREDSCHEDCHANGE = 'S'
     CREDATTACHADDED = 'AD'
     CREDATTACHVIEW = 'AV'
@@ -240,6 +258,7 @@ class CredAudit(models.Model):
         (CREDVIEW, _('Only Details Viewed')),
         (CREDEXPORT, _('Exported')),
         (CREDDELETE, _('Deleted')),
+        (CREDUNDELETE, _('Restored')),
         (CREDSCHEDCHANGE, _('Scheduled For Change')),
         (CREDPASSVIEW, _('Password Viewed')),
         (CREDATTACHADDED, _('Attachment Added')),

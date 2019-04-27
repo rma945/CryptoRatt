@@ -26,6 +26,7 @@ urlpatterns = [
     path("detail/<int:cred_id>/", detail, name="cred_detail"),
     path("edit/<int:cred_id>/", edit, name="cred_edit"),
     path("delete/<int:cred_id>/", delete, name="cred_delete"),
+    path("undelete/<int:cred_id>/", cred_undelete, name="cred_undelete"),
     path("add/", add, name="cred_add"),
 
     # attachments

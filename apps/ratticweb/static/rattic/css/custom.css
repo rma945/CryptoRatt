@@ -91,3 +91,11 @@
     background-color: white;
 }
 
+/* cred_edit.html */
+.CodeMirror {
+    height: 200px;
+}
+
+.CodeMirror, .CodeMirror-scroll {
+    min-height: 100px;
+}

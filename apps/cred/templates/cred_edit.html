@@ -1,118 +1,63 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load credicons %}
+
+{% block title %}
+  {% if not cred.id %}
+    {% trans "Create credential" %}
+  {% else %}
+    {% trans "Update credential" %}: {{ cred.title }}
+  {% endif %}
+{% endblock %}
 
 {% block content %}
 
-{% include "cred_part_passgenmodal.html" %}
-{% include "cred_part_logomodal.html" with icons=icons txtfield='#id_iconname' imgfield='#logodisplay' %}
+{% if cred.id %}
+<h2>
+  {{ cred.title }}
+</h2>
+{% endif %}
 
-<h1>
-    {% if not cred.id %}
-        {% trans "Create Password" %}
-    {% else %}
-        {% trans "Edit Password" %}: {{ cred.title }}
-    {% endif %}
-</h1>
-
-<form class="form-horizontal" enctype="multipart/form-data" autocomplete="off" action="{{ action }}{% if next %}?next={{ next }}{% endif %}" method="post">{% csrf_token %}
-
-    <div class="control-group">
-        {{ form.project.errors }}
-        <label class="control-label" for="{{ form.project.html_name }}">{{ form.project.label }} </label>
-        <div class="controls">{{ form.project }}</div>
+  <form class="pt-2" enctype="multipart/form-data" autocomplete="off" action="{{ action }}" method="post">{% csrf_token %}
+    
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="{{ form.project.html_name }}">{{ form.project.label }}</label>
+      </div>
+      {{ form.project }}
     </div>
 
-    <div class="control-group">
-        {{ form.title.errors }}
-        <label class="control-label" for="{{ form.title.html_name }}">{{ form.title.label }} </label>
-        <div class="controls">{{ form.title }}</div>
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="{{ form.title.html_name }}">{{ form.title.label }}</label>
+      </div>
+      {{ form.title }}
     </div>
 
-    <div class="control-group">
-        {{ form.url.errors }}
-        <label class="control-label" for="{{ form.url.html_name }}">{{ form.url.label }} </label>
-        <div class="controls">{{ form.url }}</div>
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="{{ form.url.html_name }}">{{ form.url.label }}</label>
+      </div>
+      {{ form.url }}
     </div>
 
-    <div class="control-group">
-        {{ form.username.errors }}
-        <label class="control-label" for="{{ form.username.html_name }}">{{ form.username.label }} </label>
-        <div class="controls">{{ form.username }}</div>
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="{{ form.username.html_name }}">{{ form.username.label }}</label>
+      </div>
+      {{ form.username }}
     </div>
 
-    <div class="control-group">
-        {{ form.password.errors }}
-        <label class="control-label" for="{{ form.password.html_name }}">{{ form.password.label }} </label>
-        <div class="controls">{{ form.password }}</div>
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="{{ form.password.html_name }}">{{ form.password.label }}</label>
+        <button class="btn btn-sm btn-primary" type="button" id="button-addon1"><i class="fas fa-redo"></i></button>
+      </div>
+      {{ form.password }}
     </div>
 
-    <div class="control-group">
-        <label class="control-label" for="{{ form.descriptionmarkdown.html_name }}">{{ form.descriptionmarkdown.label }} </label>
-        <div class="controls">{{ form.descriptionmarkdown }}</div>
-    </div>
+    {{ form.description }}
 
-    <div class="control-group">
-        <label class="control-label" for="{{ form.description.html_name }}">{{ form.description.label }} </label>
-        <div class="controls">{{ form.description }}</div>
-    </div>
+  </form>
 
-    {% if attachments %}
-        <div class="control-group">
-            <label class="control-label">Attachments</label>
-            <div class="controls">
-                <ul class="unstyled">
-                    {% for a in attachments.all %}
-                    <li>
-                        <div class="btn-group" role="group" aria-label="attachment">
-                            <a class="btn btn-mini" href="{% url 'cred:download_attachment' a.id %}" role="button">{{ a.filename }}</a>
-                            <a class="btn btn-mini" href="{% url 'cred:delete_attachment' a.id %}" role="button">x</a>
-                        </div>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    {% endif %}
-
-    <div class="control-group">
-        <label class="control-label" for="{{ form.uploads.html_name }}">{{ form.uploads.label }} </label>
-        <div class="controls">{{ form.uploads }}</div>
-    </div>
-
-    <div class="control-group">
-        {{ form.tags.errors }}
-        <label class="control-label" for="{{ form.tags.html_name }}">{{ form.tags.label }} </label>
-        <div class="controls">{{ form.tags }}</div>
-    </div>
-
-    <div class="control-group">
-        {{ form.group.errors }}
-        <label class="control-label" for="{{ form.group.html_name }}">{{ form.group.label }} </label>
-        <div class="controls">{{ form.group }}</div>
-    </div>
-
-    <div class="control-group">
-        {{ form.groups.errors }}
-        <label class="control-label" for="{{ form.groups.html_name }}">{{ form.groups.label }} </label>
-        <div class="controls">{{ form.groups }}</div>
-    </div>
-
-    <div class="control-group">
-        {{ form.users.errors }}
-        <label class="control-label" for="{{ form.users.html_name }}">{{ form.users.label }} </label>
-        <div class="controls">{{ form.users }}</div>
-    </div>
-
-    <div class="control-group">
-        {{ form.iconname.errors }}
-        <label class="control-label" for="{{ form.iconname.html_name }}">{{ form.iconname.label }} </label>
-        <div class="controls">{{ form.iconname }}</div>
-    </div> 
-
-    <div class="controls">
-        <input id="credsave" class="btn btn-primary" type="submit" value="{% trans "Submit" %}" />
-    </div>
-</form>
 {% endblock %}
 

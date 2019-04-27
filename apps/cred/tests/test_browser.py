@@ -6,8 +6,6 @@ from django.utils.unittest import SkipTest
 from apps.cred.models import Cred
 from apps.ratticweb.tests.helper import TestData
 
-from apps.cred.icon import get_icon_data
-
 from url_decode import urldecode
 import random
 import time
@@ -130,7 +128,7 @@ class JavascriptTests(LiveServerTestCase):
             lambda driver: not otherimg.is_displayed())
         # Check the new iconname is in the list
         iconname = self.selenium.find_element_by_id('id_iconname').get_attribute('value')
-        icondata = get_icon_data()[iconname]
+        icondata = None
         # Validate the logo is shown correctly
         logodisplay = self.selenium.find_element_by_id('logodisplay')
         logoclasses = logodisplay.get_attribute('class')

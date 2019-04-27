@@ -227,17 +227,8 @@ SESSION_ENGINE = 'user_sessions.backends.db'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = int(config.get('ratticweb', 'session_cookie_age'))
 
-# Icon configuration
-CRED_ICON_JSON = 'db/icons.json'
-CRED_ICON_CSS = 'apps/ratticweb/static/rattic/css/icons.css'
-CRED_ICON_SPRITE = 'rattic/img/sprite.png'
-CRED_ICON_BASEDIR = 'rattic/img/credicons'
-CRED_ICON_CLEAR = 'rattic/img/clear.gif'
-CRED_ICON_DEFAULT = 'Key.png'
-
 # django-auth-ldap
 AUTH_LDAP_USER_FLAGS_BY_GROUP = {}
-
 
 ###############################
 # External environment config #

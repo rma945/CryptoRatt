@@ -1,11 +1,12 @@
 // variables
 var credentialPassword = 'all-passwords-are-encrypted';
 
-//  api functions
+// get credential ID from page metadata
 function getCredentialID() {
   return $('head meta[name=rattic_cred_id]').attr('content');
 }
 
+// get credential password from API and cache it in local JS
 function getCredentialPassword() {
   if (credentialPassword == 'all-passwords-are-encrypted') {
     var credentialID = getCredentialID();
@@ -62,6 +63,34 @@ function copyPassword() {
   }
 };
 
+// undelete credentials modal window 
+function undeleteCredentialModalToggle() {
+  var credentialID = getCredentialID();
+  var url = '/cred/undelete/' + credentialID + '/'
+  var modalWindow = $('#delete-modal');
+
+  modalWindow.find('.modal-body').text('This credential has been deleted and is in the trash can, click on the undelete button if you want to restore it');
+  modalWindow.find('.modal-title').text('Undelete credential');
+  modalWindow.find('.btn-danger').text('Undelete');
+  $("#delete-modal-form").attr('action', url)
+
+  modalWindow.modal('show')
+}
+
+// delete credential modal window toggle 
+function deleteCredentialModalToggle() {
+  var credentialID = getCredentialID();
+  var url = '/cred/delete/' + credentialID + '/'
+  var modalWindow = $('#delete-modal');
+
+  modalWindow.find('.modal-body').text('You are about to delete this password. A staff member will be required if you want to undelete it.');
+  modalWindow.find('.modal-title').text('Delete credential');
+  modalWindow.find('.btn-danger').text('Delete');
+  $("#delete-modal-form").attr('action', url)
+  
+  modalWindow.modal('show')
+}
+
 $(document).ready(function () {
   // initialize js clipboards and add default unselect actions on it
   var usernameClipboard = new ClipboardJS('#copy-username-button');
@@ -95,22 +124,12 @@ $(document).ready(function () {
 
   // register - undelete button
   $('#undelete-credential-button').click(function (e) {
-    var modalWindow = $('#delete-modal');
-    modalWindow.find('.modal-body').text('This credential has been deleted and is in the trash can,cClick the undelete button if you want to restore it');
-    modalWindow.find('.modal-title').text('Undelete credential');
-    modalWindow.find('.btn-danger').text('Undelete');
-    $("#delete-modal-form").attr('action', '/cred/undelete/2659/')
-    modalWindow.modal('show')
+    undeleteCredentialModalToggle()
   });
 
   // register - delete button
   $('#delete-credential-button').click(function (e) {
-    var modalWindow = $('#delete-modal');
-    modalWindow.find('.modal-body').text('You are about to delete this password. A staff member will be required if you want to undelete it.');
-    modalWindow.find('.modal-title').text('Delete credential');
-    modalWindow.find('.btn-danger').text('Delete');
-    $("#delete-modal-form").attr('action', '/cred/delete/2659/')
-    modalWindow.modal('show')
+    deleteCredentialModalToggle()
   });
 
 });

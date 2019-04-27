@@ -14,7 +14,6 @@ import datetime
 from django.utils.timezone import now
 from django.utils.timezone import utc
 
-from apps.cred.icon import get_icon_list
 from apps.cred.models import CredAudit, Cred, Tag
 from apps.cred.forms import CredForm
 from apps.staff.models import UserForm, GroupForm, KeepassImportForm, AuditFilterForm
@@ -327,7 +326,6 @@ def import_process(request, import_id):
 
     return render(request, 'staff_import_process.html', {
         'form': form,
-        'icons': get_icon_list(),
     })
 
 
