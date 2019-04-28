@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static from staticfiles %}
 {% load i18n %}
 
 {% block title %}
@@ -11,53 +12,129 @@
 
 {% block content %}
 
-{% if cred.id %}
-<h2>
-  {{ cred.title }}
-</h2>
-{% endif %}
+<form class="pt-2" enctype="multipart/form-data" autocomplete="off" action="{{ action }}" method="post">{% csrf_token %}
 
-  <form class="pt-2" enctype="multipart/form-data" autocomplete="off" action="{{ action }}" method="post">{% csrf_token %}
-    
-    <div class="input-group input-group-sm mb-3">
-      <div class="input-group-prepend">
-        <label class="input-group-text" for="{{ form.project.html_name }}">{{ form.project.label }}</label>
+<div class="row">
+  <div class="col-md-1 d-flex align-items-center pb-2">
+    <div class="container cred-image">
+      <img class="mx-auto d-block img-thumbnail" style="width: 128px;" src="{% static rattic_logo %}"/>
+      <a class="btn btn-outline-primary btn-sm btn-block" href="#" role="button">Select icon</a>
+    </div>  
+  </div>
+
+  <div class="col-md">
+    <div class="row align-items-center">
+      <div class="col-md">
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="{{ form.project.html_name }}">{{ form.project.label }}</label>
+          </div>
+          {{ form.project }}
+        </div>
       </div>
-      {{ form.project }}
     </div>
 
-    <div class="input-group input-group-sm mb-3">
-      <div class="input-group-prepend">
-        <label class="input-group-text" for="{{ form.title.html_name }}">{{ form.title.label }}</label>
+    <div class="row">
+      <div class="col-md">
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="{{ form.title.html_name }}">{{ form.title.label }}</label>
+          </div>
+          {{ form.title }}
+        </div>
       </div>
-      {{ form.title }}
     </div>
 
-    <div class="input-group input-group-sm mb-3">
-      <div class="input-group-prepend">
-        <label class="input-group-text" for="{{ form.url.html_name }}">{{ form.url.label }}</label>
+    <div class="row">
+      <div class="col-md">
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="{{ form.url.html_name }}">{{ form.url.label }}</label>
+          </div>
+          {{ form.url }}
+        </div>
       </div>
-      {{ form.url }}
     </div>
+  </div>
 
-    <div class="input-group input-group-sm mb-3">
-      <div class="input-group-prepend">
-        <label class="input-group-text" for="{{ form.username.html_name }}">{{ form.username.label }}</label>
-      </div>
-      {{ form.username }}
+</div>
+
+  <div class="input-group input-group-sm mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="{{ form.username.html_name }}">{{ form.username.label }}</label>
     </div>
+    {{ form.username }}
+  </div>
 
-    <div class="input-group input-group-sm mb-3">
-      <div class="input-group-prepend">
-        <label class="input-group-text" for="{{ form.password.html_name }}">{{ form.password.label }}</label>
-        <button class="btn btn-sm btn-primary" type="button" id="button-addon1"><i class="fas fa-redo"></i></button>
-      </div>
-      {{ form.password }}
+  <div class="input-group input-group-sm mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="{{ form.password.html_name }}">{{ form.password.label }}</label>
+      <button class="btn btn-sm btn-primary" type="button" id="show-password-button"><i class="far fa-eye"></i></button>
+      <button class="btn btn-sm btn-success" type="button" id="generate-password-button"><i class="fas fa-redo"></i></button>
     </div>
+    {{ form.password }}
+  </div>
 
-    {{ form.description }}
+  {{ form.description }}
 
-  </form>
+  <div class="input-group input-group-sm mb-3 mt-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text">{{ form.tags.label }}</span>
+    </div>
+    {{ form.tags }}
+  </div>
+
+  <div class="input-group input-group-sm mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text">{{ form.group.label }}</label>
+    </div>
+    {{ form.group }}
+  </div>
+
+  <div class="input-group input-group-sm mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text">{{ form.groups.label }}</span>
+    </div>
+    {{ form.groups }}
+  </div>
+
+  <div class="input-group input-group-sm mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text">{{ form.users.label }}</span>
+    </div>
+    {{ form.users }}
+  </div>
+     
+  <div class="input-group input-group-sm">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="{{ form.uploads.html_name }}">{{ form.uploads.label }}</label>
+    </div>
+    <div class="custom-file">
+      {{ form.uploads }}
+      <label class="custom-file-label" id="upload-field-label" for="id_uploads">Choose file</label>
+    </div>
+  </div>
+
+  {% if attachments %}
+  <div class="card cred-card-attachment mb-3">
+    <div class="card-body card-body-sm">
+        {% for a in attachments.all %}
+          <div class="btn-group mt-2 ml-2" role="group">
+            <a class="btn btn-outline-primary btn-sm" href="{% url 'cred:download_attachment' a.id %}" role="button">
+              <img height="24px" src="{{ a.get_icon }}">
+              {{ a.filename }}
+            </a>
+            <a class="btn btn-outline-primary btn-sm" href="#" role="button">
+              <i class="fas fa-times"></i>
+            </a>
+          </div>
+        {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</form>
+
+
 
 {% endblock %}
 

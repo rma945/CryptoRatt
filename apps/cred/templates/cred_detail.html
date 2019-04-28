@@ -37,47 +37,44 @@
 
 <div class="row pt-2 col-md">
   <div class="col-md-1 d-flex flex-wrap align-items-center">
-    <img class="mx-auto d-block img-thumbnail" style="width: 128px;" alt="{% trans "RatticDB Logo" %}" src="{% static rattic_logo %}"/>
+    <img class="mx-auto d-block img-thumbnail" style="width: 128px;" src="{% static rattic_logo %}"/>
   </div>
 
-  <div class="col-md-8">
+  <div class="col-md">
     <div class="row align-items-center">
       <div class="col-md">
-        <div class="well">
-          <h2>{{ cred.title }}</h2>
-        </div>
+        <h2>{{ cred.title }}</h2>
       </div>
     </div>
 
     <div class="row">
-      <div class="col-md-12">
-        <div class="well">
-          {% if cred.project %}
-            <h2><a href="{% url "cred:project_detail" cred.project.id %}" class="badge badge-primary">{{ cred.project.title }}</a></h2>
-          {% endif %}
-        </div>
+      <div class="col-md">
+        {% if cred.project %}
+          <h2><a href="{% url "cred:project_detail" cred.project.id %}" class="badge badge-primary">{{ cred.project.title }}</a></h2>
+        {% endif %}
       </div>
     </div>
 
     <div class="row">
-      <div class="col-md-12">
-        <div class="well">
-          {% if cred.url %}
-            <a href="{{ cred.url }}">{{ cred.url }}</a>
-          {% endif %}
-        </div>
+      <div class="col-md">
+        {% if cred.url %}
+          <a href="{{ cred.url }}">{{ cred.url }}</a>
+        {% endif %}
       </div>
     </div>
+
     <div class="row justify-content-md-left pt-2">
       <div class="col-sm">
         <b>{% trans "Created" %}</b> : {{ cred.created|date:"Y/m/d H:m" }}
       </div>
     </div>  
+
     <div class="row justify-content-md-left">
       <div class="col-sm">
         <b>{% trans "Updated" %}</b> : {{ cred.created|date:"Y/m/d H:m" }}
       </div>
     </div>
+
     {% if cred.tags.all|length %}
     <div class="row justify-content-md-left">
       <div class="col-sm">
@@ -88,6 +85,7 @@
       </div>
     </div>
     {% endif %}
+
   </div>
 </div>
 
@@ -108,7 +106,7 @@
 {% endif %}
 
 <div class="card mt-2">
-  <div class="card-body">
+  <div class="card-body card-body-sm">
     {% if cred.username %}
     <div class="row align-items-center pb-2">
       <div class="col-md-1 align-items-center"><b>{% trans "Username" %}</b></div>
@@ -144,11 +142,11 @@
 {% if cred.description|length %}
 <div class="accordion mt-2" id="description-collapse">
   <div class="card">
-    <div class="card-header" id="description-header" data-toggle="collapse" data-target="#description-collapse-body" aria-expanded="true" aria-controls="description-collapse-body">
+    <div class="card-header card-header-sm" id="description-header" data-toggle="collapse" data-target="#description-collapse-body" aria-expanded="true" aria-controls="description-collapse-body">
       <b>{% trans "Description" %}</b>
     </div>
     <div id="description-collapse-body" class="collapse show" aria-labelledby="attachments-header" data-parent="#description-collapse">
-      <div class="card-body">
+      <div class="card-body card-body-sm">
         {% markdown_cred cred.description %}
       </div>
     </div>
@@ -159,12 +157,12 @@
 {% if attachments %}
 <div class="accordion mt-2" id="attachments-collapse">
   <div class="card">
-    <div class="card-header" id="attachments-header" data-toggle="collapse" data-target="#attachments-collapse-body" aria-expanded="false" aria-controls="attachments-collapse-body">
+    <div class="card-header card-header-sm" id="attachments-header" data-toggle="collapse" data-target="#attachments-collapse-body" aria-expanded="false" aria-controls="attachments-collapse-body">
       <b>{% trans "Attachments" %}</b>
       <span class="badge badge-pill badge-secondary pull-right">{{ attachments.all|length }}</span>
     </div>
     <div id="attachments-collapse-body" class="collapse" aria-labelledby="attachments-header" data-parent="#attachments-collapse">
-      <div class="card-body">
+      <div class="card-body card-body-sm">
           <ul class="list-unstyled">
             {% for a in attachments.all %}
               <li>
@@ -183,12 +181,12 @@
 
 <div class="accordion mt-2" id="permissions-collapse">
   <div class="card">
-    <div class="card-header" id="permissions-header" data-toggle="collapse" data-target="#permissions-collapse-body" aria-expanded="false" aria-controls="permissions-collapse-body">
+    <div class="card-header card-header-sm" id="permissions-header" data-toggle="collapse" data-target="#permissions-collapse-body" aria-expanded="false" aria-controls="permissions-collapse-body">
       <b>{% trans "Permissions" %}</b>
     </div>
     <!-- permissions-start -->
     <div id="permissions-collapse-body" class="collapse" aria-labelledby="permissions-header" data-parent="#permissions-collapse">
-      <div class="card-body">
+      <div class="card-body card-body-sm">
 
       <!-- owner -->
       <div class="row justify-content-md-left">

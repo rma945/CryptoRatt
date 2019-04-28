@@ -218,17 +218,19 @@ class Attachment(models.Model):
     def __str__(self):
         return self.filename
 
+    # TODO: get_icon - rewrite this function
     def get_icon(self):
         icon = static("rattic/img/attachment-default.png")
-        
-        if self.mime in ('application/x-x509-ca-cert'):
-            icon = static("rattic/img/attachment-sshkey.png")
-        elif self.mime in ('application/pkix-crl', 'application/x-pkcs12', 'application/x-iwork-keynote-sffkey', 'application/pkix-cert', 'application/pkcs10'):
-            icon = static("rattic/img/attachment-certificate.png")
-        elif self.mime in ('image/png', 'image/jpeg', 'image/gif'):
-            icon = static("rattic/img/attachment-image.png")
-        elif self.mime in ('application/zip', 'application/x-bzip', 'application/x-tar'):
-            icon = static("rattic/img/attachment-archive.png")
+
+        if self.mime:
+            if self.mime in ('application/x-x509-ca-cert', 'application/x-x509-user-cert'):
+                icon = static("rattic/img/attachment-sshkey.png")
+            elif self.mime in ('application/pkix-crl','application/x-pkcs12', 'application/x-iwork-keynote-sffkey', 'application/pkix-cert', 'application/pkcs10'):
+                icon = static("rattic/img/attachment-certificate.png")
+            elif self.mime in ('image/png', 'image/jpeg', 'image/gif'):
+                icon = static("rattic/img/attachment-image.png")
+            elif self.mime in ('application/zip', 'application/x-bzip', 'application/x-tar'):
+                icon = static("rattic/img/attachment-archive.png")
 
         return icon
 

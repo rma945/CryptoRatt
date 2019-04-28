@@ -80,7 +80,9 @@
             {% for g in c.groups.all %}
               {% if g in groups.all %}
                 <a href="{% url "cred:cred_list" "group" g.id %}">{{ g.name }}</a>
-              {% else %}{{ g.name }}{% endif %}{% if not forloop.last %}, {% endif %}
+              {% else %}
+                {{ g.name }}
+              {% endif %}
             {% endfor %}
           </td>
           <td class="d-none d-sm-table-cell">

@@ -38,7 +38,8 @@ class ProjectForm(ModelForm):
 class CredForm(ModelForm):
     
     # fake uploads field for attachments
-    uploads = FileField(widget=ClearableFileInput(attrs={'multiple': True}),required=False)
+    uploads = FileField(widget=ClearableFileInput(
+        attrs={'multiple': True, 'class': 'custom-file-input'}), required=False)
 
     def __init__(self, requser, *args, **kwargs):
         super(CredForm, self).__init__(*args, **kwargs)
@@ -66,12 +67,14 @@ class CredForm(ModelForm):
             'url': TextInput(attrs={'class': 'form-control'}),
             'username': TextInput(attrs={'autocomplete': 'off', 'class': 'form-control'}),
             'password': PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'off'}),
-            # 'description': Textarea(attrs={'style': 'display: none;'}),
-            'description': Textarea(attrs={'rows': 4}),
-            'tags': SelectMultiple(attrs={'class': 'custom-select'}),
-            'group': Select(attrs={'class': 'custom-select'}),
-            'groups': SelectMultiple(attrs={'class': 'custom-select'}),
-            'users': SelectMultiple(attrs={'class': 'custom-select'}),
+            'description': Textarea(attrs={'autocomplete': 'off'}),
+            'tags':  SelectMultiple(attrs={'class': 'form-control single-select'}),
+            'group': Select(attrs={'class': 'form-control single-select'}),
+            'groups': SelectMultiple(attrs={'class': 'form-control single-select'}),
+            'users': SelectMultiple(attrs={'class': 'form-control single-select'}),
         }
 
 
+# .selectize-input
+#calc(2.25rem + 2px)
+# font-size: .75rem

@@ -39,21 +39,44 @@
   </div>
 
   <div class="card">
-    <div class="card-header" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+    <div class="card-header" id="collapse-groups-header" data-toggle="collapse" data-target="#collapse-groups" aria-expanded="false" aria-controls="collapse-groups">
       <h6 class="mb-0">Groups</h6>
     </div>
-    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+    <div id="collapse-groups" class="collapse" aria-labelledby="collapse-groups-header" data-parent="#accordionExample">
       <div class="card-body">
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">Cras justo odio</li>
-          <li class="list-group-item">Dapibus ac facilisis in</li>
-          <li class="list-group-item">Morbi leo risus</li>
-          <li class="list-group-item">Porta ac consectetur ac</li>
-          <li class="list-group-item">Vestibulum at eros</li>
+        <ul class="list-unstyled">
+        {% for g in user.groups.all %}
+          <a href="{% url "cred:cred_list" "group" g.id %}">
+            <li>
+              <i class="fas fa-minus"></i> {{ g.name }}
+            </li>
+          </a>
+        {% endfor %}
         </ul>
       </div>
     </div>
   </div>
+
+  <div class="card">
+    <div class="card-header" id="collapse-tags-header" data-toggle="collapse" data-target="#collapse-tags" aria-expanded="false" aria-controls="collapse-tags">
+      <h6 class="mb-0">Tags</h6>
+    </div>
+    <div id="collapse-tags" class="collapse" aria-labelledby="collapse-tags-header" data-parent="#accordionExample">
+      <div class="card-body">
+        <ul class="list-unstyled">
+        {% for tag in user.profile.favourite_tags.all %}
+          <a href="{% url "cred:cred_list" "tag" tag.id %}">
+            <li>
+              <i class="fas fa-minus"></i> {{ tag.name }}
+            </li>
+          </a>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
 </div>
 
 </div>
