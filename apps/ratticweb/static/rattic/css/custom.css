@@ -69,6 +69,10 @@
 }
 
 /* custom thin styles */
+.no-margin-right {
+    margin:0px;
+}
+
 .alert-sm {
     padding: .3rem .5rem;
     margin-bottom: .2rem
@@ -104,6 +108,9 @@ favorite-link {
     padding: 0;
 }
 
+.form-control-small {
+    height: calc(1em + .75rem + 2px);
+}
 
 .cred-card-attachment {
     border:0;
@@ -134,4 +141,22 @@ favorite-link {
 
 .selectize-control.plugin-remove_button [data-value] .remove {
     border-left: 1px solid #fff;
+}
+
+/* disable up-down arrows in a numbers imput type */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+/* disable text selection for a different browsers */
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
 }

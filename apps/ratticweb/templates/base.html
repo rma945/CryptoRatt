@@ -50,14 +50,13 @@
 
   <script type="application/javascript" src="{% static "jquery/jquery.min.js" %}"></script>
   <script type="application/javascript" src="{% static "bootstrap/js/bootstrap.bundle.min.js" %}"></script>
-  <script type="application/javascript" src="{% static "selectize/js/selectize.min.js" %}"></script>
-  <script type="application/javascript" src="{% static "sjcl/sjcl.js" %}"></script>
-  <script type="application/javascript" src="{% static "clipboard/clipboard.min.js" %}"></script>
-  <script type="application/javascript" src="{% static "simple-mde/simplemde.min.js" %}"></script>
 
-  <script type="application/javascript" src="{% static "rattic/js/newcore.js" %}"></script>
-  <script type="application/javascript" src="{% static "rattic/js/cred_details.js" %}"></script>
-  <script type="application/javascript" src="{% static "rattic/js/cred_edit.js" %}"></script>
+  {% comment %} <script type="application/javascript" src="{% static "sjcl/sjcl.js" %}"></script> {% endcomment %}
+  {% comment %} <script type="application/javascript" src="{% static "rattic/js/newcore.js" %}"></script> {% endcomment %}
+  
+  <script type="application/javascript" src="{% static "rattic/js/base.js" %}"></script>
 
+  {% block customjs %}
+  {% endblock %}
 </body>
 </html>

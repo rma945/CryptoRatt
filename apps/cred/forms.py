@@ -41,6 +41,8 @@ class CredForm(ModelForm):
     uploads = FileField(widget=ClearableFileInput(
         attrs={'multiple': True, 'class': 'custom-file-input'}), required=False)
 
+    iconname = CharField(required=False)
+
     def __init__(self, requser, *args, **kwargs):
         super(CredForm, self).__init__(*args, **kwargs)
 
@@ -66,7 +68,7 @@ class CredForm(ModelForm):
             'title': TextInput(attrs={'class': 'form-control'}),
             'url': TextInput(attrs={'class': 'form-control'}),
             'username': TextInput(attrs={'autocomplete': 'off', 'class': 'form-control'}),
-            'password': PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'off'}),
+            'password': PasswordInput(render_value=True, attrs={'class': 'form-control', 'autocomplete': 'off'}),
             'description': Textarea(attrs={'autocomplete': 'off'}),
             'tags':  SelectMultiple(attrs={'class': 'form-control single-select'}),
             'group': Select(attrs={'class': 'form-control single-select'}),

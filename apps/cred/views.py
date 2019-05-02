@@ -444,12 +444,15 @@ def edit(request, cred_id):
                     return HttpResponseRedirect(reverse('cred:cred_detail', args=(cred.id,)))
                 else:
                     return HttpResponseRedirect(next)
+        else:
+            print(form.errors)
     else:
-        # get all attachments
-        attachments = Attachment.objects.filter(credential=cred)
         form = CredForm(request.user, instance=cred)
         CredAudit(audittype=CredAudit.CREDPASSVIEW, cred=cred, user=request.user).save()
 
+    # get all attachments
+    attachments = Attachment.objects.filter(credential=cred)
+    
     return render(
         request, 'cred_edit.html',
         {

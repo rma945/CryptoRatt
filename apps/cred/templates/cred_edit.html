@@ -14,17 +14,17 @@
 
 <form class="pt-2" enctype="multipart/form-data" autocomplete="off" action="{{ action }}" method="post">{% csrf_token %}
 
-<div class="row">
-  <div class="col-md-1 d-flex align-items-center pb-2">
-    <div class="container cred-image">
-      <img class="mx-auto d-block img-thumbnail" style="width: 128px;" src="{% static rattic_logo %}"/>
-      <a class="btn btn-outline-primary btn-sm btn-block" href="#" role="button">Select icon</a>
-    </div>  
-  </div>
+  <div class="row no-margin-right">
+    <div class="col-sm-1 pb-2">
+      <div class="cred-image">
+        <img class="img-thumbnail" style="width: 128px;" src="{% static rattic_logo %}"/>
+        <a class="btn btn-outline-primary btn-sm btn-block" href="#" role="button">{% trans "Select icon" %}</a>
+      </div>  
+    </div>
 
-  <div class="col-md">
-    <div class="row align-items-center">
-      <div class="col-md">
+    <!-- items row start -->
+    <div class="col">
+      <div class="col-xs">
         <div class="input-group input-group-sm mb-3">
           <div class="input-group-prepend">
             <label class="input-group-text" for="{{ form.project.html_name }}">{{ form.project.label }}</label>
@@ -32,10 +32,8 @@
           {{ form.project }}
         </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-md">
+      <div class="col-xs">
         <div class="input-group input-group-sm mb-3">
           <div class="input-group-prepend">
             <label class="input-group-text" for="{{ form.title.html_name }}">{{ form.title.label }}</label>
@@ -43,10 +41,8 @@
           {{ form.title }}
         </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-md">
+      <div class="col-xs">
         <div class="input-group input-group-sm mb-3">
           <div class="input-group-prepend">
             <label class="input-group-text" for="{{ form.url.html_name }}">{{ form.url.label }}</label>
@@ -55,9 +51,9 @@
         </div>
       </div>
     </div>
-  </div>
+    <!-- items row end -->
 
-</div>
+  </div>
 
   <div class="input-group input-group-sm mb-3">
     <div class="input-group-prepend">
@@ -69,8 +65,12 @@
   <div class="input-group input-group-sm mb-3">
     <div class="input-group-prepend">
       <label class="input-group-text" for="{{ form.password.html_name }}">{{ form.password.label }}</label>
-      <button class="btn btn-sm btn-primary" type="button" id="show-password-button"><i class="far fa-eye"></i></button>
-      <button class="btn btn-sm btn-success" type="button" id="generate-password-button"><i class="fas fa-redo"></i></button>
+      <button class="btn btn-sm btn-primary" type="button" id="show-password-button">
+        <i class="far fa-eye">
+      </i></button>
+      <button class="btn btn-sm btn-success" type="button" id="generate-password-button" data-toggle="modal" data-target="#generate-password-modal">
+        <i class="fas fa-redo"></i>
+      </button>
     </div>
     {{ form.password }}
   </div>
@@ -111,12 +111,12 @@
     </div>
     <div class="custom-file">
       {{ form.uploads }}
-      <label class="custom-file-label" id="upload-field-label" for="id_uploads">Choose file</label>
+      <label class="custom-file-label" id="upload-field-label" for="id_uploads">{% trans "Choose file" %}</label>
     </div>
   </div>
 
   {% if attachments %}
-  <div class="card cred-card-attachment mb-3">
+  <div class="card cred-card-attachment">
     <div class="card-body card-body-sm">
         {% for a in attachments.all %}
           <div class="btn-group mt-2 ml-2" role="group">
@@ -132,9 +132,92 @@
     </div>
   </div>
   {% endif %}
+
+  <div class="row no-margin-right pt-2 pb-2 justify-content-md-center">
+    <div class="col-4">
+      <input id="credsave" class="btn btn-success btn-block" type="submit" value="{% trans "Save" %}" />
+    </div>
+    <div class="col-4">
+      <a class="btn btn-secondary btn-block" href="{% url 'cred:cred_detail' cred.id %}" role="button">{% trans "Cancel" %}</a>
+    </div>
+  </div>
 </form>
 
+<!-- generate password modal -->
+<div class="modal fade" id="generate-password-modal" tabindex="-1" role="dialog" aria-labelledby="generate-password-modal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="generate-password-modal-title">{% trans "Generate password" %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+      <h5>Password symbols</h5>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="lowercase-switch" checked="">
+        <label class="custom-control-label" for="lowercase-switch">{% trans "Lowercase alphabet" %}</label>
+      </div>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="uppercase-switch" checked="">
+        <label class="custom-control-label" for="uppercase-switch">{% trans "Uppercase alphabet" %}</label>
+      </div>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="numbers-switch" checked="">
+        <label class="custom-control-label" for="numbers-switch"{% trans "Numbers" %}></label>
+      </div>
+      <div class="custom-control custom-switch pb-3">
+        <input type="checkbox" class="custom-control-input" id="special-switch">
+        <label class="custom-control-label" for="special-switch">{% trans "Special symbols" %}</label>
+      </div>
 
+      <h5>Password length</h5>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="length8" name="customRadio" class="custom-control-input" value="8">
+        <label class="custom-control-label" for="length8">8</label>
+      </div>
 
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="length16" name="customRadio" class="custom-control-input" value="16">
+        <label class="custom-control-label" for="length16">16</label>
+      </div>
+
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="length24" name="customRadio" class="custom-control-input" value="24">
+        <label class="custom-control-label" for="length24">24</label>
+      </div>
+
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="length32" name="customRadio" class="custom-control-input" value="32">
+        <label class="custom-control-label" for="length32">32</label>
+      </div>
+
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="length64" name="customRadio" class="custom-control-input" value="64">
+        <label class="custom-control-label" for="length64">64</label>
+      </div>
+
+      <div class="custom-control custom-control-inline">
+        <input type="number" class="form-control form-control-sm form-control-small" 
+        id="lengthCustom" min="2" max="128" placeholder="length" style="min-width: 68px">
+      </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="set-password-button" class="btn btn-primary btn-sm">{% trans "Generate" %}</button>
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">{% trans "Cancel" %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block customjs %}
+  <script type="application/javascript" src="{% static "rattic/js/cred_edit.js" %}"></script>
+  <script type="application/javascript" src="{% static "selectize/js/selectize.min.js" %}"></script>
+  <script type="application/javascript" src="{% static "simple-mde/simplemde.min.js" %}"></script>
 {% endblock %}
 

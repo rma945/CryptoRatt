@@ -12,7 +12,6 @@
 
   <div class="collapse navbar-collapse" id="navigation-bar">
     <ul class="navbar-nav mr-auto">
-
       <li class="nav-item {% if request.resolver_match.view_name == "cred:project_list" %}active{% endif %}">
         <a class="nav-link" href="{% url "cred:project_list" %}">{% trans "Projects" %}</a>
       </li>
@@ -26,9 +25,6 @@
         <a class="nav-link" href="{{ cred_views_viewqueue }}">{% trans "Change Queue" %}
         {% if changeqcount > 0 %}<span class="badge badge-primary">{{ changeqcount }}</span>{% endif %}
         </a>
-      </li>
-      <li class="nav-item {% if request.resolver_match.view_name == "staff:home" %}active{% endif %}">
-        <a class="nav-link" href="{% url "staff:home" %}">{% trans "Settings" %}</a>
       </li>
       {% endif %}
 
@@ -44,13 +40,27 @@
       <li class="nav-item d-block d-sm-none">
         <a class="nav-link" href="{% url "account:logout" %}">{% trans "Logout" %}</a>
       </li>
+    </ul>
 
-      <!--dropdown start-->
+    <div class="col-md-4 ml-auto">
+      <form class="form" id="search-form">
+        <div class="input-group">
+          <input id="search-form-input" type="search" name="search" class="form-control search-query" aria-label="Search" placeholder="{% trans "Search" %}">
+        </div>
+      </form>
+    </div>
+
+    <!-- account dropdown start-->
+    <ul class="navbar-nav pull-right">
       <li class="nav-item dropdown d-none d-sm-block">
         <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Account
+          <img class="rounded-circle" src="" width="24" height="24">
+          {{ user.username}}
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url "account:profile" %}">{% trans "Profile" %}</a>
+          <div class="dropdown-divider"></div>
+
           <a class="dropdown-item" href="{% url "cred:project_list" %}">{% trans "Projects" %}</a>
           <a class="dropdown-item" href="{% url "cred:cred_list" %}">{% trans "Passwords" %}</a>
           <a class="dropdown-item" href="{% url "cred:tags" %}">{% trans "Tags" %}</a>
@@ -67,21 +77,13 @@
           {% endif %}
 
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="{% url "account:profile" %}">{% trans "Profile" %}</a>
           <a class="dropdown-item" href="{% url "account:logout" %}">{% trans "Logout" %}</a>
         </div>
       </li>
-      <!--dropdown end-->
     </ul>
 
-    <form class="form-inline rattic-cred-search">
-      <div class="input-group">
-        <input id="search-box" type="search" name="box" class="form-control search-query" aria-label="Search" placeholder="{% trans "Search" %}">
-        <div class="input-group-append">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </div>
-      </div>
-    </form>
+    
+    <!--account dropdown end-->   
     
   </div>
 </nav>

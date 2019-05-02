@@ -35,54 +35,43 @@
   </div>
 {% endif %}
 
-<div class="row pt-2 col-md">
+<div class="row pt-2 no-margin-right">
   <div class="col-md-1 d-flex flex-wrap align-items-center">
     <img class="mx-auto d-block img-thumbnail" style="width: 128px;" src="{% static rattic_logo %}"/>
   </div>
 
   <div class="col-md">
-    <div class="row align-items-center">
-      <div class="col-md">
-        <h2>{{ cred.title }}</h2>
-      </div>
+
+    <div class="col-xs">
+      <h2>{{ cred.title }}</h2>
     </div>
 
-    <div class="row">
-      <div class="col-md">
-        {% if cred.project %}
-          <h2><a href="{% url "cred:project_detail" cred.project.id %}" class="badge badge-primary">{{ cred.project.title }}</a></h2>
-        {% endif %}
-      </div>
+    <div class="col-xs">
+      {% if cred.project %}
+        <h2><a href="{% url "cred:project_detail" cred.project.id %}" class="badge badge-primary">{{ cred.project.title }}</a></h2>
+      {% endif %}
     </div>
 
-    <div class="row">
-      <div class="col-md">
-        {% if cred.url %}
-          <a href="{{ cred.url }}">{{ cred.url }}</a>
-        {% endif %}
-      </div>
+    <div class="col-xs">
+      {% if cred.url %}
+        <a href="{{ cred.url }}" target="_blank">{{ cred.url }}</a>
+      {% endif %}
     </div>
 
-    <div class="row justify-content-md-left pt-2">
-      <div class="col-sm">
-        <b>{% trans "Created" %}</b> : {{ cred.created|date:"Y/m/d H:m" }}
-      </div>
-    </div>  
+    <div class="col-xs justify-content-md-left pt-2">
+      <b>{% trans "Created" %}</b> : {{ cred.created|date:"Y/m/d H:m" }}
+    </div>
 
-    <div class="row justify-content-md-left">
-      <div class="col-sm">
-        <b>{% trans "Updated" %}</b> : {{ cred.created|date:"Y/m/d H:m" }}
-      </div>
+    <div class="col-xs justify-content-md-left">
+      <b>{% trans "Updated" %}</b> : {{ cred.created|date:"Y/m/d H:m" }}
     </div>
 
     {% if cred.tags.all|length %}
-    <div class="row justify-content-md-left">
-      <div class="col-sm">
-        <b>{% trans "Tags" %}</b> : 
-        {% for t in cred.tags.all %}
-          <a class="badge badge-secondary" href="{% url 'cred:cred_list' 'tag' t.id %}">{{ t.name }}</a>
-        {% endfor %}
-      </div>
+    <div class="col-xs justify-content-md-left">
+      <b>{% trans "Tags" %}</b> : 
+      {% for t in cred.tags.all %}
+        <a class="badge badge-secondary" href="{% url 'cred:cred_list' 'tag' t.id %}">{{ t.name }}</a>
+      {% endfor %}
     </div>
     {% endif %}
 
@@ -293,4 +282,9 @@
 
 <div class="pb-2">
 </div>
+{% endblock %}
+
+{% block customjs %}
+  <script type="application/javascript" src="{% static "rattic/js/cred_details.js" %}"></script>
+  <script type="application/javascript" src="{% static "clipboard/clipboard.min.js" %}"></script>
 {% endblock %}
