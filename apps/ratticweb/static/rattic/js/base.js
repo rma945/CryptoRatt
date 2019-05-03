@@ -11,12 +11,12 @@ function searchCredentials() {
 
 $(document).ready(function () {
   // register favorites menu toggle
+  // register favorites menu toggle
   $('#favorites-menu-toggle').click(function (e) {
-    console.log('init')
     e.preventDefault();
-    $('#page-content-wrapper').toggleClass('enabled');
+    $('#content-wrapper').toggleClass('disabled');
   });
-  
+ 
   // register search form
   $('#search-form').submit(function (form) {
     searchCredentials()

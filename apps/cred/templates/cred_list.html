@@ -60,7 +60,7 @@
       
       <tbody>
         {% for c in credlist %}
-        <tr class="{% if c.on_changeq or c.is_expired %}table-warning{% endif %} {% if not c.is_latest %}table-info{% endif %}">
+        <tr class="{% if c.on_changeq or c.is_expired %}table-secondary{% endif %} {% if not c.is_latest %}table-info{% endif %}">
           <td>
             <a href="{% url "cred:cred_detail" c.id %}">
               <img class="pr-2" src="{% static "rattic/img/credential-default.png" %}">{{ c.title|default:"No Title" }}

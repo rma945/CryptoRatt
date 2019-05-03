@@ -1,6 +1,5 @@
-{% load static from staticfiles %}
-{% load url_root from ratticweb %}
-
+{% load static %}
+{% comment %} {% load url_root from ratticweb %} {% endcomment %}
 {% load i18n %}
 
 <!DOCTYPE html>
@@ -10,18 +9,22 @@
   <title>{% block title %}{% trans "Rattic" %}{% endblock %}</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="rattic_url_root" content="{% url_root %}" />
-  {% if user.is_staff and USE_LDAP_GROUPS %}
+  {% comment %} <meta name="rattic_url_root" content="{% url_root %}" /> {% endcomment %}
+  {% comment %} {% if user.is_staff and USE_LDAP_GROUPS %}
     <meta name="rattic_user_staff" content="true" />
   {% else %}
     <meta name="rattic_user_staff" content="false" />
-  {% endif %}
-  
+  {% endif %} {% endcomment %}
   {% block headarea %}
-  {% endblock %}
-
+  {% endblock %}  
   <link href="{% static "favicon_new.ico" %}" rel="shortcut icon">
-  <link href="{% static "bootstrap/css/bootstrap.default.min.css" %}" rel="stylesheet" media="screen">
+  <link href=
+  {% if user.is_authenticated %}
+    "{% get_static_prefix %}/bootstrap/css/{{ user.profile.theme }}"
+  {% else %}
+    "{% static "bootstrap/css/bootstrap.default.min.css" %}"
+  {% endif %}
+   rel="stylesheet" media="screen">
   <link href="{% static "font-awesome/css/fontawesome.min.css" %}" rel="stylesheet" media="screen">
   <link href="{% static "font-awesome/css/regular.min.css" %}" rel="stylesheet" media="screen">
   <link href="{% static "font-awesome/css/solid.min.css" %}" rel="stylesheet" media="screen">
@@ -31,9 +34,16 @@
 </head>
 <body>
   
-  <div class="d-flex" {% if user.is_authenticated %} id="content-wrapper" {% endif %}>
+  <div 
+    {% if user.profile.favourite_menu %}
+      class="d-flex"
+    {% else %}
+      class="d-flex disabled"
+    {% endif %}
+    {% if user.is_authenticated %} id="content-wrapper" {% endif %}>
+
     {% if user.is_authenticated %}
-      {% include "sidebar.html" %}
+        {% include "sidebar.html" %}
     {% endif %}
 
     <div id="page-content-wrapper">
@@ -50,12 +60,8 @@
 
   <script type="application/javascript" src="{% static "jquery/jquery.min.js" %}"></script>
   <script type="application/javascript" src="{% static "bootstrap/js/bootstrap.bundle.min.js" %}"></script>
-
-  {% comment %} <script type="application/javascript" src="{% static "sjcl/sjcl.js" %}"></script> {% endcomment %}
-  {% comment %} <script type="application/javascript" src="{% static "rattic/js/newcore.js" %}"></script> {% endcomment %}
-  
   <script type="application/javascript" src="{% static "rattic/js/base.js" %}"></script>
-
+  {% comment %} <script type="application/javascript" src="{% static "rattic/js/newcore.js" %}"></script> {% endcomment %}
   {% block customjs %}
   {% endblock %}
 </body>

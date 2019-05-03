@@ -380,7 +380,7 @@ def add(request):
                     ).save()
             
             CredAudit(audittype=CredAudit.CREDADD, cred=form.instance, user=request.user).save()
-            return HttpResponseRedirect(reverse('cred:cred_list'))
+            return HttpResponseRedirect(reverse('cred:cred_detail', args=(saved_form.id,)))
     else:
         form = CredForm(request.user)
 

@@ -94,6 +94,7 @@
 </div>
 {% endif %}
 
+{% if cred.username or cred.password %}
 <div class="card mt-2">
   <div class="card-body card-body-sm">
     {% if cred.username %}
@@ -126,7 +127,7 @@
     {% endif %}
   </div>
 </div>
-
+{% endif %}
 
 {% if cred.description|length %}
 <div class="accordion mt-2" id="description-collapse">

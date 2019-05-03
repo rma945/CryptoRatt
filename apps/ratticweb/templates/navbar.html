@@ -1,12 +1,13 @@
 {% load static from staticfiles %}
-{% load url_root from ratticweb %}
+{% load custom_tags %}
 {% load i18n %}
 {% url "cred:cred_list" "special" "changeq" as cred_views_viewqueue %}
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="btn d-none d-sm-block" id="favorites-menu-toggle"><i class="fas fa-align-justify"></i></a>
     
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation-bar" aria-controls="navigation-bar" aria-expanded="false" aria-label="toggle fav-bar">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation-bar"
+   aria-controls="navigation-bar" aria-expanded="false" aria-label="toggle fav-bar">
     <span class="navbar-toggler-icon oi oi-menu"></span>
   </button>
 
@@ -45,7 +46,8 @@
     <div class="col-md-4 ml-auto">
       <form class="form" id="search-form">
         <div class="input-group">
-          <input id="search-form-input" type="search" name="search" class="form-control search-query" aria-label="Search" placeholder="{% trans "Search" %}">
+          <input id="search-form-input" type="search" name="search"
+           class="form-control search-query" aria-label="Search" placeholder="{% trans "Search" %}">
         </div>
       </form>
     </div>
@@ -54,8 +56,18 @@
     <ul class="navbar-nav pull-right">
       <li class="nav-item dropdown d-none d-sm-block">
         <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <img class="rounded-circle" src="" width="24" height="24">
+
+          <!-- draw avatar start -->
+          <img class="rounded" 
+          {% if user.profile.avatar %}
+            src="data:image/jpeg;base64, {{ user.profile.avatar|decode_utf8 }}"
+          {% else %}
+            src="{% static "rattic/img/avatar-default.png" %}"
+          {% endif %}
+          width="24" height="24">
           {{ user.username}}
+          <!-- draw avatar end -->
+          
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="{% url "account:profile" %}">{% trans "Profile" %}</a>
@@ -63,7 +75,6 @@
 
           <a class="dropdown-item" href="{% url "cred:project_list" %}">{% trans "Projects" %}</a>
           <a class="dropdown-item" href="{% url "cred:cred_list" %}">{% trans "Passwords" %}</a>
-          <a class="dropdown-item" href="{% url "cred:tags" %}">{% trans "Tags" %}</a>
           
           {% if user.is_staff %}
             <div class="dropdown-divider"></div>

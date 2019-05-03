@@ -104,14 +104,6 @@ $(document).ready(function () {
     e.clearSelection();
   });
 
-  // register buttons
-
-  // register favorites menu toggle
-  $('#favorites-menu-toggle').click(function (e) {
-    e.preventDefault();
-    $('#content-wrapper').toggleClass('enabled');
-  });
-  
   // register - show password toggle button
   $('#show-password-field-button').click(function (e) {
     showPasswordToggle();

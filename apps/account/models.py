@@ -3,7 +3,7 @@ import hmac
 
 from django.db import models
 from django import forms
-from django.forms import ModelForm, SelectMultiple
+from django.forms import ModelForm, SelectMultiple, Select, CheckboxInput
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import SetPasswordForm
@@ -19,12 +19,7 @@ from datetime import timedelta
 
 from apps.cred.models import Tag
 
-try:
-    from hashlib import sha1
-except ImportError:
-    import sha
-    sha1 = sha.sha
-
+from hashlib import sha1
 
 class LDAPPassChangeForm(SetPasswordForm):
     old_password = forms.CharField(label=_("Old password"), widget=forms.PasswordInput)
@@ -53,21 +48,49 @@ LDAPPassChangeForm.base_fields.keyOrder = ['old_password', 'new_password1', 'new
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    items_per_page = models.IntegerField(verbose_name=_('Items per page'), default=25)
+    items_per_page = models.IntegerField(verbose_name=_('Items at page'), default=25)
     favourite_tags = models.ManyToManyField(Tag, verbose_name=_('Favourite tags'), blank=True)
+    # favourite_credentials = models.ManyToManyField(Cred, verbose_name=_('Favourite tags'), blank=True)
+    # favourite_projects = models.ManyToManyField(Cred, verbose_name=_('Favourite tags'), blank=True)
     password_changed = models.DateTimeField(default=now)
+    avatar = models.BinaryField(null=True, default=None)
+    favourite_menu = models.BooleanField(default=False, verbose_name=_('Enable favorites menu'))
+    theme = models.CharField(max_length=128, default='bootstrap.default.min.css', verbose_name=_('Theme'))
 
     def __str__(self):
         return self.user.username
 
-
+# TODO: move to form.py
 class UserProfileForm(ModelForm):
     class Meta:
+        custom_themes = [
+            ('bootstrap.default.min.css', 'Default'),
+            ('bootstrap.cosmo.min.css', 'Cosmo'),
+            ('bootstrap.cerulean.min.css', 'Cerulean'),
+            # ('bootstrap.darkly.min.css', 'Darkly'),
+            ('bootstrap.flatly.min.css', 'Flatly'),
+            ('bootstrap.litera.min.css', 'Litera'),
+            ('bootstrap.pulse.min.css', 'Pulse'),
+            ('bootstrap.lux.min.css', 'Lux'),
+            ('bootstrap.lumen.min.css', 'Lumen'),
+            ('bootstrap.litera.min.css', 'Litera'),
+            ('bootstrap.slate.min.css', 'Slate'),
+            ('bootstrap.spacelab.min.css', 'Spacelab'),
+        ]
+
         model = UserProfile
         exclude = ('user', 'password_changed',)
         widgets = {
-            'favourite_tags': SelectMultiple(attrs={'class': 'rattic-tag-selector'}),
+            'favourite_menu': CheckboxInput(attrs={'class': 'custom-control-input'}),
+            'favourite_tags': SelectMultiple(attrs={'class': 'single-select'}),
+            'theme': Select(
+                choices=custom_themes,
+                attrs={'class': 'form-control single-select'}),
+            'items_per_page': Select(
+                choices=[('10', 10), ('20', 20), ('30', 30), ('40', 40), ('50', 50)],
+                attrs={'class': 'form-control single-select'}),
         }
+
 
 # Attach the UserProfile object to the User
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])

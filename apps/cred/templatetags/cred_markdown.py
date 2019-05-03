@@ -4,7 +4,6 @@ import markdown
 
 register = template.Library()
 
-
 @register.simple_tag
 def markdown_cred(description):
     out = markdown.markdown(
