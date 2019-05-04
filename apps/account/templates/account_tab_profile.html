@@ -14,9 +14,14 @@
         src="{% static "rattic/img/avatar-default.png" %}"
       {% endif %}
       width="160" height="160">
-      <div class="text-center">
-        <a class="btn btn-outline-primary btn-sm" style="width: 160px" href="#" role="button">{% trans "Update image" %}</a>
+      <div class="text-center pb-1">
+        <a class="btn btn-outline-primary btn-sm" style="width: 160px" href="#" role="button">{% trans "Update image" %}</a>       
       </div>
+      {% if ALLOWPWCHANGE %}
+      <div class="text-center">        
+        <a class="btn btn-outline-danger btn-sm" style="width: 160px" href="{% url "password_change" %}">{% trans "Update password" %} </a>
+      </div>
+      {% endif %}
     </div>
 
     <div class="col">
@@ -28,6 +33,11 @@
       </div>
       <div class="col-xs">
         <b>{% trans "Two Factor Authentication" %}: </b>
+        {% if default_device %}
+          <a href="{% url 'account:tfa_disable' %}" class="btn btn-danger btn-sm">{% trans "Disable" %}</a>
+        {% else %}
+          <a href="{% url 'account:tfa_setup' %}" class="btn btn-success btn-sm">{% trans "Enable" %}</a></td></tr>
+        {% endif %}
       </div>
       <div class="col-xs">
         <b>{% trans "Last Password Change" %}: </b> {{ user.profile.password_changed | date:"Y/m/d H:m"  }}

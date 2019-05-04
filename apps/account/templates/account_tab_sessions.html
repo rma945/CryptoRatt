@@ -1,0 +1,65 @@
+{% load static %}
+{% load custom_tags %}
+{% load i18n %}
+
+<div class="tab-pane fade" id="nav-sessions" role="tabpanel" aria-labelledby="sessions-tab">
+
+  <div class="row p-4 no-margin-right">
+
+    <div class="col-md-12">
+      <div class="table-responsive">    
+        <table class="table">
+          <thead>
+            <tr>
+              <th>{% trans "Device" %}</th>
+              <th>{% trans "IP Address" %}</th>
+              <th colspan="2">{% trans "Last Activity" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in sessions %}
+              <tr>
+                <td>{{ s.user_agent }}</td>
+                <td>{{ s.ip }}</td>
+                <td>{{ s.last_activity|timesince }}
+                  {% if session_key == s.session_key %}
+                    <span class="badge badge-primary">
+                      {% trans "This Session" %}
+                    </span>
+                  {% endif %}
+                </td>
+                <td>
+                  <a class="btn btn-sm btn-danger delete-session-button" data-sesionid={{ s.session_key }} href="#" href="#">
+                    <i class="fas fa-trash-alt"></i>
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!--- delete API key -->
+<div class="modal fade" id="delete-session-modal" tabindex="-1" role="dialog" aria-labelledby="delete-session-modal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="delete-session-modal-label">{% trans "Delete API key" %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% trans "Do you really want to delete this session?" %}
+      </div>
+      <div class="modal-footer">
+        <button id="delete-session-modal-button" type="button" class="btn btn-danger">{% trans "Delete" %}</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans "Cancel" %}</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -77,11 +77,11 @@ def newapikey(request):
         form = ApiKeyForm(request.POST, instance=newkey)
         if form.is_valid():
             form.save()
-        return render(request, 'account_viewapikey.html', {'key': newkey})
+        return HttpResponseRedirect(reverse('account:profile'))
     else:
         form = ApiKeyForm()
 
-    return render(request, 'account_newapikey.html', {'form': form})
+    return HttpResponseRedirect(reverse('account:profile'))
 
 
 @login_required
@@ -95,7 +95,7 @@ def deleteapikey(request, key_id):
         key.delete()
         return HttpResponseRedirect(reverse('account:profile'))
 
-    return render(request, 'account_deleteapikey.html', {'key': key})
+    return HttpResponseRedirect(reverse('account:profile'))
 
 
 # Stolen from django.contrib.auth.views

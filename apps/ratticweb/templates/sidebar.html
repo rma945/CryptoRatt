@@ -4,7 +4,7 @@
 <div class="bg-light d-none d-sm-block" id="sidebar">
  <div class="accordion" id="accordionExample">
  
-  <div class="card">
+  <div class="card favorites-card">
     <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
       <h6 class="mb-0">Projects</h6>
     </div>
@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  <div class="card">
+  <div class="card favorites-card">
     <div class="card-header" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
       <h6 class="mb-0">Credentials</h6>
     </div>
@@ -38,13 +38,13 @@
     </div>
   </div>
 
-  <div class="card">
+  <div class="card favorites-card">
     <div class="card-header" id="collapse-groups-header" data-toggle="collapse" data-target="#collapse-groups" aria-expanded="false" aria-controls="collapse-groups">
       <h6 class="mb-0">Groups</h6>
     </div>
     <div id="collapse-groups" class="collapse" aria-labelledby="collapse-groups-header" data-parent="#accordionExample">
       <div class="card-body">
-        <ul class="list-unstyled">
+        <ul class="list-unstyled favorites-list">
         {% for g in user.groups.all %}
           <a href="{% url "cred:cred_list" "group" g.id %}">
             <li>
@@ -57,13 +57,13 @@
     </div>
   </div>
 
-  <div class="card">
+  <div class="card favorites-card">
     <div class="card-header" id="collapse-tags-header" data-toggle="collapse" data-target="#collapse-tags" aria-expanded="false" aria-controls="collapse-tags">
       <h6 class="mb-0">Tags</h6>
     </div>
     <div id="collapse-tags" class="collapse" aria-labelledby="collapse-tags-header" data-parent="#accordionExample">
       <div class="card-body">
-        <ul class="list-unstyled">
+        <ul class="list-unstyled favorites-list">
         {% for tag in user.profile.favourite_tags.all %}
           <a href="{% url "cred:cred_list" "tag" tag.id %}">
             <li>

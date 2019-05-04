@@ -16,11 +16,11 @@
 
   <div class="pt-2 pb-2 btn-group btn-group-sm" role="group" aria-label="credential-buttons">
     {% if buttons.add %}
-      <a class="btn btn-primary" href="{% url "cred:cred_add" %}">{% trans "Add New" %}</a>
+      <a class="btn btn-primary" href="{% url "cred:cred_add" %}">{% trans "Create" %}</a>
     {% endif %}
     
     {% if buttons.bulkchange %}
-      <button class="btn btn-secondary" data-target=".cred-list-check" data-action="{% url "cred:cred_bulk_delete" %}">{% trans "Bulk update" %}</button>
+      <button class="btn btn-secondary" data-target=".cred-list-check" data-action="{% url "cred:cred_bulk_delete" %}">{% trans "Update" %}</button>
     {% endif %}
   </div>
 
