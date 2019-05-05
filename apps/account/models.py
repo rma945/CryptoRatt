@@ -67,7 +67,7 @@ class UserProfileForm(ModelForm):
             ('bootstrap.default.min.css', 'Default'),
             ('bootstrap.cosmo.min.css', 'Cosmo'),
             ('bootstrap.cerulean.min.css', 'Cerulean'),
-            # ('bootstrap.darkly.min.css', 'Darkly'),
+            ('bootstrap.darkly.min.css', 'Darkly'),
             ('bootstrap.flatly.min.css', 'Flatly'),
             ('bootstrap.litera.min.css', 'Litera'),
             ('bootstrap.pulse.min.css', 'Pulse'),

@@ -19,9 +19,16 @@
       </div>
       {% if ALLOWPWCHANGE %}
       <div class="text-center">        
-        <a class="btn btn-outline-danger btn-sm" style="width: 160px" href="{% url "password_change" %}">{% trans "Update password" %} </a>
+        <a class="btn btn-outline-danger btn-sm" style="width: 160px" href="{% url "password_change" %}">{% trans "Update password" %}</a>
       </div>
       {% endif %}
+      <div class="text-center">        
+        {% if default_device %}
+          <a href="{% url 'account:tfa_disable' %}" style="width: 160px" class="btn btn-danger btn-sm">{% trans "Disable 2FA" %}</a>
+        {% else %}
+          <a href="{% url 'account:tfa_setup' %}" style="width: 160px" class="btn btn-success btn-sm">{% trans "Enable 2FA" %}</a>
+        {% endif %}
+      </div>
     </div>
 
     <div class="col">
@@ -29,19 +36,40 @@
         <h2>{{ user.username }}</h2>
       </div>
       <div class="col-xs">
+        <b>{% trans "Role" %}: </b> {% if user.is_staff %} Admin {% else %} User {% endif %}
+      </div>
+      <div class="col-xs">
         <b>{% trans "Email" %}: </b> {{user.email }}
       </div>
       <div class="col-xs">
         <b>{% trans "Two Factor Authentication" %}: </b>
         {% if default_device %}
-          <a href="{% url 'account:tfa_disable' %}" class="btn btn-danger btn-sm">{% trans "Disable" %}</a>
+          {% trans "Enabled" %}
         {% else %}
-          <a href="{% url 'account:tfa_setup' %}" class="btn btn-success btn-sm">{% trans "Enable" %}</a></td></tr>
+          {% trans "Disabled" %}
         {% endif %}
       </div>
       <div class="col-xs">
         <b>{% trans "Last Password Change" %}: </b> {{ user.profile.password_changed | date:"Y/m/d H:m"  }}
       </div>
+      
+      {% if user.groups %}
+      <hr class="col-xs-12">
+        <h6>{% trans 'Groups' %}</h6>
+        <ul class="list-inline" id="user_groups">
+        {% for g in user.groups.all %}
+          <li class="list-inline-item">
+          <span class="badge badge-big badge-primary">
+            {% if user.is_staff %}              
+              <a class="text-white" href="{% url "staff:group_detail" g.id %}">{{ g.name }}</a>
+            {% else %}
+              {{ g.name }}
+            {% endif %}
+          </span>
+          </li>
+        {% endfor %}
+        </ul>
+      {% endif %}
 
       <hr class="col-xs-12">
       <form id="profile-submit-form" action="" method="POST">{% csrf_token %}

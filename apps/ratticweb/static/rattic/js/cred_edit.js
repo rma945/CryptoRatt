@@ -1,4 +1,87 @@
-// variables
+// validatePasswordModal:
+// set minimal symbols count for a password modal window
+function validatePasswordModal() {
+  var setDefault = true
+
+  $("input[type='checkbox']").each(function () {
+    if ($(this).prop('checked')) {
+      setDefault = false
+      return false;
+    }
+  });
+  
+  // set default lowerCase letters for password generation
+  if (setDefault) {
+    $('#lowercase-switch').prop('checked', true);
+  }
+}
+
+function calculatePasswordStrengthModal() {
+  var passwordStrength = 0;
+  var passwordLength = 0;
+  var color = 'danger';
+
+  // get password length from checkboxex
+  $("input[type='radio']").each(function () {
+    if ($(this).prop('checked')) {
+      passwordLength = $(this).val();
+      return false;
+    }
+  });
+
+  // check if custom password lenght is set
+  if ($("#lengthCustom").val()) {
+    passwordLength = $("#lengthCustom").val();
+  }
+  
+  // calculate password length
+  switch (true) {
+    case (passwordLength < 8):
+      break;
+    case (passwordLength == 8):
+      passwordStrength +=1
+      break;
+    case (passwordLength <= 16):
+      passwordStrength += 2
+      break;
+    case (passwordLength <= 18):
+      passwordStrength += 3
+      break;
+    case (passwordLength <= 24):
+      passwordStrength += 4
+      break;
+    case (passwordLength >= 32):
+      passwordStrength += 5
+      break;
+    }
+
+  // generate password
+  if ($("#lowercase-switch").prop('checked') ) {
+    passwordStrength += 1
+  } 
+  if ($("#uppercase-switch").prop('checked')) {
+    passwordStrength += 1
+  }
+  if ($("#numbers-switch").prop('checked')) {
+    passwordStrength += 1
+  }
+  if ($("#special-switch").prop('checked')) {
+    passwordStrength += 2
+  }
+
+  // calculate color-class
+  if (passwordStrength <= 4 ) {
+    color = 'danger';
+  } else if (passwordStrength <= 6) {
+    color = 'warning';
+  } else {
+    color = 'success';
+  }
+
+  $('#password-strength-bar').attr('style', 'width:' + passwordStrength * 10 + '%');
+  $('#password-strength-bar').attr('class', 'progress-bar progress-bar-striped bg-' + color  )
+  $('#generate-password-modal-header').attr('class', 'modal-header text-white bg-' + color)
+}
 
 function generateRandomPassword(lower=true, upper=true, numbers=true, special=false, length=16) {
   var generatedPassword = '';
@@ -60,6 +143,18 @@ function showPassword() {
   }
 }
 
+// set added filenames at files upload field
+function updateFilesUploadField() {
+  var uploadFiles = e.target.files;
+  var fileList = '';
+
+  for (var i = 0; i < uploadFiles.length; ++i) {
+    fileList = fileList + ' ' + uploadFiles[i].name
+  }
+
+  $('#upload-field-label').text(fileList)
+}
+
 $(document).ready(function () {
 
   // initialize passwordGenerate button
@@ -109,14 +204,17 @@ $(document).ready(function () {
 
   // add upload filenames at upload files panel
   $('#id_uploads').change(function (e) {
-    var uploadFiles = e.target.files;
-    var fileList = '';
-
-    for (var i = 0; i < uploadFiles.length; ++i ) {
-      fileList = fileList + ' ' + uploadFiles[i].name
-    }
-
-    $('#upload-field-label').text(fileList)
+    updateFilesUploadField();
   });
-});
 
+  $("input[type='radio']").click(function (e) {
+    calculatePasswordStrengthModal();
+  });
+
+  // register validate modal function
+  $("input[type='checkbox']").click(function (e) {
+    validatePasswordModal();
+    calculatePasswordStrengthModal();
+  });
+  
+});

@@ -78,7 +78,7 @@
           
           {% if user.is_staff %}
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{% url "staff:home" %}">{% trans "Settings" %}</a>
+            <a class="dropdown-item" href="{% url "staff:settings" %}">{% trans "Settings" %}</a>
             <a class="dropdown-item" href="{{ cred_views_viewqueue }}">{% trans "Change Queue" %}
             {% if changeqcount > 0 %}<span class="badge badge-primary">{{ changeqcount }}</span>{% endif %}</a>
           {% endif %}

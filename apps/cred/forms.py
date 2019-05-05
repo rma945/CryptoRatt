@@ -1,7 +1,6 @@
 from django.utils.translation import ugettext_lazy as _
 from django.forms import Form, ModelForm, SelectMultiple, Select, PasswordInput, CharField, TextInput, ClearableFileInput, FileField, Textarea
 
-import paramiko
 from apps.cred.models import Project, Cred, Tag, Group
 
 class ExportForm(Form):

@@ -1,8 +1,6 @@
 from django.contrib.auth.models import User, Group
 from django.utils.translation import ugettext_lazy as _
 from django import forms
-from apps.staff.importloaders import keepass
-from keepassdb.exc import AuthenticationError, InvalidDatabase
 from apps.cred.models import CredAudit
 
 
@@ -56,38 +54,3 @@ class GroupForm(forms.ModelForm):
     class Meta:
         model = Group
         fields = ('name',)
-
-
-class KeepassImportForm(forms.Form):
-    file = forms.FileField()
-    password = forms.CharField(
-        max_length=50,
-        widget=forms.PasswordInput(attrs={'class': 'btn-password-visibility'})
-    )
-    group = forms.ModelChoiceField(
-        queryset=Group.objects.all(),
-        widget=forms.Select(attrs={'class': 'rattic-group-selector'}),
-    )
-
-    def __init__(self, requser, *args, **kwargs):
-        super(KeepassImportForm, self).__init__(*args, **kwargs)
-        self.fields['group'].queryset = Group.objects.filter(user=requser)
-
-    def clean(self):
-        cleaned_data = super(KeepassImportForm, self).clean()
-
-        try:
-            db = keepass(cleaned_data['file'], cleaned_data['password'])
-            cleaned_data['db'] = db
-        except AuthenticationError:
-            msg = _('Could not read keepass file, the password you gave may not be correct.')
-            self._errors['file'] = self.error_class([msg])
-            del cleaned_data['file']
-            del cleaned_data['password']
-        except InvalidDatabase:
-            msg = _('That file does not appear to be a valid KeePass file.')
-            self._errors['file'] = self.error_class([msg])
-            del cleaned_data['file']
-            del cleaned_data['password']
-
-        return cleaned_data

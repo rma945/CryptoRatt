@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="col-md-12 pt-2">
+  <nav>
+    <div class="nav nav-tabs " id="account-tabs" role="tablist">
+      <a class="nav-item nav-link active" id="settings-tab" href="#">{% trans 'Settings' %}</a>
+      <a class="nav-item nav-link" id="users-tab" href="#">{% trans 'Users' %}</a>
+      <a class="nav-item nav-link" id="groups-tab" href="#">{% trans 'Groups' %}</a>
+      <a class="nav-item nav-link" id="tags-tab" href="#">{% trans 'Tags' %}</a>
+    </div>
+  </nav>
+
+  <div class="tab-content border-right border-left border-bottom">
+  </div>
+
+</div>
+{% endblock %}
+
+{% block customjs %}
+  <script type="application/javascript" src="{% static "rattic/js/account_profile.js" %}"></script>
+  <script type="application/javascript" src="{% static "selectize/js/selectize.min.js" %}"></script>
+{% endblock %}

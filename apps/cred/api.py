@@ -13,9 +13,6 @@ from apps.account.authentication import MultiApiKeyAuthentication
 from apps.cred.models import Cred, Tag, CredAudit
 from apps.cred.forms import TagForm
 
-import paramiko
-
-
 class CredAuthorization(Authorization):
     def read_list(self, object_list, bundle):
         # List views remove the deletes and historical credentials

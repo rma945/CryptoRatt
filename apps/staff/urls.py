@@ -5,7 +5,7 @@ from apps.staff.views import *
 app_name = "staff"
 urlpatterns = [
     # Views in views.py
-    path('', home, name="home"),
+    path('', app_settings, name="settings"),
 
     # User/Group Management
     path('userdetail/<int:uid>/', userdetail, name="user_detail"),
@@ -15,12 +15,6 @@ urlpatterns = [
     # Auditing
     path('audit-by-<slug:by>/<int:byarg>/', audit, name="audit"),
 
-    # Importing
-    path('import/keepass/', upload_keepass),
-    path('import/process/', import_overview),
-    path('import/process/<int:import_id>/', import_process),
-    path('import/process/<int:import_id>/ignore/', import_ignore),
-
     # credentials undeletion
     path('credundelete/<int:cred_id>/', credundelete, name="cred_undelete"),
 
@@ -29,7 +23,6 @@ urlpatterns = [
     path('groupdelete/<int:gid>/', groupdelete, name="group_delete"),
     path('userdelete/<int:uid>/', userdelete, name="user_delete"),
 ]
-
 
 # don`t manage groups if USE_LDAP_GROUPS or SAML_ENABLED
 if (not settings.USE_LDAP_GROUPS and not settings.SAML_ENABLED):

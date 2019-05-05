@@ -105,6 +105,27 @@
     margin-bottom: 0px
 }
 
+.badge-big {
+    padding: .45em;
+}
+
+/* disable up-down arrows in a numbers imput type */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+/* disable text selection for a different browsers */
+.noselect {
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
 /* cred_detail.html */
 #password-field, #username-field {
     background-color: white;
@@ -154,19 +175,3 @@
     border-left: 1px solid #fff;
 }
 
-/* disable up-down arrows in a numbers imput type */
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
-}
-
-/* disable text selection for a different browsers */
-.noselect {
-  -webkit-touch-callout: none;
-    -webkit-user-select: none;
-     -khtml-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-            user-select: none;
-}

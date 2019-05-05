@@ -16,15 +16,21 @@ from django.utils.timezone import utc
 
 from apps.cred.models import CredAudit, Cred, Tag
 from apps.cred.forms import CredForm
-from apps.staff.models import UserForm, GroupForm, KeepassImportForm, AuditFilterForm
+from apps.staff.models import UserForm, GroupForm, AuditFilterForm
 from apps.staff.decorators import rattic_staff_required
 
 
 @rattic_staff_required
-def home(request):
-    userlist = User.objects.all()
-    grouplist = Group.objects.all()
-    return render(request, 'staff_home.html', {'userlist': userlist, 'grouplist': grouplist})
+def app_settings(request):
+    return render(request, 'staff_tab_settings.html')
+
+@rattic_staff_required
+def users(request):
+    return render(request, 'staff_tab_users.html')
+
+@rattic_staff_required
+def groups(request):
+    return render(request, 'staff_tab_groups.html')
 
 
 @rattic_staff_required
@@ -54,7 +60,7 @@ def groupadd(request):
         if form.is_valid():
             form.save()
             request.user.groups.add(form.instance)
-            return HttpResponseRedirect(reverse('staff:home'))
+            return HttpResponseRedirect(reverse('staff:settings'))
     else:
         form = GroupForm()
 
@@ -74,7 +80,7 @@ def groupedit(request, gid):
         form = GroupForm(request.POST, instance=group)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('staff:home'))
+            return HttpResponseRedirect(reverse('staff:settings'))
     else:
         form = GroupForm(instance=group)
 
@@ -86,7 +92,7 @@ def groupdelete(request, gid):
     group = get_object_or_404(Group, pk=gid)
     if request.method == 'POST':
         group.delete()
-        return HttpResponseRedirect(reverse('staff:home'))
+        return HttpResponseRedirect(reverse('staff:settings'))
     return render(request, 'staff_groupdetail.html', {'group': group, 'delete': True})
 
 
@@ -95,7 +101,7 @@ def userdelete(request, uid):
     user = get_object_or_404(User, pk=uid)
     if request.method == 'POST':
         user.delete()
-        return HttpResponseRedirect(reverse('staff:home'))
+        return HttpResponseRedirect(reverse('staff:settings'))
     return render(request, 'staff_userdetail.html', {'viewuser': user, 'delete': True})
 
 
@@ -149,7 +155,7 @@ def audit(request, by, byarg):
 class NewUser(FormView):
     form_class = UserForm
     template_name = 'staff_useredit.html'
-    success_url = reverse_lazy('staff:home')
+    success_url = reverse_lazy('staff:settings')
 
     # Staff access only
     @method_decorator(rattic_staff_required)
@@ -168,7 +174,7 @@ class UpdateUser(UpdateView):
     model = User
     form_class = UserForm
     template_name = 'staff_useredit.html'
-    success_url = reverse_lazy('staff:home')
+    success_url = reverse_lazy('staff:settings')
 
     # Staff access only
     @method_decorator(rattic_staff_required)
@@ -196,137 +202,6 @@ class UpdateUser(UpdateView):
         if 'is_active' in form.changed_data and not form.instance.is_active:
             self.success_url = reverse('cred:cred_list', args=('changeadvice', form.instance.id))
         return super(UpdateUser, self).form_valid(form)
-
-
-@rattic_staff_required
-def upload_keepass(request):
-    # If data was submitted
-    if request.method == 'POST':
-        form = KeepassImportForm(request.user, request.POST, request.FILES)
-        # And it is valid
-        if form.is_valid():
-            # Store the data in the session
-            data = {
-                'group': form.cleaned_data['group'].id,
-                'entries': form.cleaned_data['db']['entries'],
-            }
-            request.session['imported_data'] = data
-
-            # Start the user processing entries
-            return HttpResponseRedirect(reverse('staff:import_overview'))
-    else:
-        form = KeepassImportForm(request.user)
-    return render(request, 'staff_keepassimport.html', {'form': form})
-
-
-@rattic_staff_required
-def import_overview(request):
-    # If there was no session data, return 404
-    if 'imported_data' not in request.session.keys():
-        raise Http404
-
-    # Get the entries to import
-    entries = request.session['imported_data']['entries']
-
-    # If there is nothing left, go back home
-    if len(entries) == 0:
-        del request.session['imported_data']
-        request.session.save()
-        return HttpResponseRedirect(reverse('staff:home'))
-
-    return render(request, 'staff_import_overview.html', {
-        'entries': entries,
-    })
-
-
-@rattic_staff_required
-def import_ignore(request, import_id):
-    # If there was no session data, return 404
-    if 'imported_data' not in request.session.keys():
-        raise Http404
-
-    # Get the entry we are concerned with
-    try:
-        del request.session['imported_data']['entries'][int(import_id)]
-        request.session.save()
-    except IndexError:
-        raise Http404
-
-    return HttpResponseRedirect(reverse('staff:import_overview'))
-
-
-@rattic_staff_required
-def import_process(request, import_id):
-    # If there was no session data, return 404
-    if 'imported_data' not in request.session.keys():
-        raise Http404
-
-    # Get the entry we are concerned with
-    try:
-        entry = request.session['imported_data']['entries'][int(import_id)]
-    except IndexError:
-        raise Http404
-
-    # Get the group
-    groupid = request.session['imported_data']['group']
-    try:
-        group = Group.objects.get(pk=groupid)
-    except Group.DoesNotExist:
-        del request.session['imported_data']
-        raise Http404
-
-    if request.method == 'POST':
-        # Try and import what we have now
-
-        # TODO: implement file uploads
-
-        # Build the form
-        form = CredForm(request.user, request.POST, request.FILES)
-
-        # Do we have enough data to save?
-        if form.is_valid():
-
-            # Save the credential
-            form.save()
-
-            # Write the audit log
-            CredAudit(
-                audittype=CredAudit.CREDADD,
-                cred=form.instance,
-                user=request.user,
-            ).save()
-
-            # Remove the entry we're importing
-            del request.session['imported_data']['entries'][int(import_id)]
-            request.session.save()
-
-            # Go back to the overview
-            return HttpResponseRedirect(reverse('staff:import_overview'))
-
-    else:
-        # Init the cred, and create the form
-        processed = dict(entry)
-
-        # Create all the tags
-        tlist = []
-        for t in processed['tags']:
-            (tag, create) = Tag.objects.get_or_create(name=t)
-            tlist.append(tag)
-        processed['tags'] = tlist
-
-        # Setup the group
-        processed['group'] = group
-
-        # If the icon is empty set it
-        if 'iconname' not in processed.keys():
-            processed['iconname'] = 'Key.png'
-
-        # Create the form
-        form = CredForm(request.user, processed, {})
-
-    return render(request, 'staff_import_process.html', {
-        'form': form,
-    })
 
 
 @rattic_staff_required

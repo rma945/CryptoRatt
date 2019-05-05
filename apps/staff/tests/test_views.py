@@ -14,7 +14,7 @@ class StaffViewTests(TestCase):
         self.data = TestData()
 
     def test_home(self):
-        resp = self.data.staff.get(reverse('staff:home'))
+        resp = self.data.staff.get(reverse('staff:settings'))
         self.assertEqual(resp.status_code, 200)
         userlist = resp.context['userlist']
         grouplist = resp.context['grouplist']

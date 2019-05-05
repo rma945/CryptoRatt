@@ -241,7 +241,6 @@ SECRET_KEY = config.get('ratticweb', 'secretkey')
 HOSTNAME = config.get('ratticweb', 'hostname')
 RATTIC_MAX_ATTACHMENTS = int(config.get('ratticweb', 'max_attachments'))
 RATTIC_MAX_ATTACHMENT_SIZE = int(config.get('ratticweb', 'max_attachment_size'))
-LOGINLESS_SSH_FINGERPRINTS = config.getboolean("ratticweb", "loginless_ssh_fingerprints")
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 ALLOWED_HOSTS += config.get('ratticweb', 'hostname'), 'localhost'
