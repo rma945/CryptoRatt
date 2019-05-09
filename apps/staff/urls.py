@@ -4,11 +4,13 @@ from apps.staff.views import *
 
 app_name = "staff"
 urlpatterns = [
-    # Views in views.py
     path('', app_settings, name="settings"),
+    path('users/', users, name="users"),
+    path('groups/', groups, name="groups"),
+    path('tags/', tags, name="tags"),
 
     # User/Group Management
-    path('userdetail/<int:uid>/', userdetail, name="user_detail"),
+    path('user/<int:uid>/', userdetail, name="user_detail"),
     path('removetoken/<int:uid>/', removetoken, name="remove_token"),
     path('groupdetail/<int:gid>/', groupdetail, name="group_detail"),
 
@@ -19,12 +21,12 @@ urlpatterns = [
     path('credundelete/<int:cred_id>/', credundelete, name="cred_undelete"),
 
     # group \ user delete
-    path('useredit/<int:pk>/', UpdateUser.as_view(), name="user_edit"),
-    path('groupdelete/<int:gid>/', groupdelete, name="group_delete"),
-    path('userdelete/<int:uid>/', userdelete, name="user_delete"),
+    path('edit/user/<int:pk>/', UpdateUser.as_view(), name="edit_user"),
+    path('delete/group/<int:gid>/', delete_group, name="delete_group"),
+    path('delete/user/<int:uid>/', delete_user, name="delete_user"),
 ]
 
-# don`t manage groups if USE_LDAP_GROUPS or SAML_ENABLED
+# disable addgroup if LDAP or SAML enabled
 if (not settings.USE_LDAP_GROUPS and not settings.SAML_ENABLED):
     urlpatterns += [
         # Group Management
@@ -32,10 +34,8 @@ if (not settings.USE_LDAP_GROUPS and not settings.SAML_ENABLED):
         path('groupedit/<int:gid>/', groupedit, name="group_edit"),
     ]
 
-# don`t add users if USE_LDAP_GROUPS or SAML_ENABLED
+# disable adduser if LDAP or SAML enabled
 if (not settings.LDAP_ENABLED and not settings.SAML_ENABLED):
     urlpatterns += [
-        # staff.views,
-        # User Management
         path('useradd/', NewUser.as_view(), name="user_add"),
     ]

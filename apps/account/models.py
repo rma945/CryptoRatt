@@ -14,12 +14,19 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import F
 from django.utils import timezone
 
+from django_otp import user_has_device
+
 from tastypie.compat import AUTH_USER_MODEL
 from datetime import timedelta
 
 from apps.cred.models import Tag
 
 from hashlib import sha1
+
+
+def is_2fa_enabled(self):
+    '''Returns user 2fa active status'''
+    return user_has_device(self)
 
 class LDAPPassChangeForm(SetPasswordForm):
     old_password = forms.CharField(label=_("Old password"), widget=forms.PasswordInput)

@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_tags %}
+{% load i18n %}
+{% url "staff:audit" "user" "viewuser.id" as the_url %}
+
+{% block content %}
+
+{{ the_url }}
+<div class="col-xs-12 border mt-2">
+  <div class="row p-4 no-margin-right">
+
+    <!-- profile image -->
+    <div class="col-xs-2 align-items-top ">        
+      <img class="mx-auto d-block img-thumbnail"
+      {% if viewuser.profile.avatar %}
+        src="data:image/jpeg;base64, {{ viewuser.profile.avatar|decode_utf8 }}"
+      {% else %}
+        src="{% static "rattic/img/avatar-default.png" %}"
+      {% endif %}
+      width="160" height="160">
+      <div class="text-center pt-1">
+        <a class="btn btn-outline-primary btn-sm" style="width: 160px" href="{% url "staff:edit_user" viewuser.id %}" role="button">{% trans "Edit" %}</a>
+      </div>
+      <div class="text-center pt-1">
+      {% if viewuser.is_active %}
+        <a class="btn btn-outline-danger btn-sm" style="width: 160px" href="#">{% trans 'Deactivate' %}</a>
+      {% else %}
+        <a class="btn btn-outline-success btn-sm" style="width: 160px" href="#">{% trans 'Activate' %}</a>
+      {% endif %}
+      </div>
+      <div class="text-center pt-1">
+        <a href="#" style="width: 160px" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete-user-modal">{% trans 'Delete' %}</a>
+      </div>
+
+    </div>
+
+    <div class="col">
+      <div class="col-xs">
+        <h2>{{ viewuser.username }}</h2>
+      </div>
+      <div class="col-xs">
+        <b>{% trans "Role" %}: </b>
+        {% if viewuser.is_staff %}
+          <span class="badge badge-danger">Admin</span>
+        {% else %}
+          User 
+        {% endif %}
+      </div>
+      <div class="col-xs">
+        <b>{% trans "Status" %}: </b> 
+        {% if viewuser.is_active %} 
+          <span class="badge badge-success">{% trans 'Active' %}</span>
+        {% else %} 
+          <span class="badge badge-secondary">{% trans 'Deactivated' %}</span>
+        {% endif %}
+      </div>
+
+      <div class="col-xs">
+        <b>{% trans "Email" %}: </b> {{viewuser.email }}
+      </div>
+      <div class="col-xs">
+        <b>{% trans "Two Factor Authentication" %}: </b>
+        {% if viewuser.is_2fa_enabled %}
+          {% trans "Enabled" %}
+        {% else %}
+          {% trans "Disabled" %}
+        {% endif %}
+      </div>
+      <div class="col-xs">
+        <b>{% trans "Last login" %}: </b> {{ viewuser.last_login | date:"Y/m/d H:m"  }}
+      </div>
+      <div class="col-xs">
+        <b>{% trans "Last Password Change" %}: </b> {{ viewuser.profile.password_changed | date:"Y/m/d H:m"  }}
+      </div>
+
+
+      {% if viewuser.groups.all|length %}
+      <hr class="col-xs-12">
+        <h6>{% trans 'Groups' %}</h6>
+        <ul class="list-inline" id="user_groups">
+        {% for g in viewuser.groups.all %}
+          <li class="list-inline-item">
+          <span class="badge badge-big badge-primary">
+            <a class="text-white" href="{% url "staff:group_detail" g.id %}">{{ g.name }}</a>
+          </span>
+          </li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+
+{% include "cred_audit_list.html" with type='cred' morelink=the_url %}
+
+
+<!-- Modal -->
+<div class="modal fade" id="delete-user-modal" tabindex="-1" role="dialog" aria-labelledby="delete-user-modal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="delete-user-modal-label">{% trans 'Delete user' %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      {% blocktrans %}
+        Deleting this user will remove any associated auditlogs, maybe deactivate their account instead?
+      {% endblocktrans %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger">{% trans 'Delete' %}</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Cancel' %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block customjs %}
+{% endblock %}

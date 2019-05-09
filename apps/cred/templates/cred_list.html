@@ -2,101 +2,90 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}{{ credtitle }} - {% trans "Rattic" %}{% endblock %}
+{% block title %}{% trans "Credentials" %}{% endblock %}
 
 {% block content %}
 
-{% if not hidecredlist %}
 {% for alert in alerts %}
   <div class="alert alert-{{ alert.type }}" role="alert">{{ alert.message }}</div>
 {% endfor %}
 
-<form id="credchecksubmitform" action="" method="post">{% csrf_token %}
-  <input type='hidden' name='next' value="{% url "cred:cred_list" filter value sortdir sort page %}" />
+<div class="pt-2 pb-2 btn-group btn-group-sm" role="group" aria-label="credential-buttons">
+  <a class="btn btn-primary" href="{% url "cred:cred_add" %}">{% trans "Create" %}</a>
+  <button class="btn btn-secondary" data-target=".cred-list-check">{% trans "Mass update" %}</button>
+</div>
 
-  <div class="pt-2 pb-2 btn-group btn-group-sm" role="group" aria-label="credential-buttons">
-    {% if buttons.add %}
-      <a class="btn btn-primary" href="{% url "cred:cred_add" %}">{% trans "Create" %}</a>
-    {% endif %}
+<div class="table-responsive">
+  <table class="table table-hover table-sm">
+    <thead>
+      <tr>
+        <th class="d-none d-sm-table-cell" style="width: 35%">
+          {% if sort == 'title' %}
+            <a href="{% url "cred:cred_list" filter value revsortdir 'title' page %}">{% trans "Title" %}</a>
+          {% else %}
+            <a href="{% url "cred:cred_list" filter value sortdir 'title' page %}">{% trans "Title" %}</a>
+          {% endif %}
+        </th>
+        <th class="d-none d-sm-table-cell">
+          {% if sort == 'username' %}
+            <a href="{% url 'cred:cred_list' filter value revsortdir 'username' page %}">{% trans "User" %}</a>
+          {% else %}
+            <a href="{% url 'cred:cred_list' filter value sortdir 'username' page %}">{% trans "User" %}</a>
+          {% endif %}
+        </th>
+        <th  class="d-none d-sm-table-cell">
+          {% if sort == 'group' %}
+            <a href="{% url 'cred:cred_list' filter value revsortdir 'group' page %}">{% trans "Owner" %}</a>
+          {% else %}
+            <a href="{% url 'cred:cred_list' filter value sortdir 'group' page %}">{% trans "Owner" %}</a>
+          {% endif %}
+        </th>
+        <th class="d-none d-sm-table-cell">
+          {% trans "Viewer" %}
+        </th>
+        <th class="d-none d-sm-table-cell">
+          {% trans "Tags" %}
+        </th>
+      </tr>
+    </thead>
     
-    {% if buttons.bulkchange %}
-      <button class="btn btn-secondary" data-target=".cred-list-check" data-action="{% url "cred:cred_bulk_delete" %}">{% trans "Update" %}</button>
-    {% endif %}
-  </div>
-
-  <div class="table-responsive">
-    <table class="table table-hover table-sm">
-      <thead>
-        <tr>
-          <th class="d-none d-sm-table-cell" style="width: 35%">
-            {% if sort == 'title' %}
-              <a href="{% url "cred:cred_list" filter value revsortdir 'title' page %}">{% trans "Title" %}</a>
+    <tbody>
+      {% for c in credlist %}
+      <tr class="{% if c.on_changeq or c.is_expired %}table-secondary{% endif %} {% if not c.is_latest %}table-info{% endif %}">
+        <td>
+          <a href="{% url "cred:cred_detail" c.id %}">
+            <img class="pr-2" src="{% static "rattic/img/credential-default.png" %}">{{ c.title|default:"No Title" }}
+          </a>
+        </td>
+        <td class="d-none d-sm-table-cell">
+          {{ c.username }}
+        </td>
+        <td class="d-none d-sm-table-cell">
+          {% if c.group in groups.all %}
+            <a href="{% url "cred:cred_list" "group" c.group.id %}">{{ c.group.name }}</a>
+          {% else %}
+            {{ c.group.name }}
+          {% endif %}
+        </td>
+        <td class="d-none d-sm-table-cell">
+          {% for g in c.groups.all %}
+            {% if g in groups.all %}
+              <a href="{% url "cred:cred_list" "group" g.id %}">{{ g.name }}</a>
             {% else %}
-              <a href="{% url "cred:cred_list" filter value sortdir 'title' page %}">{% trans "Title" %}</a>
+              {{ g.name }}
             {% endif %}
-          </th>
-          <th class="d-none d-sm-table-cell">
-            {% if sort == 'username' %}
-              <a href="{% url 'cred:cred_list' filter value revsortdir 'username' page %}">{% trans "User" %}</a>
-            {% else %}
-              <a href="{% url 'cred:cred_list' filter value sortdir 'username' page %}">{% trans "User" %}</a>
-            {% endif %}
-          </th>
-          <th  class="d-none d-sm-table-cell">
-            {% if sort == 'group' %}
-              <a href="{% url 'cred:cred_list' filter value revsortdir 'group' page %}">{% trans "Owner" %}</a>
-            {% else %}
-              <a href="{% url 'cred:cred_list' filter value sortdir 'group' page %}">{% trans "Owner" %}</a>
-            {% endif %}
-          </th>
-          <th class="d-none d-sm-table-cell">
-            {% trans "Viewer" %}
-          </th>
-          <th class="d-none d-sm-table-cell">
-            {% trans "Tags" %}
-          </th>
-        </tr>
-      </thead>
-      
-      <tbody>
-        {% for c in credlist %}
-        <tr class="{% if c.on_changeq or c.is_expired %}table-secondary{% endif %} {% if not c.is_latest %}table-info{% endif %}">
-          <td>
-            <a href="{% url "cred:cred_detail" c.id %}">
-              <img class="pr-2" src="{% static "rattic/img/credential-default.png" %}">{{ c.title|default:"No Title" }}
-            </a>
-          </td>
-          <td class="d-none d-sm-table-cell">
-            {{ c.username }}
-          </td>
-          <td class="d-none d-sm-table-cell">
-            {% if c.group in groups.all %}
-              <a href="{% url "cred:cred_list" "group" c.group.id %}">{{ c.group.name }}</a>
-            {% else %}
-              {{ c.group.name }}
-            {% endif %}
-          </td>
-          <td class="d-none d-sm-table-cell">
-            {% for g in c.groups.all %}
-              {% if g in groups.all %}
-                <a href="{% url "cred:cred_list" "group" g.id %}">{{ g.name }}</a>
-              {% else %}
-                {{ g.name }}
-              {% endif %}
-            {% endfor %}
-          </td>
-          <td class="d-none d-sm-table-cell">
-            {% for t in c.tags.all %}
-              <a class="badge badge-primary" href="{% url "cred:cred_list" "tag" t.id %}">{{ t.name }}</a>
-            {% endfor %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-
-</form>
+          {% endfor %}
+        </td>
+        <td class="d-none d-sm-table-cell">
+          {% for t in c.tags.all %}
+            <a class="badge badge-primary" href="{% url "cred:cred_list" "tag" t.id %}">{{ t.name }}</a>
+          {% endfor %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
 <!-- paginator start -->
 <nav aria-label="pagination">
@@ -121,7 +110,9 @@
           {% if credlist.number == p %}
             <li class="d-none d-sm-block page-item active"><a class="page-link" href="#"><b>{{ forloop.counter }}</b></a></li>
           {% else %}
-            <li class="d-none d-sm-block page-item"><a class="page-link" href="{% url "cred:cred_list" filter value sortdir sort forloop.counter %}">{{ forloop.counter }}</a></li>
+            <li class="d-none d-sm-block page-item">
+              <a class="page-link" href="{% url "cred:cred_list" filter value sortdir sort forloop.counter %}">{{ forloop.counter }}</a>
+            </li>
           {% endif %}
         {% endif %}
     {% endfor %}
@@ -142,14 +133,6 @@
 
   </ul>
 </nav>
-
-{% endif %}
-
-
-{% if showtaglist %}
-  <h1>{% trans "Matched Tags" %}</h1>
-  {% include "cred_taglist.html" with tags=tag only %}
-{% endif %}
 
 {% endblock %}
 

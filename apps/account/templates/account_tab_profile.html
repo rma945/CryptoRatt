@@ -53,7 +53,7 @@
         <b>{% trans "Last Password Change" %}: </b> {{ user.profile.password_changed | date:"Y/m/d H:m"  }}
       </div>
       
-      {% if user.groups %}
+      {% if user.groups.all|length %}
       <hr class="col-xs-12">
         <h6>{% trans 'Groups' %}</h6>
         <ul class="list-inline" id="user_groups">

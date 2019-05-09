@@ -26,31 +26,41 @@ def app_settings(request):
 
 @rattic_staff_required
 def users(request):
-    return render(request, 'staff_tab_users.html')
+    paginator = Paginator(
+        User.objects.all().order_by('username'),
+        request.user.profile.items_per_page
+    )
+    
+    page = request.GET.get('page')
+    users = paginator.get_page(page)    
+    
+    return render(request, 'staff_tab_users.html', {'users': users})
 
 @rattic_staff_required
 def groups(request):
-    return render(request, 'staff_tab_groups.html')
+    groups = Group.objects.all()
+    return render(request, 'staff_tab_groups.html', {'groups': groups})
 
+@rattic_staff_required
+def tags(request):
+    return render(request, 'staff_tab_tags.html')
 
 @rattic_staff_required
 def userdetail(request, uid):
     user = get_object_or_404(User, pk=uid)
+    credlogs = CredAudit.objects.filter(user=user, cred__group__in=request.user.groups.all())[:5]
+    
+    # disable user if it don`t exists in LDAP
     if settings.LDAP_ENABLED and settings.USE_LDAP_GROUPS:
         from django_auth_ldap.backend import LDAPBackend
         popuser = LDAPBackend().populate_user(user.username)
         if popuser is None:
             user.is_active = False
             user.save()
-            return HttpResponseRedirect(reverse('cred:cred_list',
-                args=('changeadvice', user.id)))
-    credlogs = CredAudit.objects.filter(user=user, cred__group__in=request.user.groups.all())[:5]
-    morelink = reverse("staff:audit", args=('user', user.id))
-    return render(request, 'staff_userdetail.html', {
-        'viewuser': user,
-        'credlogs': credlogs,
-        'morelink': morelink,
-        'hastoken': user_has_device(user)})
+
+    return render(
+        request, 'staff_user_detail.html',
+        {'viewuser': user, 'credlogs': credlogs,})
 
 
 @rattic_staff_required
@@ -88,7 +98,7 @@ def groupedit(request, gid):
 
 
 @rattic_staff_required
-def groupdelete(request, gid):
+def delete_group(request, gid):
     group = get_object_or_404(Group, pk=gid)
     if request.method == 'POST':
         group.delete()
@@ -97,12 +107,12 @@ def groupdelete(request, gid):
 
 
 @rattic_staff_required
-def userdelete(request, uid):
-    user = get_object_or_404(User, pk=uid)
+def delete_user(request, uid):
     if request.method == 'POST':
+        user = get_object_or_404(User, pk=uid)
         user.delete()
         return HttpResponseRedirect(reverse('staff:settings'))
-    return render(request, 'staff_userdetail.html', {'viewuser': user, 'delete': True})
+    return render(request, 'staff_user_detail.html', {'viewuser': user, 'delete': True})
 
 
 @rattic_staff_required
@@ -198,9 +208,11 @@ class UpdateUser(UpdateView):
             if len(missing_groups) > 0:
                 self.success_url = reverse('cred:cred_list',
                         args=('changeadvice', form.instance.id)) + '?' + '&'.join(missing_groups)
+        
         # If user is becoming inactive we want to redirect to change advice
         if 'is_active' in form.changed_data and not form.instance.is_active:
             self.success_url = reverse('cred:cred_list', args=('changeadvice', form.instance.id))
+        
         return super(UpdateUser, self).form_valid(form)
 
 
