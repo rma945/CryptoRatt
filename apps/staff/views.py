@@ -16,7 +16,8 @@ from django.utils.timezone import utc
 
 from apps.cred.models import CredAudit, Cred, Tag
 from apps.cred.forms import CredForm
-from apps.staff.models import UserForm, GroupForm, AuditFilterForm
+from apps.staff.forms import UserForm, GroupForm, AuditFilterForm
+from apps.staff.forms import EditUserForm
 from apps.staff.decorators import rattic_staff_required
 
 
@@ -46,7 +47,7 @@ def tags(request):
     return render(request, 'staff_tab_tags.html')
 
 @rattic_staff_required
-def userdetail(request, uid):
+def user_detail(request, uid):
     user = get_object_or_404(User, pk=uid)
     credlogs = CredAudit.objects.filter(user=user, cred__group__in=request.user.groups.all())[:5]
     
@@ -59,7 +60,7 @@ def userdetail(request, uid):
             user.save()
 
     return render(
-        request, 'staff_user_detail.html',
+        request, 'staff_detail_user.html',
         {'viewuser': user, 'credlogs': credlogs,})
 
 
@@ -78,13 +79,13 @@ def groupadd(request):
 
 
 @rattic_staff_required
-def groupdetail(request, gid):
+def group_detail(request, gid):
     group = get_object_or_404(Group, pk=gid)
-    return render(request, 'staff_groupdetail.html', {'group': group})
+    return render(request, 'staff_detail_group.html', {'group': group})
 
 
 @rattic_staff_required
-def groupedit(request, gid):
+def edit_group(request, gid):
     group = get_object_or_404(Group, pk=gid)
     if request.method == 'POST':
         form = GroupForm(request.POST, instance=group)
@@ -103,7 +104,7 @@ def delete_group(request, gid):
     if request.method == 'POST':
         group.delete()
         return HttpResponseRedirect(reverse('staff:settings'))
-    return render(request, 'staff_groupdetail.html', {'group': group, 'delete': True})
+    return render(request, 'staff_detail_group.html', {'group': group, 'delete': True})
 
 
 @rattic_staff_required
@@ -112,22 +113,22 @@ def delete_user(request, uid):
         user = get_object_or_404(User, pk=uid)
         user.delete()
         return HttpResponseRedirect(reverse('staff:settings'))
-    return render(request, 'staff_user_detail.html', {'viewuser': user, 'delete': True})
+    return render(request, 'staff_detail_user.html', {'viewuser': user, 'delete': True})
 
 
 @rattic_staff_required
 def audit(request, by, byarg):
     auditlog = CredAudit.objects.all()
-    item = None
+    audit_item = None
 
     if by == 'user':
-        item = get_object_or_404(User, pk=byarg)
-        auditlog = auditlog.filter(user=item)
+        audit_item = get_object_or_404(User, pk=byarg)
+        auditlog = auditlog.filter(user=audit_item)
     elif by == 'cred':
-        item = get_object_or_404(Cred, pk=byarg)
-        auditlog = auditlog.filter(cred=item)
+        audit_item = get_object_or_404(Cred, pk=byarg)
+        auditlog = auditlog.filter(cred=audit_item)
     elif by == 'days':
-        item = int(byarg)
+        audit_item = int(byarg)
         try:
             delta = datetime.timedelta(days=int(byarg))
             datefrom = now() - delta
@@ -147,24 +148,24 @@ def audit(request, by, byarg):
     page = request.GET.get('page')
 
     try:
-        logs = paginator.page(page)
+        audit_logs = paginator.page(page)
     except PageNotAnInteger:
-        logs = paginator.page(1)
+        audit_logs = paginator.page(1)
     except EmptyPage:
-        logs = paginator.page(paginator.num_pages)
+        audit_logs = paginator.page(paginator.num_pages)
 
     return render(request, 'staff_audit.html', {
+        'audit_item': audit_item,
         'filterform': form,
-        'logs': logs,
+        'audit_logs': audit_logs,
         'by': by,
-        'item': item,
         'byarg': byarg
     })
 
 
 class NewUser(FormView):
     form_class = UserForm
-    template_name = 'staff_useredit.html'
+    template_name = 'staff_edit_user.html'
     success_url = reverse_lazy('staff:settings')
 
     # Staff access only
@@ -179,41 +180,58 @@ class NewUser(FormView):
         user.save()
         return super(NewUser, self).form_valid(form)
 
+@rattic_staff_required
+def edit_user(request, uid):
+    edituser = get_object_or_404(User, pk=uid)
+    
+    if request.method == 'POST':
+        form = EditUserForm(request.POST, request.user, instance=edituser)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('staff:user_detail', args=(uid,)))
+        else:
+            print(form.errors)
+    else:
+        form = EditUserForm(instance=edituser)
 
-class UpdateUser(UpdateView):
-    model = User
-    form_class = UserForm
-    template_name = 'staff_useredit.html'
-    success_url = reverse_lazy('staff:settings')
+    return render(request, 'staff_edit_user.html', {'edit_user':  edituser, 'form': form})
 
-    # Staff access only
-    @method_decorator(rattic_staff_required)
-    def dispatch(self, *args, **kwargs):
-        return super(UpdateUser, self).dispatch(*args, **kwargs)
 
-    # If the password changed, set password to newpass
-    def form_valid(self, form):
-        if form.cleaned_data['newpass'] is not None and len(form.cleaned_data['newpass']) > 0:
-            form.instance.set_password(form.cleaned_data['newpass'])
-        # If user is having groups removed we want change advice for those
-        # groups
-        if form.instance.is_active and 'groups' in form.changed_data:
-            # Get a list of the missing groups
-            missing_groups = []
-            for g in form.instance.groups.all():
-                if g not in form.cleaned_data['groups']:
-                    missing_groups.append('group=' + str(g.id))
+# class UpdateUser(UpdateView):
+#     model = User
+#     form_class = UserForm
+#     template_name = 'staff_edit_user.html'
+#     success_url = reverse_lazy('staff:settings')
 
-            # The user may have just added groups
-            if len(missing_groups) > 0:
-                self.success_url = reverse('cred:cred_list',
-                        args=('changeadvice', form.instance.id)) + '?' + '&'.join(missing_groups)
+#     # Staff access only
+#     @method_decorator(rattic_staff_required)
+#     def dispatch(self, *args, **kwargs):
+#         return super(UpdateUser, self).dispatch(*args, **kwargs)
+
+#     # If the password changed, set password to newpass
+#     def form_valid(self, form):
+#         if form.cleaned_data['newpass'] is not None and len(form.cleaned_data['newpass']) > 0:
+#             form.instance.set_password(form.cleaned_data['newpass'])
         
-        # If user is becoming inactive we want to redirect to change advice
-        if 'is_active' in form.changed_data and not form.instance.is_active:
-            self.success_url = reverse('cred:cred_list', args=('changeadvice', form.instance.id))
+#         # If user is having groups removed we want change advice for those
+#         # groups
+#         if form.instance.is_active and 'groups' in form.changed_data:
+#             # Get a list of the missing groups
+#             missing_groups = []
+#             for g in form.instance.groups.all():
+#                 if g not in form.cleaned_data['groups']:
+#                     missing_groups.append('group=' + str(g.id))
+
+#             # The user may have just added groups
+#             if len(missing_groups) > 0:
+#                 self.success_url = reverse('cred:cred_list',
+#                         args=('changeadvice', form.instance.id)) + '?' + '&'.join(missing_groups)
         
-        return super(UpdateUser, self).form_valid(form)
+#         # If user is becoming inactive we want to redirect to change advice
+#         if 'is_active' in form.changed_data and not form.instance.is_active:
+#             self.success_url = reverse('cred:cred_list', args=('changeadvice', form.instance.id))
+        
+#         return super(UpdateUser, self).form_valid(form)
 
 
 @rattic_staff_required
@@ -243,7 +261,7 @@ def credundelete(request, cred_id):
 
 
 @rattic_staff_required
-def removetoken(request, uid):
+def delete_token(request, uid):
     # Grab the user
     user = get_object_or_404(User, pk=uid)
 

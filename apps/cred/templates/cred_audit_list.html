@@ -2,12 +2,25 @@
 
 <div class="accordion mt-2" id="audit-logs-collapse">
   <div class="card">
-    <div class="card-header card-header-sm" id="audit-logs-header" data-toggle="collapse" data-target="#audit-logs-collapse-body" aria-expanded="false" aria-controls="audit-logs-collapse-body">
+    <div class="card-header card-header-sm" id="audit-logs-header" data-toggle="collapse" data-target="#audit-logs-collapse-body" 
+    {% if expanded %}
+      aria-expanded="true"
+    {% else %}
+      aria-expanded="false"
+    {%endif %}
+    aria-controls="audit-logs-collapse-body">
       <b>{% trans "Audit Logs" %}</b>
     </div>
 
     <!-- audit-logs-start -->
-    <div id="audit-logs-collapse-body" class="collapse" aria-labelledby="audit-logs-header" data-parent="#audit-logs-collapse">
+    <div id="audit-logs-collapse-body" 
+    {% if expanded %}
+      class="collapse show"
+    {% else %}
+      class="collapse"
+    {%endif %}
+
+    aria-labelledby="audit-logs-header" data-parent="#audit-logs-collapse">
       <div class="card-body card-body-sm">
         <table class="table table-sm">
           <thead>

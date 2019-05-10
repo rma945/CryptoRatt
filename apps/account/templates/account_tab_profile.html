@@ -15,14 +15,14 @@
       {% endif %}
       width="160" height="160">
       <div class="text-center pb-1">
-        <a class="btn btn-outline-primary btn-sm" style="width: 160px" href="#" role="button">{% trans "Update image" %}</a>       
+        <a class="btn btn-outline-primary btn-sm" style="width: 160px" href="#" role="button">{% trans "Update image" %}</a>
       </div>
       {% if ALLOWPWCHANGE %}
-      <div class="text-center">        
+      <div class="text-center">
         <a class="btn btn-outline-danger btn-sm" style="width: 160px" href="{% url "password_change" %}">{% trans "Update password" %}</a>
       </div>
       {% endif %}
-      <div class="text-center">        
+      <div class="text-center">
         {% if default_device %}
           <a href="{% url 'account:tfa_disable' %}" style="width: 160px" class="btn btn-danger btn-sm">{% trans "Disable 2FA" %}</a>
         {% else %}

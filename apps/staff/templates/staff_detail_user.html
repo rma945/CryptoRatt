@@ -2,11 +2,9 @@
 {% load static %}
 {% load custom_tags %}
 {% load i18n %}
-{% url "staff:audit" "user" "viewuser.id" as the_url %}
 
 {% block content %}
 
-{{ the_url }}
 <div class="col-xs-12 border mt-2">
   <div class="row p-4 no-margin-right">
 
@@ -93,8 +91,9 @@
 
 </div>
 
-{% include "cred_audit_list.html" with type='cred' morelink=the_url %}
-
+<!-- audit logs -->
+{% url "staff:audit" 'user' viewuser.id as audit_logs_url %}
+{% include "cred_audit_list.html" with type='cred' morelink=audit_logs_url expanded=True %}
 
 <!-- Modal -->
 <div class="modal fade" id="delete-user-modal" tabindex="-1" role="dialog" aria-labelledby="delete-user-modal" aria-hidden="true">

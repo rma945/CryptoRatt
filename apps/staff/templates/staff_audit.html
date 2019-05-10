@@ -1,72 +1,49 @@
 {% extends "base.html" %}
-
 {% load i18n %}
-
 {% block content %}
 
-{% include "staff_part_audit_filter.html" %}
-
-{% if by == 'cred' %}
-  <h2>{% blocktrans with cred_title=item.title %}Audit Logs for password &apos;{{ cred_title }}&apos;{% endblocktrans %}</h2>
-{% endif %}
-{% if by == 'user' %}
-  <h2>{% blocktrans with username=item.username %}Audit Logs for user &apos;{{ username }}&apos;{% endblocktrans %}</h2>
-{% endif %}
-{% if by == 'days' %}
-  <h2>{% blocktrans %}Audit Logs going back {{ item }} days ago{% endblocktrans %}</h2>
-{% endif %}
-
-<table class="table table-striped table-bordered table-condensed">
-<tr>
-
-    <th>
-        {% trans "Action" %}
-        <a href="#filterModal" data-toggle="modal"><i class="icon-filter"></i></a>
-    </th>
-
-  {% if type != 'user' %}
-    <th>{% trans "User" %}</th>
+<div class="alert alert-success mt-2" role="alert">
+  <b>{% trans "Audit access logs" %}:</b>
+  {% if by == 'user' %}
+    <a href="{% url 'staff:user_detail' audit_item.id %}">{{ audit_item.username }}</a>
+  {% elif by == 'cred' %}
+    <a href="{% url 'cred:cred_detail' audit_item.id %}">{{ audit_item.title }}</a>
   {% endif %}
-  {% if type != 'cred' %}
-    <th>{% trans "Credential" %}</th>
-  {% endif %}
-  <th>{% trans "When" %}</th>
-</tr>
-
-{% for audit in logs %}
-  <tr>
-    <td>{{ audit.get_audittype_display }}</td>
-    {% if by != 'user' %}
-      <td><a href="{% url 'staff:user_detail' audit.user.id %}">{{ audit.user.username }}</a></td>
-    {% endif %}
-    {% if vy != 'cred' %}
-      <td><a href="{% url 'cred:cred_detail' audit.cred.id %}">{{ audit.cred.title }}</a></td>
-    {% endif %}
-    <td>{{ audit.time }}</td>
-  </tr>
-{% endfor %}
-</table>
-
-<div class="pagination pagination-centered">
-  <ul>
-    {% if logs.has_previous %}
-      <li><a href="?page={{ logs.previous_page_number }}">{% trans "Prev" %}</a></li>
-    {% else %}
-      <li class="disabled"><a href="#">{% trans "Prev" %}</a></li>
-    {% endif %}
-    {% for p in logs.paginator.page_range %}
-      {% if logs.number == p %}
-        <li class="active"><a href="#">{{ p }}</a></li>
-      {% else %}
-        <li><a href="?page={{ p }}">{{ p }}</a></li>
-      {% endif %}
-    {% endfor %}
-    {% if logs.has_next %}
-      <li><a href="?page={{ logs.next_page_number }}">{% trans "Next" %}</a></li>
-    {% else %}
-      <li class="disabled"><a href="#">{% trans "Next" %}</a></li>
-    {%endif %}
-  </ul>
 </div>
+
+<div class="table-responsive pt-2">
+  <table class="table table-sm table-hover">
+
+    <tr>
+      <th>{% trans "Action" %}</th>
+      {% if by != 'user' %}
+        <th>{% trans "User" %}</th>
+      {% endif %}
+      {% if by != 'cred' %}
+      <th>{% trans "Credential" %}</th>
+      {% endif %}
+      <th>{% trans "When" %}</th>
+    </tr>
+
+    {% for audit in audit_logs %}
+      <tr>
+        <td>{{ audit.get_audittype_display }}</td>
+        {% if by != 'user' %}
+          <td><a href="{% url 'staff:user_detail' audit.user.id %}">{{ audit.user.username }}</a></td>
+        {% endif %}
+        {% if by != 'cred' %}
+          <td><a href="{% url 'cred:cred_detail' audit.cred.id %}">{{ audit.cred.title }}</a></td>
+        {% endif %}
+        <td>{{ audit.time }}</td>
+      </tr>
+    {% endfor %}
+
+  </table>
+</div>
+
+{% block paginator %}
+  {% include "paginator.html" with itemlist=audit_logs %}
+{% endblock %}
+
 
 {% endblock %}

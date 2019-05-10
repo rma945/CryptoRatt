@@ -74,8 +74,3 @@ class CredForm(ModelForm):
             'groups': SelectMultiple(attrs={'class': 'form-control single-select'}),
             'users': SelectMultiple(attrs={'class': 'form-control single-select'}),
         }
-
-
-# .selectize-input
-#calc(2.25rem + 2px)
-# font-size: .75rem

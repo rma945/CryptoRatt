@@ -16,8 +16,8 @@
     </li>
 
     <!--paginator pages button-->
-    {% for l in  itemlist.paginator.page_range %}
-        {% if l <= itemlist.number|add:20 and l >= itemlist.number|add:-10 %}
+    {% for p in  itemlist.paginator.page_range %}
+        {% if p <= itemlist.number|add:20 and p >= itemlist.number|add:-10 %}
           {% if itemlist.number == p %}
             <li class="d-none d-sm-block page-item active">
               <a class="page-link" href="#"><b>{{ forloop.counter }}</b></a>
