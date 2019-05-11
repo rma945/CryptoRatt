@@ -69,16 +69,16 @@
           
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="{% url "account:profile" %}">{% trans "Profile" %}</a>
+          <a class="dropdown-item" href="{% url "account:profile" %}"><i class="far fa-user"></i> {% trans "Profile" %}</a>
           <div class="dropdown-divider"></div>
 
-          <a class="dropdown-item" href="{% url "cred:project_list" %}">{% trans "Projects" %}</a>
-          <a class="dropdown-item" href="{% url "cred:cred_list" %}">{% trans "Passwords" %}</a>
+          <a class="dropdown-item" href="{% url "cred:project_list" %}"><i class="far fa-paper-plane"></i>  {% trans "Projects" %}</a>
+          <a class="dropdown-item" href="{% url "cred:cred_list" %}"><i class="far fa-list-alt"></i> {% trans "Passwords" %}</a>
           
           {% if user.is_staff %}
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{% url "staff:settings" %}">{% trans "Settings" %}</a>
-            <a class="dropdown-item" href="{{ cred_views_viewqueue }}">{% trans "Change Queue" %}
+            <a class="dropdown-item" href="{% url "staff:settings" %}"><i class="fas fa-cogs"></i> {% trans "Settings" %}</a>
+            <a class="dropdown-item" href="{{ cred_views_viewqueue }}"><i class="fas fa-exchange-alt"></i> {% trans "Change Queue" %}
             {% if changeqcount > 0 %}<span class="badge badge-primary">{{ changeqcount }}</span>{% endif %}</a>
           {% endif %}
 
@@ -87,12 +87,11 @@
           {% endif %}
 
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="{% url "account:logout" %}">{% trans "Logout" %}</a>
+          <a class="dropdown-item" href="{% url "account:logout" %}"><i class="fas fa-sign-out-alt"></i>{% trans "Logout" %}</a>
         </div>
       </li>
     </ul>
    
-    <!--account dropdown end-->   
-    
+    <!--account dropdown end-->
   </div>
 </nav>

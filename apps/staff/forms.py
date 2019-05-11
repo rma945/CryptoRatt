@@ -17,7 +17,7 @@ class EditUserForm(ModelForm):
         }
         
     def clean(self):
-        print("FUCK")
+        addvalidator = True
 
 class AuditFilterForm(Form):
     hide = MultipleChoiceField(

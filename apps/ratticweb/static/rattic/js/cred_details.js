@@ -3,7 +3,7 @@ var credentialPassword = 'all-passwords-are-encrypted';
 
 // get credential ID from page metadata
 function getCredentialID() {
-  return $('head meta[name=rattic_cred_id]').attr('content');
+  return $("[name='cred-id']").attr("content");
 }
 
 // get credential password from API and cache it in local JS
@@ -105,22 +105,22 @@ $(document).ready(function () {
   });
 
   // register - show password toggle button
-  $('#show-password-field-button').click(function (e) {
+  $('#show-password-field-button').click(function () {
     showPasswordToggle();
   });
 
   // register - copy password button
-  $('#copy-password-button').click(function (e) {
+  $('#copy-password-button').click(function () {
     copyPassword();
   });
 
   // register - undelete button
-  $('#undelete-credential-button').click(function (e) {
+  $('#undelete-credential-button').click(function () {
     undeleteCredentialModalToggle()
   });
 
   // register - delete button
-  $('#delete-credential-button').click(function (e) {
+  $('#delete-credential-button').click(function () {
     deleteCredentialModalToggle()
   });
 

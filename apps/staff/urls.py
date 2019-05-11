@@ -26,7 +26,8 @@ urlpatterns = [
     path('delete/group/<int:gid>/', delete_group, name="delete_group"),
     path('delete/user/<int:uid>/', delete_user, name="delete_user"),
 
-    # unused
+    # api
+    path('deactivate/user/', deactivate_user, name="deactivate_user"),
     # path('delete/token/<int:uid>/', delete_token, name="delete_token"),
 ]
 

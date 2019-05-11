@@ -18,39 +18,26 @@ function validatePasswordModal() {
 
 function calculatePasswordStrengthModal() {
   var passwordStrength = 0;
-  var passwordLength = 0;
+  var passwordLength = $('#password-length-custom-input').val();
   var color = 'danger';
 
-  // get password length from checkboxex
-  $("input[type='radio']").each(function () {
-    if ($(this).prop('checked')) {
-      passwordLength = $(this).val();
-      return false;
-    }
-  });
-
-  // check if custom password lenght is set
-  if ($("#lengthCustom").val()) {
-    passwordLength = $("#lengthCustom").val();
-  }
-  
   // calculate password length
   switch (true) {
-    case (passwordLength < 8):
+    case (passwordLength <= 6):
       break;
-    case (passwordLength == 8):
+    case (passwordLength >= 6 && passwordLength <= 8):
       passwordStrength +=1
       break;
-    case (passwordLength <= 16):
+    case (passwordLength >= 8 && passwordLength <= 12):
       passwordStrength += 2
       break;
-    case (passwordLength <= 18):
+    case (passwordLength >= 12 && passwordLength <= 16):
       passwordStrength += 3
       break;
-    case (passwordLength <= 24):
+    case (passwordLength >= 16 && passwordLength <= 20):
       passwordStrength += 4
       break;
-    case (passwordLength >= 32):
+    case (passwordLength >= 20):
       passwordStrength += 5
       break;
     }
@@ -107,7 +94,7 @@ function generateRandomPassword(lower=true, upper=true, numbers=true, special=fa
 }
 
 function setRandomPassword() {
-  var passwordLength = 24;
+  var passwordLength = $('#password-length-custom-input').val();
 
   // get password length from checkboxex
   $(".form-check-input").each(function () {
@@ -116,11 +103,6 @@ function setRandomPassword() {
       return false;
     }
   });
-
-  // set custom password length if need
-  if ($("#lengthCustom").val()) {
-    passwordLength = $("#lengthCustom").val();
-  }
 
   // generate password
   password = generateRandomPassword(
@@ -169,7 +151,7 @@ $(document).ready(function () {
   });
 
   // initialize SimpleMDE only for cred_edit page
-  var descriptionMDE = new SimpleMDE({
+  new SimpleMDE({
     autoDownloadFontAwesome: false,
     spellChecker: false,
     status: false,
@@ -203,16 +185,34 @@ $(document).ready(function () {
   });
 
   // add upload filenames at upload files panel
-  $('#id_uploads').change(function (e) {
+  $('#id_uploads').change(function () {
     updateFilesUploadField();
   });
 
-  $("input[type='radio']").click(function (e) {
+  // register modal password slider function
+  $('#password-length-slider').on('input', function () {
+    passwordLength = $(this).val()
+    $('#password-length-custom-input').val(passwordLength);
+  });
+
+  $('#password-length-slider').change(function () {
     calculatePasswordStrengthModal();
   });
 
-  // register validate modal function
-  $("input[type='checkbox']").click(function (e) {
+  $('#password-length-custom-input').on('input', function () {
+    if ($(this).val() > 128) {
+      $(this).val(128)
+    }
+    if ($(this).val() < 6) {
+      $(this).val(6)
+    }
+
+    $('#password-length-slider').val($(this).val());
+    calculatePasswordStrengthModal();
+  });
+
+  
+  $("input[type='checkbox']").click(function () {
     validatePasswordModal();
     calculatePasswordStrengthModal();
   });

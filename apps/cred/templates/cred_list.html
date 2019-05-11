@@ -11,8 +11,8 @@
 {% endfor %}
 
 <div class="pt-2 pb-2 btn-group btn-group-sm" role="group" aria-label="credential-buttons">
-  <a class="btn btn-primary" href="{% url "cred:cred_add" %}">{% trans "Create" %}</a>
-  <button class="btn btn-secondary" data-target=".cred-list-check">{% trans "Mass update" %}</button>
+  <a class="btn btn-primary" href="{% url "cred:cred_add" %}"><i class="fas fa-plus"></i> {% trans "Create" %}</a>
+  <button class="btn btn-secondary" data-target=".cred-list-check"><i class="fas fa-tasks"></i> {% trans "Mass update" %}</button>
 </div>
 
 <div class="table-responsive">

@@ -18,7 +18,6 @@ function createAPIKey() {
     });
   }
   
-  // TODO: MOVE TO API
   location.reload();
 }
 

@@ -5,8 +5,8 @@
 
 {% block title %}{{ cred.title }} - {% trans "Rattic" %}{% endblock %}
 
-{% block headarea %}
-  <meta name="rattic_cred_id" content="{{ cred.id }}" />
+{% block customheader %}
+  <meta name="cred-id" content="{{ cred.id }}" />
 {% endblock %}
 
 {% block content %}
@@ -80,16 +80,16 @@
 
 {% if cred.is_latest and not readonly %}
 <div class="pb-2 pt-2 btn-group btn-group-sm" role="group" aria-label="credential-tools-buttons">
-  <a class="btn btn-primary" href="{% url 'cred:cred_edit' cred.id %}" role="button">{% trans "Edit" %}</a>
-  <a class="btn btn-success" href="{% url 'cred:cred_list' 'history' cred.id 'ascending' 'id' %}" role="button">{% trans "History" %}</a>
+  <a class="btn btn-primary" href="{% url 'cred:cred_edit' cred.id %}" role="button"><i class="far fa-edit"></i> {% trans "Edit" %}</a>
+  <a class="btn btn-success" href="{% url 'cred:cred_list' 'history' cred.id 'ascending' 'id' %}" role="button"><i class="fas fa-history"></i> {% trans "History" %}</a>
   {% if not cred.is_deleted %}
-    <button class="btn btn-danger" id="delete-credential-button" role="button">{% trans "Delete" %}</button>
+    <button class="btn btn-danger" id="delete-credential-button" role="button"><i class="far fa-trash-alt"></i> {% trans "Delete" %}</button>
   {% endif %}
   {% if not cred.is_deleted %}
-    <a class="btn btn-info" href="{% url 'cred:cred_add_to_queue' cred.id %}" role="button">{% trans "Change Queue" %}</a>
+    <a class="btn btn-info" href="{% url 'cred:cred_add_to_queue' cred.id %}" role="button"><i class="fas fa-exchange-alt"></i> {% trans "Change Queue" %}</a>
   {% endif %}
   {% if cred.is_deleted and not undelete %}
-    <button class="btn btn-danger" id="undelete-credential-button" role="button">{% trans "Undelete" %}</button>
+    <button class="btn btn-danger" id="undelete-credential-button" role="button"><i class="fas fa-trash-restore"></i> {% trans "Undelete" %}</button>
   {% endif %}
 </div>
 {% endif %}
@@ -104,7 +104,7 @@
         <div class="input-group input-group-sm">
           <input type="text" id="username-field" value="{{ cred.username }}" readonly class="form-control" aria-label="input-username" aria-describedby="input-buttons">
           <div class="input-group-append" id="input-buttons">
-            <button class="btn btn-primary" id="copy-username-button" type="button" data-clipboard-target="#username-field">copy</button>
+            <button class="btn btn-primary" id="copy-username-button" type="button" data-clipboard-target="#username-field"><i class="far fa-clipboard"></i></button>
           </div>
         </div>
       </div>
@@ -113,13 +113,13 @@
     {% if cred.password %}
       <button style="display: none;" id="copy-password-button-hidden" type="button" data-clipboard-target="#password-field"></button>
       <div class="row align-items-center">
-        <div class="col-md-1 align-items-center"><b>Password</b></div>
+        <div class="col-md-1 align-items-center"><b>{% trans "Password" %}</b></div>
         <div class="col-md-4">
           <div class="input-group input-group-sm">
             <input type="password" id="password-field" value="all-passwords-are-encrypted" readonly class="form-control" aria-label="input-password" aria-describedby="input-buttons">
             <div class="input-group-append" id="credentials-input-buttons">
-              <button class="btn btn-info"id="show-password-field-button" type="button">view</button>
-              <button class="btn btn-primary"id="copy-password-button" type="button">copy</button>
+              <button class="btn btn-info"id="show-password-field-button" type="button"><i class="far fa-eye"></i></button>
+              <button class="btn btn-primary"id="copy-password-button" type="button"><i class="far fa-clipboard"></i></button>
             </div>
           </div>
         </div>
@@ -136,7 +136,7 @@
       <b>{% trans "Description" %}</b>
     </div>
     <div id="description-collapse-body" class="collapse show" aria-labelledby="attachments-header" data-parent="#description-collapse">
-      <div class="card-body card-body-sm">
+      <div class="card-body card-body-sm description-body">
         {% markdown_cred cred.description %}
       </div>
     </div>
@@ -251,12 +251,9 @@
 </div>
 
 <!-- Audit logs -->
-{% if not delete %}
-  {% if credlogs %}
-    {% include "cred_audit_list.html" with type='user' %}
-  {% endif %}
+{% if credlogs %}
+  {% include "cred_audit_list.html" with type='user' %}
 {% endif %}
-
 
 <!-- delete\undelete modal window -->
 <div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="delete-action-label" aria-hidden="true">

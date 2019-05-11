@@ -13,25 +13,22 @@ function getCSRFToken() {
   return cookieValue;
 }
 
-// TODO move to API - VERY BAAD 
-function deactivateUser(button) {
+// TODO move to API
+function deactivateUser() {
   var CSRF = getCSRFToken();
   var isActive = null
-  var buttonText = 'unset'
 
-  if (button.data('isactive') === 'True') {
+  if ($("#deactivate-user-button").data("isactive") == 'True') {
     isActive = false
-    buttonText = 'Activate'
   } else {
     isActive = true
-    buttonText = 'Deactivate'
   }
 
   var jsonData = {
-    user_id: button.data('userid'),
+    user_id: $("[name='user-id']").attr("content"),
     is_active: isActive,
   };
-  
+
   $.ajax({
     url: '/staff/deactivate/user/',
     type: 'POST',
@@ -42,52 +39,39 @@ function deactivateUser(button) {
     data: JSON.stringify(jsonData),
     dataType: 'json',
     success: function () {
-      button.closest(".users-tab").toggleClass("bg-light");
-      button.data('isactive', isActive)
-      button.text(buttonText);
+      location.reload();
     }
   });
 }
 
-function deleteUser(button) {
+// TODO move to API
+function deleteUser() {
   var CSRF = getCSRFToken();
+  var user_id = $("[name='user-id']").attr("content");
 
   $.ajax({
-    url: '/staff/delete/user/' + button.data('userid') + '/',
+    url: '/staff/delete/user/' + user_id + '/',
     type: 'POST',
     beforeSend: function (xhr) {
       xhr.setRequestHeader('X-CSRFToken', CSRF);
     },
     contentType: 'application/json; charset=utf-8',
     success: function () {
-      button.closest(".users-tab").remove();
-      $("#delete-user-modal").modal("hide")
+      window.location.href = '/staff/users';
     }
   });
 }
 
-
 $(document).ready(function () {
-  // add selection highlight throught JS for a correct colors in all boostrap themes
-  $(".users-tab").hover(function () {
-    $(this).toggleClass("bg-light");
-  }, function () {
-      $(this).toggleClass("bg-light");
+  // register deactivate user handler
+  $("#deactivate-user-button").click(function (e) {
+    deactivateUser()
   });
 
-  // initialize deactivate user buttons
-  $(".deactivate-user-button").click(function (e) {
-    // var button = $(this)
-    deactivateUser($(this))
-  });
-
-  // initialize deactivate user button throught modal window
-  $(".delete-user-button").click(function (e) {
-    var dropdownButton = $(this)
-    $("#delete-user-modal").modal("show")
-    $("#delete-user-modal-button").click(function () {
-      deleteUser($(dropdownButton))
-    });
+  // register delete user handler
+  $("#delete-user-button").click(function (e) {
+    deleteUser()
   });
 
 });
+

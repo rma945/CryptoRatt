@@ -1,6 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.views.generic.edit import UpdateView, FormView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User, Group
@@ -11,6 +11,7 @@ from django_otp import user_has_device, devices_for_user
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 import datetime
+import json
 from django.utils.timezone import now
 from django.utils.timezone import utc
 
@@ -91,7 +92,7 @@ def edit_group(request, gid):
         form = GroupForm(request.POST, instance=group)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('staff:settings'))
+            return HttpResponseRedirect(reverse('staff:groups'))
     else:
         form = GroupForm(instance=group)
 
@@ -103,7 +104,7 @@ def delete_group(request, gid):
     group = get_object_or_404(Group, pk=gid)
     if request.method == 'POST':
         group.delete()
-        return HttpResponseRedirect(reverse('staff:settings'))
+        return HttpResponseRedirect(reverse('staff:groups'))
     return render(request, 'staff_detail_group.html', {'group': group, 'delete': True})
 
 
@@ -112,7 +113,7 @@ def delete_user(request, uid):
     if request.method == 'POST':
         user = get_object_or_404(User, pk=uid)
         user.delete()
-        return HttpResponseRedirect(reverse('staff:settings'))
+        return HttpResponseRedirect(reverse('staff:users'))
     return render(request, 'staff_detail_user.html', {'viewuser': user, 'delete': True})
 
 
@@ -187,6 +188,7 @@ def edit_user(request, uid):
     if request.method == 'POST':
         form = EditUserForm(request.POST, request.user, instance=edituser)
         if form.is_valid():
+            print("valid")
             form.save()
             return HttpResponseRedirect(reverse('staff:user_detail', args=(uid,)))
         else:
@@ -196,6 +198,20 @@ def edit_user(request, uid):
 
     return render(request, 'staff_edit_user.html', {'edit_user':  edituser, 'form': form})
 
+
+# TODO: Move to API
+@rattic_staff_required 
+def deactivate_user(request):
+    if request.method == 'POST':
+        request_json = json.loads(request.body)
+
+        user = get_object_or_404(User, pk=request_json['user_id'])
+        user.is_active = request_json['is_active']
+        user.save()
+        print(user.is_active)
+
+        return JsonResponse({'user_id':request_json['user_id'], 'is_active': user.is_active})
+    return Http404
 
 # class UpdateUser(UpdateView):
 #     model = User

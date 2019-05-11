@@ -93,7 +93,7 @@ class Cred(models.Model):
     objects = SearchManager()
 
     # User changable fields
-    project = models.ForeignKey(Project, verbose_name=_('Project'), blank=True, null=True, default=None, on_delete=models.SET_NULL)
+    project = models.ForeignKey(Project, verbose_name=_('Project'), default=None, on_delete=models.SET_DEFAULT)
     title = models.CharField(verbose_name=_('Title'), max_length=64, db_index=True)
     url = models.URLField(verbose_name=_('URL'), blank=True, null=True, db_index=True)
     username = models.CharField(verbose_name=_('Username'), max_length=250, blank=True, null=True, db_index=True)
@@ -219,7 +219,7 @@ class Attachment(models.Model):
         return self.filename
 
     # TODO: get_icon - rewrite this function
-    def get_icon(self):
+    def get_icon(self): 
         icon = static("rattic/img/attachment-default.png")
 
         if self.mime:
@@ -270,7 +270,7 @@ class CredAudit(models.Model):
 
     audittype = models.CharField(max_length=5, choices=CREDAUDITCHOICES)
     cred = models.ForeignKey(Cred, related_name='logs', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, related_name='credlogs', null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, related_name='credlogs', blank=True, null=True, on_delete=models.SET_NULL)
     time = models.DateTimeField(auto_now_add=True, blank=True)
 
     class Meta:
@@ -292,7 +292,6 @@ class CredChangeQManager(models.Manager):
 
 class CredChangeQ(models.Model):
     objects = CredChangeQManager()
-
     cred = models.ForeignKey(Cred, on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True, blank=True)
 

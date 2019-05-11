@@ -39,7 +39,11 @@
             <tr>
               <td>{{ audit.get_audittype_display }}</td>
               {% if type == 'user' %}
-                <td><a href="{% url "staff:user_detail" audit.user.id %}">{{ audit.user.username }}</a></td>
+                {% if audit.user %}
+                  <td><a href="{% url "staff:user_detail" audit.user.id %}">{{ audit.user.username }}</a></td>
+                {% else %}
+                  <td>{% trans 'deleted user' %}</td>
+                {% endif %}
               {% else %}
                 <td><a href="{% url "cred:cred_detail" audit.cred.id %}">{{ audit.cred.title }}</a></td>
               {% endif %}
