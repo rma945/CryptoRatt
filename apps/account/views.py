@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.urls import reverse
-from apps.account.models import ApiKey, ApiKeyForm
-from apps.account.models import UserProfileForm, LDAPPassChangeForm
+from apps.account.models import ApiKey
+from apps.account.forms import UserProfileForm, LDAPPassChangeForm, ApiKeyForm
 
 from django.views.decorators.debug import sensitive_post_parameters
 from django.contrib.auth.decorators import login_required
