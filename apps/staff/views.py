@@ -40,12 +40,40 @@ def users(request):
 
 @rattic_staff_required
 def groups(request):
-    groups = Group.objects.all()
+    paginator = Paginator(
+        Group.objects.all().order_by('name'),
+        request.user.profile.items_per_page
+    )
+    
+    page = request.GET.get('page')
+    groups = paginator.get_page(page)    
+
     return render(request, 'staff_tab_groups.html', {'groups': groups})
 
 @rattic_staff_required
 def tags(request):
-    return render(request, 'staff_tab_tags.html')
+    paginator = Paginator(
+        Tag.objects.all().order_by('name'),
+        request.user.profile.items_per_page
+    )
+    
+    page = request.GET.get('page')
+    tags = paginator.get_page(page)    
+
+    return render(request, 'staff_tab_tags.html',  {'tags': tags})
+
+@rattic_staff_required
+def trash(request):
+    paginator = Paginator(
+        Cred.objects.filter(is_deleted=True).order_by('title'),
+        request.user.profile.items_per_page
+    )
+    
+    page = request.GET.get('page')
+    creds = paginator.get_page(page)    
+
+    return render(request, 'staff_tab_trash.html',  {'creds': creds})
+
 
 @rattic_staff_required
 def user_detail(request, uid):
@@ -64,9 +92,35 @@ def user_detail(request, uid):
         request, 'staff_detail_user.html',
         {'viewuser': user, 'credlogs': credlogs,})
 
+@rattic_staff_required
+def user_detail(request, uid):
+    user = get_object_or_404(User, pk=uid)
+    credlogs = CredAudit.objects.filter(user=user, cred__group__in=request.user.groups.all())[:5]
+    
+    # disable user if it don`t exists in LDAP
+    if settings.LDAP_ENABLED and settings.USE_LDAP_GROUPS:
+        from django_auth_ldap.backend import LDAPBackend
+        popuser = LDAPBackend().populate_user(user.username)
+        if popuser is None:
+            user.is_active = False
+            user.save()
+
+    return render(
+        request, 'staff_detail_user.html',
+        {'viewuser': user, 'credlogs': credlogs,})
 
 @rattic_staff_required
-def groupadd(request):
+def group_detail(request, gid):
+    group = get_object_or_404(Group, pk=gid)
+    return render(request, 'staff_detail_group.html', {'group': group})
+
+@rattic_staff_required
+def tag_detail(request, tid):
+    tag = get_object_or_404(Tag, pk=tid)
+    return render(request, 'staff_detail_tag.html', {'tag': tag})
+
+@rattic_staff_required
+def group_add(request):
     if request.method == 'POST':
         form = GroupForm(request.POST)
         if form.is_valid():
@@ -77,13 +131,6 @@ def groupadd(request):
         form = GroupForm()
 
     return render(request, 'staff_groupedit.html', {'form': form})
-
-
-@rattic_staff_required
-def group_detail(request, gid):
-    group = get_object_or_404(Group, pk=gid)
-    return render(request, 'staff_detail_group.html', {'group': group})
-
 
 @rattic_staff_required
 def edit_group(request, gid):
@@ -96,7 +143,7 @@ def edit_group(request, gid):
     else:
         form = GroupForm(instance=group)
 
-    return render(request, 'staff_groupedit.html', {'group': group, 'form': form})
+    return render(request, 'staff_edit_group.html', {'edit_group': group, 'form': form})
 
 
 @rattic_staff_required
@@ -104,8 +151,7 @@ def delete_group(request, gid):
     group = get_object_or_404(Group, pk=gid)
     if request.method == 'POST':
         group.delete()
-        return HttpResponseRedirect(reverse('staff:groups'))
-    return render(request, 'staff_detail_group.html', {'group': group, 'delete': True})
+    return HttpResponseRedirect(reverse('staff:groups'))
 
 
 @rattic_staff_required
@@ -113,8 +159,14 @@ def delete_user(request, uid):
     if request.method == 'POST':
         user = get_object_or_404(User, pk=uid)
         user.delete()
-        return HttpResponseRedirect(reverse('staff:users'))
-    return render(request, 'staff_detail_user.html', {'viewuser': user, 'delete': True})
+    return HttpResponseRedirect(reverse('staff:users'))
+
+@rattic_staff_required
+def delete_tag(request, tid):
+    tag = get_object_or_404(Tag, pk=tid)
+    if request.method == 'POST':
+        tag.delete()
+    return HttpResponseRedirect(reverse('staff:tags'))
 
 
 @rattic_staff_required
@@ -162,7 +214,6 @@ def audit(request, by, byarg):
         'by': by,
         'byarg': byarg
     })
-
 
 class NewUser(FormView):
     form_class = UserForm
@@ -212,42 +263,6 @@ def deactivate_user(request):
 
         return JsonResponse({'user_id':request_json['user_id'], 'is_active': user.is_active})
     return Http404
-
-# class UpdateUser(UpdateView):
-#     model = User
-#     form_class = UserForm
-#     template_name = 'staff_edit_user.html'
-#     success_url = reverse_lazy('staff:settings')
-
-#     # Staff access only
-#     @method_decorator(rattic_staff_required)
-#     def dispatch(self, *args, **kwargs):
-#         return super(UpdateUser, self).dispatch(*args, **kwargs)
-
-#     # If the password changed, set password to newpass
-#     def form_valid(self, form):
-#         if form.cleaned_data['newpass'] is not None and len(form.cleaned_data['newpass']) > 0:
-#             form.instance.set_password(form.cleaned_data['newpass'])
-        
-#         # If user is having groups removed we want change advice for those
-#         # groups
-#         if form.instance.is_active and 'groups' in form.changed_data:
-#             # Get a list of the missing groups
-#             missing_groups = []
-#             for g in form.instance.groups.all():
-#                 if g not in form.cleaned_data['groups']:
-#                     missing_groups.append('group=' + str(g.id))
-
-#             # The user may have just added groups
-#             if len(missing_groups) > 0:
-#                 self.success_url = reverse('cred:cred_list',
-#                         args=('changeadvice', form.instance.id)) + '?' + '&'.join(missing_groups)
-        
-#         # If user is becoming inactive we want to redirect to change advice
-#         if 'is_active' in form.changed_data and not form.instance.is_active:
-#             self.success_url = reverse('cred:cred_list', args=('changeadvice', form.instance.id))
-        
-#         return super(UpdateUser, self).form_valid(form)
 
 
 @rattic_staff_required

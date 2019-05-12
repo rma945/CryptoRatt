@@ -8,12 +8,14 @@ urlpatterns = [
     path('users/', users, name="users"),
     path('groups/', groups, name="groups"),
     path('tags/', tags, name="tags"),
+    path('trash/', trash, name="trash"),
     # path('trash/', trash, name="trash"),
 
     # User/Group Management
     path('user/<int:uid>/', user_detail, name="user_detail"),  
     path('group/<int:gid>/', group_detail, name="group_detail"),
-
+    path('tag/<int:tid>/', tag_detail, name="tag_detail"),
+    
     # audit
     path('audit-by-<slug:by>/<int:byarg>/', audit, name="audit"),
 
@@ -25,6 +27,7 @@ urlpatterns = [
     path('edit/group/<int:gid>/', edit_group, name="edit_group"),
     path('delete/group/<int:gid>/', delete_group, name="delete_group"),
     path('delete/user/<int:uid>/', delete_user, name="delete_user"),
+    path('delete/tag/<int:tid>/', delete_tag, name="delete_tag"),
 
     # api
     path('deactivate/user/', deactivate_user, name="deactivate_user"),
@@ -34,6 +37,6 @@ urlpatterns = [
 # disable adduser if LDAP or SAML enabled
 if (not settings.LDAP_ENABLED and not settings.SAML_ENABLED):
     urlpatterns += [
-        path('groupadd/', groupadd, name="group_add"),
+        path('groupadd/', group_add, name="group_add"),
         path('useradd/', NewUser.as_view(), name="user_add"),
     ]

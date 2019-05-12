@@ -61,7 +61,7 @@ class UserProfile(models.Model):
     # favourite_projects = models.ManyToManyField(Cred, verbose_name=_('Favourite tags'), blank=True)
     password_changed = models.DateTimeField(default=now)
     avatar = models.BinaryField(null=True, default=None)
-    favourite_menu = models.BooleanField(default=False, verbose_name=_('Enable favorites menu'))
+    favourite_menu = models.BooleanField(default=True, verbose_name=_('Enable favorites menu'))
     theme = models.CharField(max_length=128, default='bootstrap.default.min.css', verbose_name=_('Theme'))
 
     def __str__(self):

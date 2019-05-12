@@ -36,19 +36,11 @@ def confget(section, var, default):
     except NoOptionError:
         return default
 
-
 def confgetbool(section, var, default):
     try:
         return config.getboolean(section, var)
     except NoOptionError:
         return default
-
-
-ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
-)
-
-MANAGERS = ADMINS
 
 # The Internationalization Settings
 USE_I18N = True
@@ -61,30 +53,25 @@ LANGUAGES = (
     ('fr', _('French')),
     ('de', _('German')),
     ('it', _('Italian')),
+    ('ru', _('Russian')),
 )
 
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
 
-# Additional locations of static files
-STATICFILES_DIRS = ()
-
-
-# List of finder classes that know how to find static files in
-# various locations.
+# List of finder classes that know how to find static files in locations
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 MIDDLEWARE = (
     'user_sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 
@@ -150,15 +137,13 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-    'django.contrib.admindocs',
-    'django.contrib.gis',
     'user_sessions',
+    'django_saml2_auth',
     'django_otp',
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
     'two_factor',
     'tastypie',
-    'django_saml2_auth',
 ) + LOCAL_APPS
 
 if os.environ.get("ENABLE_TESTS") == "1":
@@ -218,7 +203,7 @@ LOGGING = {
 #######################
 
 # URLs
-PUBLIC_HELP_WIKI_BASE = 'https://github.com/tildaslash/RatticWeb/wiki/'
+PUBLIC_HELP_WIKI_BASE = 'https://github.com/rma945/CryptoRatt/wiki/'
 LOGIN_REDIRECT_URL = urljoin(RATTIC_ROOT_URL, "cred/list/")
 LOGIN_URL = RATTIC_ROOT_URL
 

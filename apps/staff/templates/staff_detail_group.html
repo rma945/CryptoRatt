@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_tags %}
+{% load i18n %}
+
+{% block content %}
+
+{% block customheader %}
+  <meta name="group-id" content="{{group.id}}">
+{% endblock %}
+
+<div class="col-xs-12 border mt-2">
+  <div class="row p-4 no-margin-right">
+
+    <!-- group image -->
+    <div class="col-xs-2 align-items-top ">        
+      <img class="mx-auto d-block img-thumbnail" src="{% static "rattic/img/avatar-default.png" %}" width="160" height="160">
+      <div class="text-center pt-1">
+        <a class="btn btn-outline-primary btn-sm" style="width: 160px" href="{% url 'staff:edit_group' group.id %}" role="button">{% trans "Edit" %}</a>
+      </div>
+      <div class="text-center pt-1">
+        <a href="#" style="width: 160px" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete-group-modal">{% trans 'Delete' %}</a>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="col-xs">
+        <h2>{{ group.name }}</h2>
+      </div>
+
+      {% if group.user_set.all|length %}
+      <hr class="col-xs-12">
+        <h6>{% trans 'Users' %}</h6>
+        <ul class="list-inline" id="user_groups">
+        {% for u in group.user_set.all %}
+          <li class="list-inline-item">
+          <span class="badge badge-big badge-primary">
+            <a class="text-white" href="{% url "staff:user_detail" u.id %}">{{ u.username }}</a>
+          </span>
+          </li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="delete-group-modal" tabindex="-1" role="dialog" aria-labelledby="delete-group-modal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{% trans 'Delete group' %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      {% blocktrans %}
+        Do you really want to delete this group?
+      {% endblocktrans %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" id="delete-group-modal-button">{% trans 'Delete' %}</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Cancel' %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block customjs %}
+  <script type="application/javascript" src="{% static "rattic/js/staff_detail_group.js" %}"></script>
+{% endblock %}

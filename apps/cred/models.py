@@ -16,10 +16,12 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def credentials_count(self):
+        return Cred.objects.filter(tags=self).count()
 
     def visible_count(self, user):
-        return Cred.objects.visible(user).filter(tags=self).count()
-
+        return Cred.cred.objects.visible(user).filter(tags=self).count()
 
 class CredIconAdmin(admin.ModelAdmin):
     list_display = ('name', 'filename')
@@ -93,14 +95,14 @@ class Cred(models.Model):
     objects = SearchManager()
 
     # User changable fields
-    project = models.ForeignKey(Project, verbose_name=_('Project'), default=None, on_delete=models.SET_DEFAULT)
+    project = models.ForeignKey(Project, verbose_name=_('Project'), blank=True, null=True, default=None, on_delete=models.SET_DEFAULT)
     title = models.CharField(verbose_name=_('Title'), max_length=64, db_index=True)
     url = models.URLField(verbose_name=_('URL'), blank=True, null=True, db_index=True)
     username = models.CharField(verbose_name=_('Username'), max_length=250, blank=True, null=True, db_index=True)
     password = models.CharField(verbose_name=_('Password'), max_length=250, blank=True, null=True)
     descriptionmarkdown = models.BooleanField(verbose_name=_('Markdown Description'), default=True, )
     description = models.TextField(verbose_name=_('Description'), blank=True, null=True)
-    group = models.ForeignKey(Group, verbose_name=_('Group'), null=True, on_delete=models.SET_NULL)
+    group = models.ForeignKey(Group, verbose_name=_('Group'), blank=True, null=True, on_delete=models.SET_NULL)
     groups = models.ManyToManyField(Group, verbose_name=_('Groups'), related_name="child_creds", blank=True, default=None)
     users = models.ManyToManyField(User, verbose_name=_('Users'), related_name="child_creds", blank=True, default=None)
     tags = models.ManyToManyField(Tag, verbose_name=_('Tags'), related_name='child_creds', blank=True, default=None)

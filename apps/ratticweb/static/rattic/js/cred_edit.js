@@ -21,27 +21,6 @@ function calculatePasswordStrengthModal() {
   var passwordLength = $('#password-length-custom-input').val();
   var color = 'danger';
 
-  // calculate password length
-  switch (true) {
-    case (passwordLength <= 6):
-      break;
-    case (passwordLength >= 6 && passwordLength <= 8):
-      passwordStrength +=1
-      break;
-    case (passwordLength >= 8 && passwordLength <= 12):
-      passwordStrength += 2
-      break;
-    case (passwordLength >= 12 && passwordLength <= 16):
-      passwordStrength += 3
-      break;
-    case (passwordLength >= 16 && passwordLength <= 20):
-      passwordStrength += 4
-      break;
-    case (passwordLength >= 20):
-      passwordStrength += 5
-      break;
-    }
-
   // generate password
   if ($("#lowercase-switch").prop('checked') ) {
     passwordStrength += 1
@@ -56,6 +35,27 @@ function calculatePasswordStrengthModal() {
     passwordStrength += 2
   }
 
+  // calculate password length
+  switch (true) {
+    case (passwordLength <= 6):
+      passwordStrength = 1
+      break;
+    case (passwordLength >= 6 && passwordLength <= 8):
+      passwordStrength = 2
+      break;
+    case (passwordLength >= 8 && passwordLength <= 12):
+      passwordStrength += 2
+      break;
+    case (passwordLength >= 12 && passwordLength <= 16):
+      passwordStrength += 3
+      break;
+    case (passwordLength >= 16 && passwordLength <= 20):
+      passwordStrength += 4
+      break;
+    case (passwordLength >= 20):
+      passwordStrength += 5
+      break;
+  }
   // calculate color-class
   if (passwordStrength <= 4 ) {
     color = 'danger';

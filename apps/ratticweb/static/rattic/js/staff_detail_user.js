@@ -69,7 +69,7 @@ $(document).ready(function () {
   });
 
   // register delete user handler
-  $("#delete-user-button").click(function (e) {
+  $("#delete-user-modal-button").click(function (e) {
     deleteUser()
   });
 

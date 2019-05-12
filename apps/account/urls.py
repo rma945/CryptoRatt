@@ -35,7 +35,7 @@ urlpatterns = [
 ]
 
 # URLs we don't want enabled with LDAP
-if not settings.LDAP_ENABLED and not settings.SAML_ENABLED:
+if not settings.LDAP_ENABLED and not settings.SAML_ENABLED or settings.DEBUG:
     urlpatterns += [
         path('reset/', PasswordResetView.as_view(),
             {

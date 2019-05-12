@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from django.utils.translation import ugettext_lazy as _
-from django.forms import ModelForm, Form, MultipleChoiceField, SelectMultiple, CharField, PasswordInput, CheckboxInput, TextInput
+from django.forms import ModelForm, Form, MultipleChoiceField, ModelMultipleChoiceField, SelectMultiple, CharField, PasswordInput, CheckboxInput, TextInput
 
 from apps.cred.models import CredAudit
 
@@ -65,6 +65,37 @@ class UserForm(ModelForm):
 
 
 class GroupForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ModelForm, self).__init__(*args, **kwargs)
+        if self.instance:
+            self.fields["users"].initial = (
+                self.instance.user_set.all().values_list(
+                    'id', flat=True
+                )
+            )
+
+    users = ModelMultipleChoiceField(
+        queryset=User.objects.all(),
+        widget=SelectMultiple(attrs={'class': 'form-control single-select'}),
+    )
+
     class Meta:
         model = Group
-        fields = ('name',)
+        fields = ('name', 'users',)
+        widgets = {
+            'name': TextInput(attrs={'class': 'form-control'}),
+        }
+        
+    def clean(self):
+        group = self.instance
+        users = self.cleaned_data['users']
+
+        # remove old users
+        if group.user_set.all():
+            group.user_set.clear()
+
+        # add new users
+        for u in users:
+            group.user_set.add(u)
+
+        return self.cleaned_data

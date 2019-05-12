@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+{% block content %}
+
+{% block form_errors %}
+  {% include "form_errors.html" %}
+{% endblock %}
+
+<div class="row justify-content-center align-items-center">
+  <div class="col mx-auto pt-4">
+    <h1 class="text-center d-none d-sm-block">{% trans "Welcome to CryptoRatt" %}</h1>
+    <img class="mx-auto d-block" style="width: 256px;" alt="{% trans "RatticDB Logo" %}" src="{% static rattic_logo %}"/>
+  </div> 
+</div>
+
+<div class="row justify-content-center align-items-center" style="padding: 32px">
+  <div class="col-md-3">
+    
+    {% if not SAML_ENABLED or DEBUG_ENABLED %}
+      <form method="post" action="{% url "account:login" %}?next={{ next|default:"" }}">{% csrf_token %}
+        <div class="form-group">
+          <input class="form-control" id="id_username" type="text" name="auth-username" maxlength="30" placeholder="Username"/>
+          </br>
+          <input class="form-control" type="password" name="auth-password" id="id_password" placeholder="Password"/>
+          </br>
+      
+          <input type="submit" class="btn btn-primary btn-block" value="{% trans "Login" %}"/>
+          {% if LDAP_ENABLED == False %}
+            <a role="button" class="btn btn-danger btn-block" href="{% url "account:password_reset" %}">{% trans "Forgot password?" %}</a>
+          {% endif %}     
+          <input type="hidden" name="rattic_tfa_login_view-current_step" value="auth" />
+      
+        </div>
+      </form>
+    {% endif %}
+
+    {% if SAML_ENABLED %}
+      <a role="button" class="btn btn-primary btn-block" href="{{SAML_IDP_URL}}" >Login by SSO</a>
+    {% endif %}
+
+  </div>  
+</div>
+
+{% endblock %}
