@@ -4,8 +4,8 @@
 
 {% block content %}
 
-<div class="container ">
-  <div class="row ">
+<div class="container">
+  <div class="row">
     <div class="col p-4">
       <h1 class="text-center">{% trans "Welcome to CryptoRatt" %}</h1>
       <img class="mx-auto d-block" width="256" alt="{% trans "RatticDB Logo" %}" src="{% static rattic_logo %}"/>
@@ -16,9 +16,6 @@
     <div class="col-md-4">
       {% if not SAML_ENABLED or DEBUG_ENABLED %}
         <a role="button" class="btn btn-primary btn-block" href={% url 'account:login' %}>Login</a>
-        {% if LDAP_ENABLED == False %}
-        <a role="button" class="btn btn-danger btn-block" href={% url 'account:password_reset' %}>{% trans "Forgot password?" %}</a>
-        {% endif %}
       {% endif %}
 
       {% if SAML_ENABLED %}

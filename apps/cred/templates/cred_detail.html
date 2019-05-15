@@ -82,11 +82,10 @@
 <div class="pb-2 pt-2 btn-group btn-group-sm" role="group" aria-label="credential-tools-buttons">
   <a class="btn btn-primary" href="{% url 'cred:cred_edit' cred.id %}" role="button"><i class="far fa-edit"></i> {% trans "Edit" %}</a>
   <a class="btn btn-success" href="{% url 'cred:cred_list' 'history' cred.id 'ascending' 'id' %}" role="button"><i class="fas fa-history"></i> {% trans "History" %}</a>
+  <button class="btn btn-warning" id="toggle-favorite-button" role="button"><i class="far fa-star"></i> {% trans "Favorite" %}</button>
   {% if not cred.is_deleted %}
     <button class="btn btn-danger" id="delete-credential-button" role="button"><i class="far fa-trash-alt"></i> {% trans "Delete" %}</button>
-  {% endif %}
-  {% if not cred.is_deleted %}
-    <a class="btn btn-info" href="{% url 'cred:cred_add_to_queue' cred.id %}" role="button"><i class="fas fa-exchange-alt"></i> {% trans "Change Queue" %}</a>
+    <a class="btn btn-info" href="{% url 'cred:cred_add_to_queue' cred.id %}" role="button"><i class="fas fa-exchange-alt"></i> {% trans "Expire" %}</a>
   {% endif %}
   {% if cred.is_deleted and not undelete %}
     <button class="btn btn-danger" id="undelete-credential-button" role="button"><i class="fas fa-trash-restore"></i> {% trans "Undelete" %}</button>

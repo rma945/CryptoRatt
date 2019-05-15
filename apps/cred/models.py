@@ -272,7 +272,7 @@ class CredAudit(models.Model):
 
     audittype = models.CharField(max_length=5, choices=CREDAUDITCHOICES)
     cred = models.ForeignKey(Cred, related_name='logs', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, related_name='credlogs', blank=True, null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, related_name='credlogs', null=True, on_delete=models.SET_NULL)
     time = models.DateTimeField(auto_now_add=True, blank=True)
 
     class Meta:

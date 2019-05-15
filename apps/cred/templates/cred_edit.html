@@ -19,7 +19,7 @@
 <form class="pt-2" enctype="multipart/form-data" autocomplete="off" action="{{ action }}" method="post">{% csrf_token %}
 
   <div class="row no-margin-right">
-    <div class="col-sm-1 pb-2">
+    <div class="col-sm-1 pb-2 d-flex justify-content-center">
       <div class="cred-image">
         <img class="img-thumbnail" style="width: 128px;" src="{% static rattic_logo %}"/>
         <a class="btn btn-outline-primary btn-sm btn-block" href="#" role="button">{% trans "Select icon" %}</a>
@@ -137,11 +137,11 @@
   </div>
   {% endif %}
 
-  <div class="row no-margin-right pt-2 pb-2 justify-content-md-center">
-    <div class="col-4">
+  <div class="row no-margin-right pt-2 pb-2">
+    <div class="col-6">
       <input id="credsave" class="btn btn-success btn-block" type="submit" value="{% trans "Save" %}" />
     </div>
-    <div class="col-4">
+    <div class="col-6">
       <a class="btn btn-secondary btn-block" 
       {% if cred.id %}
         href="{% url 'cred:cred_detail' cred.id %}"
@@ -200,8 +200,7 @@
           style="width: 80%" aria-valuenow="2" aria-valuemin="0" aria-valuemax="10"></div>
         </div>
       </div>
-
-      <div class="modal-footer">
+      <div class="modal-footer ">
         <button type="button" id="set-password-button" class="btn btn-primary btn-sm">{% trans "Generate" %}</button>
         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">{% trans "Cancel" %}</button>
       </div>
