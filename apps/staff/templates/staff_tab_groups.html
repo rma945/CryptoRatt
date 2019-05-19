@@ -20,7 +20,7 @@
       <div class="group-tab media pl-2 pt-1">
         <div class="media-body border-bottom border-gray ml-2 mr-5 row">
           <div class="col-4 mr-auto">
-            <a href="{% url 'staff:group_detail' g.id %}">
+            <a href="{% url 'staff:group_detail' g.id %}" style="text-decoration:none">
               <b>{{g.name}}</b></br>
             </a>
             <small>Users: </small><span class="badge badge-pill badge-primary">{{g.user_set.all | length }}</span></br>

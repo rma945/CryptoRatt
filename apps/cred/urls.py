@@ -4,14 +4,13 @@ from apps.cred.views import *
 
 app_name = "cred"
 
-urlpatterns = [    
+urlpatterns = [
     # projects
-    path("project/", project_list, name="project_list"),
-    path("project/page-<int:page>/", project_list, name="project_list"),
+    path("project/", projects, name="projects"),
     path("project/add/", project_add, name="project_add"),
     path("project/edit/<int:project_id>/", project_edit, name="project_edit"),
-    path("project/detail/<int:project_id>)/", project_detail, name="project_detail"),
-    path("project/delete/<int:project_id>)/", project_delete, name="project_delete"),
+    path("project/detail/<int:project_id>/", project_detail, name="project_detail"),
+    path("project/delete/<int:project_id>/", project_delete, name="project_delete"),
 
     # credentials
     path("list/", list, name="cred_list"),

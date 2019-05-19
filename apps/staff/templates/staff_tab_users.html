@@ -28,7 +28,7 @@
 
         <div class="media-body border-bottom border-gray mr-5 row">
           <div class="col-4 mr-auto">
-            <a href="{% url 'staff:user_detail' u.id %}">
+            <a href="{% url 'staff:user_detail' u.id %}" style="text-decoration:none">
               <small><b>{{u.username}}</b></small></br>
             </a>
             <small>email: {{ u.email}}</small></br>

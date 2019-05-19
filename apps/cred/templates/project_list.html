@@ -1,99 +1,61 @@
 {% extends "base.html" %}
-
 {% load static %}
+{% load custom_tags %}
 {% load i18n %}
-
-{% block title %}{% trans "Project list - Rattic" %}{% endblock %}
 
 {% block content %}
 
-{% if user.is_staff%} 
-  <div class="btn-group btn-group-sm pt-2 pb-2" role="group" aria-label="project-buttons">
-    <a class="btn btn-primary" href="{% url "cred:project_add" %}">{% trans "New project" %}</a>
-  </div>
-{% endif %}
-
-<div class="table-responsive">
-  <table class="table table-hover table-sm">
-    <thead>
-      <tr>
-        <th style="width: 48px; height: 48px" class="d-none d-sm-table-cell"></th>
-        <th>
-          {% trans "Project Title" %}
-        </th>
-        <th class="d-none d-sm-table-cell">
-          {% trans "URL" %}
-        </th>
-        <th class="d-none d-sm-table-cell">
-          {% trans "Credentials" %}
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      {% for project in projectlist %}
-        <tr>        
-            <td class="d-none d-sm-table-cell">
-              <img style="width: 48px;" src="{% if project.icon %} {{ project.icon.url }} {% else %} {% static "rattic/img/project-default.png" %} {% endif %}" alt="{{ project.title }}">
-            </td>
-          <td>
-            <a href="{% url "cred:project_detail" project.id %}"><b>{{ project.title }}</b></a>
-          </td>
-          <td class="d-none d-sm-table-cell">
-            <a href="{{ project.url }}">{{ project.url }}</a>
-          </td>
-          <td class="d-none d-sm-table-cell">
-            <a class="badge badge-primary" href="{% url "cred:project_detail" project.id %}">{{ project.getAllCreds.count}}</a>
-          </td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="col-md-12 pt-2">
+<div class="btn-group btn-group-sm" role="group" aria-label="credential-buttons">
+  <a class="btn btn-primary" href="{% url "cred:project_add" %}"><i class="fas fa-plus"></i> {% trans "Create" %}</a>
 </div>
 
-<!-- paginator start -->
-<nav aria-label="pagination">
-  <ul class="pagination justify-content-center">
-    <!--paginator  previous button-->
-    <li class="page-item {% if not projectlist.has_previous %} disabled {% endif %}">
-        <a class="page-link"
-      {% if projectlist.has_previous %}
-        href="{% url "cred:project_list" projectlist.previous_page_number %}"
-      {% else %}
-        href="#"
-      {% endif %}
-      aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-        <span class="sr-only">{% trans "Prev" %}</span>
-      </a>
-    </li>
-
-    <!--paginator pages button-->
-    {% for l in  projectlist.paginator.page_range %}
-        {% if l <= projectlist.number|add:20 and l >= projectlist.number|add:-10 %}
-          {% if projectlist.number == p %}
-            <li class="d-none d-sm-block page-item active"><a class="page-link" href="#"><b>{{ forloop.counter }}</b></a></li>
-          {% else %}
-            <li class="d-none d-sm-block page-item"><a class="page-link" href="{% url "cred:project_list" forloop.counter  %}">{{ forloop.counter }}</a></li>
-          {% endif %}
+  
+  {% for p in projects %}
+    <div class="media pl-2 pt-1">
+      <img class="align-self-center mr-3" 
+        {% if u.profile.avatar %}
+        src="data:image/jpeg;base64, {{ u.profile.avatar|decode_utf8 }}"
+        {% else %}
+          src="{% static "rattic/img/project-default.png" %}"
         {% endif %}
-    {% endfor %}
-    
-    <!--paginator next button-->
-    <li class="page-item {% if not projectlist.has_next %} disabled {% endif %}">
-        <a class="page-link"
-      {% if projectlist.has_next %}
-        href="{% url "cred:project_list" projectlist.next_page_number %}"
-      {% else %}
-        href="#"
-      {% endif %}
-      aria-label="Next">
-        <span aria-hidden="true">&raquo;</span>
-        <span class="sr-only">{% trans "Next" %}</span>
-      </a>
-    </li>
+        width="48" height="48">
 
-  </ul>
-</nav>
+      <div class="media-body border-bottom border-gray mr-5 row">
+        <div class="col-4 mr-auto">
+          <a href="{% url 'cred:project_detail' p.id %}" style="text-decoration:none">
+            <h5 class="mt-0">{{p.title}}</h5> 
+          </a>
+          {% if p.url %}
+            <small>URL: <a href="{{ p.url }}" style="text-decoration:none">{{p.url}}</a></small></br>
+          {% endif %}
+          {% if p.cred_set.all|length %}
+            <small>Credentials: </small><span class="badge badge-pill badge-primary">{{p.cred_set.all | length }}</span></br>
+          {% endif %}
+        </div>
 
+        <div class="col-xs-1 ml-auto align-self-center">
+          <div class="dropdown">
+            <a class="d-none d-sm-block" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-bars"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="{% url 'cred:project_edit' p.id %}">{% trans 'Edit' %}</a>
+              <a class="dropdown-item text-danger delete-project-button" data-userid="{{p.id}}" href="#" >{% trans 'Delete' %}</i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+
+</div>
+
+{% block paginator %}
+  {% include "paginator.html" with itemlist=projects %}
+{% endblock %}
+
+{% endblock %}
+
+{% block customjs %}
 {% endblock %}

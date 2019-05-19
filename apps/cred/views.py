@@ -120,32 +120,34 @@ def list(request, cfilter='special', value='all', sortdir='ascending', sort='tit
     return render(request, 'cred_list.html', viewdict)
 
 @login_required
-def project_list(request, page=1):
+def projects(request):
+    paginator = Paginator(
+        Project.objects.all().order_by('title'),
+        request.user.profile.items_per_page
+    )
     
-    # paginator
-    paginator = Paginator(Project.objects.all(), request.user.profile.items_per_page)
-    try:
-        proj = paginator.page(page)
-    except PageNotAnInteger:
-        proj = paginator.page(1)
-    except EmptyPage:
-        proj = paginator.page(paginator.num_pages)
-    viewdict = { 
-        'projectlist': proj,
-        'page': str(page).lower(),
-    }
+    page = request.GET.get('page')
+    projects = paginator.get_page(page)
 
-    return render(request, 'project_list.html', viewdict)
+    return render(request, 'project_list.html', {'projects': projects})
 
 @login_required
 def project_detail(request, project_id):
     # Restrict project view only to staff members
-    if not request.user.is_staff:
-        raise Http404
+    # if not request.user.is_staff:
+    #     raise Http404
 
     project = get_object_or_404(Project, pk=project_id)
 
-    return render(request, 'project_detail.html', {'project': project})
+    paginator = Paginator(
+        Cred.objects.filter(project=project).order_by('title'),
+        request.user.profile.items_per_page
+    )
+    
+    page = request.GET.get('page')
+    credentials = paginator.get_page(page)
+
+    return render(request, 'project_detail.html', {'project': project, 'credentials': credentials})
 
 @login_required
 def project_add(request):
@@ -157,7 +159,7 @@ def project_add(request):
         form = ProjectForm(request.user, request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse("cred:project_list"))
+            return HttpResponseRedirect(reverse("cred:projects"))
     else:
         form = ProjectForm(request.user)
 
@@ -207,7 +209,7 @@ def project_delete(request, project_id):
     if request.method == 'GET':
         project.delete()
 
-    return HttpResponseRedirect(reverse("cred:project_list"))
+    return HttpResponseRedirect(reverse("cred:projects"))
 
 @login_required
 def tags(request):

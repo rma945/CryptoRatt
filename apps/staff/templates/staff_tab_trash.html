@@ -41,7 +41,7 @@
         {% for c in creds %}
         <tr class="">
           <td >
-            <a href="{% url "cred:cred_detail" c.id %}">
+            <a href="{% url "cred:cred_detail" c.id %}" style="text-decoration:none">
               <i class="far fa-trash-alt pr-2" style="color: #dc3545;"></i>{{ c.title | default:"No Title" }}
             </a>
           </td>

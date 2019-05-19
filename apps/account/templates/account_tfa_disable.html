@@ -16,15 +16,13 @@
   <div class="col-md-2">
     <div class="custom-control custom-switch">
       <form method="post">{% csrf_token %}
-        {% comment %}
-        <div class="row d-flex justify-content-center">
+        <div class="row d-flex justify-content-center" style="visibility: hidden;">
           {% for f in form %}
             <input class="custom-control-input" type="{{ f.field.widget.input_type }}" name="{{ f.html_name }}" id="{{ f.id_for_label }}" {% if f.field %}checked{% endif %}>
             <label class="custom-control-label noselect" for="{{ f.id_for_label }}">{% trans '2FA' %}</label>
           {% endfor %}
         </div>
-       {% endcomment %}
-        <button class="btn btn-block btn-danger" type="submit">{% trans "Disable" %}</button>
+        <button class="btn btn-block btn-danger" type="submit">{% trans "I understand, disable" %}</button>
       </form>
     </div>
   </div>
