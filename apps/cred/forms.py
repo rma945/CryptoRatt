@@ -1,5 +1,5 @@
 from django.utils.translation import ugettext_lazy as _
-from django.forms import Form, ModelForm, SelectMultiple, Select, PasswordInput, CharField, TextInput, ClearableFileInput, FileField, Textarea
+from django.forms import Form, ModelForm, SelectMultiple, Select, PasswordInput, CharField, TextInput, ClearableFileInput, FileField, Textarea, ModelMultipleChoiceField
 
 from apps.cred.models import Project, Cred, Tag, Group
 
@@ -8,35 +8,57 @@ class ExportForm(Form):
         attrs={'class': 'btn-password-visibility'}
     ))
 
-
 class TagForm(ModelForm):
     class Meta:
         model = Tag
         fields = '__all__'
 
 class ProjectForm(ModelForm):
+    icon = FileField(widget=ClearableFileInput(
+        attrs={'multiple': False, 'class': 'custom-file-input'}), required=False)
+
+    credentials = ModelMultipleChoiceField(
+        queryset=Cred.objects.filter(is_deleted=False, latest=None),
+        widget=SelectMultiple(attrs={'class': 'form-control single-select'}),
+    )
+
     def __init__(self, requser, *args, **kwargs):
         super(ProjectForm, self).__init__(*args, **kwargs)
-
+               
         self.fields['title'].label = _('Project title')
         self.fields['url'].label = _('Project URL')
         self.fields['description'].label = _('Project description')
+        if self.instance:
+            self.fields["credentials"].initial = (
+                self.instance.cred_set.all().values_list('id', flat=True)
+        )
 
-        # Make the URL invalid message a bit more clear
         self.fields['url'].error_messages['invalid'] = _("Please enter a valid HTTP/HTTPS URL")
 
     class Meta:
         model = Project
         fields = '__all__'
-        # These field are not user configurable
         widgets = {
-            'title': TextInput(attrs={'autocomplete': ''}),
+            'title': TextInput(attrs={'class': 'form-control'}),
+            'url': TextInput(attrs={'class': 'form-control'}),
+            'description': Textarea(attrs={'class': 'form-control'}),
         }
+
+    def clean(self):
+        project = self.instance
+        credentials = self.cleaned_data['credentials']
+
+        if project.cred_set.all():
+            project.cred_set.clear()
+
+        for c in credentials:
+            project.cred_set.add(c)
+
+        return self.cleaned_data
 
 
 class CredForm(ModelForm):
     
-    # fake uploads field for attachments
     uploads = FileField(widget=ClearableFileInput(
         attrs={'multiple': True, 'class': 'custom-file-input'}), required=False)
 

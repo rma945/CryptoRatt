@@ -6,6 +6,21 @@ function getCredentialID() {
   return $("[name='cred-id']").attr("content");
 }
 
+function getCSRFToken() {
+  var cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i].trim();
+      if (cookie.substring(0, 'csrftoken'.length + 1) === ('csrftoken' + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring('csrftoken'.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
 // get credential password from API and cache it in local JS
 function getCredentialPassword() {
   if (credentialPassword == 'all-passwords-are-encrypted') {
@@ -91,6 +106,23 @@ function deleteCredentialModalToggle() {
   modalWindow.modal('show')
 }
 
+function setFavorite() {
+  var CSRF = getCSRFToken();
+  var cred_id = $("[name='cred-id']").attr("content");
+
+  $.ajax({
+    url: '/cred/favorite/' + cred_id + '/',
+    type: 'POST',
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader('X-CSRFToken', CSRF);
+    },
+    contentType: 'application/json; charset=utf-8',
+    success: function () {
+      $("#set-favorite-button").toggleClass("btn-warning")
+    }
+  });
+}
+
 $(document).ready(function () {
   // initialize js clipboards and add default unselect actions on it
   var usernameClipboard = new ClipboardJS('#copy-username-button');
@@ -123,6 +155,10 @@ $(document).ready(function () {
   $('#delete-credential-button').click(function () {
     deleteCredentialModalToggle()
   });
-
+  
+  // register - set favorite button
+  $('#set-favorite-button').click(function () {
+    setFavorite();
+  });
 });
 

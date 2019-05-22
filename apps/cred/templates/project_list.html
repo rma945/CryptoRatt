@@ -14,8 +14,8 @@
   {% for p in projects %}
     <div class="media pl-2 pt-1">
       <img class="align-self-center mr-3" 
-        {% if u.profile.avatar %}
-        src="data:image/jpeg;base64, {{ u.profile.avatar|decode_utf8 }}"
+        {% if p.icon %}
+        src="data:image/jpeg;base64, {{ p.icon|decode_utf8 }}"
         {% else %}
           src="{% static "rattic/img/project-default.png" %}"
         {% endif %}

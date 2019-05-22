@@ -10,6 +10,7 @@ urlpatterns = [
     path("project/add/", project_add, name="project_add"),
     path("project/edit/<int:project_id>/", project_edit, name="project_edit"),
     path("project/detail/<int:project_id>/", project_detail, name="project_detail"),
+    path("project/favorite/<int:project_id>/", set_favorite_project, name="project_favorite"),
     path("project/delete/<int:project_id>/", project_delete, name="project_delete"),
 
     # credentials
@@ -26,6 +27,7 @@ urlpatterns = [
     path("edit/<int:cred_id>/", edit, name="cred_edit"),
     path("delete/<int:cred_id>/", delete, name="cred_delete"),
     path("undelete/<int:cred_id>/", cred_undelete, name="cred_undelete"),
+    path("favorite/<int:cred_id>/", set_favorite_credential, name="cred_favorite"),
     path("add/", add, name="cred_add"),
 
     # attachments

@@ -150,7 +150,7 @@ $(document).ready(function () {
     showPassword();
   });
 
-  // initialize SimpleMDE only for cred_edit page
+  // initialize SimpleMDE
   new SimpleMDE({
     autoDownloadFontAwesome: false,
     spellChecker: false,

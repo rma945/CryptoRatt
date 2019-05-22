@@ -76,13 +76,12 @@ $(document).ready(function () {
   });
 
   // initialize deactivate user buttons
-  $(".deactivate-user-button").click(function (e) {
-    // var button = $(this)
+  $(".deactivate-user-button").click(function () {
     deactivateUser($(this))
   });
 
   // initialize deactivate user button throught modal window
-  $(".delete-user-button").click(function (e) {
+  $(".delete-user-button").click(function () {
     var dropdownButton = $(this)
     $("#delete-user-modal").modal("show")
     $("#delete-user-modal-button").click(function () {

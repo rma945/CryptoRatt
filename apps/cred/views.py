@@ -1,3 +1,5 @@
+from base64 import b64encode
+
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -175,9 +177,14 @@ def project_edit(request, project_id):
 
     if request.method == 'POST':
         form = ProjectForm(request.user, request.POST, request.FILES, instance=project)
-
+        
         if form.is_valid():
-            form.save()
+            saved_form = form.save()
+
+            if request.FILES.getlist('icon'):
+                f = request.FILES.getlist('icon')[0]
+                saved_form.icon = b64encode(f.file.read())
+                saved_form.save()
 
         if next is None:
             return HttpResponseRedirect(reverse("cred:project_detail", args=(project.id,)))
@@ -197,19 +204,29 @@ def project_edit(request, project_id):
         }
     )
 
-
 @login_required
 def project_delete(request, project_id):
-    # Restrict project delete only to staff members
     if not request.user.is_staff:
         raise Http404
 
-    project = get_object_or_404(Project, pk=project_id)
-
-    if request.method == 'GET':
+    if request.method == 'POST':
+        project = get_object_or_404(Project, pk=project_id)
         project.delete()
 
     return HttpResponseRedirect(reverse("cred:projects"))
+
+# TODO: MOVE TO API
+@login_required
+def set_favorite_project(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+    if request.method == 'POST':
+        if project in request.user.profile.favourite_projects.all():
+            request.user.profile.favourite_projects.remove(project)
+        else:
+            request.user.profile.favourite_projects.add(project)
+        
+    return HttpResponseRedirect(reverse('cred:projects'))
+
 
 @login_required
 def tags(request):
@@ -439,6 +456,19 @@ def delete(request, cred_id):
             'action': reverse('cred:cred_edit', args=(cred_id,)),
         }
     )
+
+# TODO: MOVE TO API
+@login_required
+def set_favorite_credential(request, cred_id):
+    credential = get_object_or_404(Cred, pk=cred_id)
+    
+    if request.method == 'POST':
+        if credential in request.user.profile.favourite_credentials.all():
+            request.user.profile.favourite_credentials.remove(credential)
+        else:
+            request.user.profile.favourite_credentials.add(credential)
+
+    return HttpResponseRedirect(reverse('cred:cred_list'))
 
 
 @login_required

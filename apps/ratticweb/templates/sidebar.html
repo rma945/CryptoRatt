@@ -10,12 +10,14 @@
     </div>
     <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
       <div class="card-body">
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">Cras justo odio</li>
-          <li class="list-group-item">Dapibus ac facilisis in</li>
-          <li class="list-group-item">Morbi leo risus</li>
-          <li class="list-group-item">Porta ac consectetur ac</li>
-          <li class="list-group-item">Vestibulum at eros</li>
+        <ul class="list-unstyled favorites-list">
+          {% for p in user.profile.favourite_projects.all %}
+            <a href="{% url "cred:project_detail" p.id %}">
+              <li>
+                <i class="fas fa-minus"></i> {{ p.title }}
+              </li>
+            </a>
+          {% endfor %}
         </ul>
       </div>
     </div>
@@ -27,12 +29,14 @@
     </div>
     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
       <div class="card-body">
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">Cras justo odio</li>
-          <li class="list-group-item">Dapibus ac facilisis in</li>
-          <li class="list-group-item">Morbi leo risus</li>
-          <li class="list-group-item">Porta ac consectetur ac</li>
-          <li class="list-group-item">Vestibulum at eros</li>
+        <ul class="list-unstyled favorites-list">
+          {% for c in user.profile.favourite_credentials.all %}
+            <a href="{% url "cred:cred_detail" c.id %}">
+              <li>
+                <i class="fas fa-minus"></i> {{ c.title }}
+              </li>
+            </a>
+          {% endfor %}
         </ul>
       </div>
     </div>

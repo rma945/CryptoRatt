@@ -14,7 +14,7 @@
     <div class="row p-4 no-margin-right">
 
       <!-- profile image -->
-      <div class="col-xs-2 align-items-top ">        
+      <div class="col-xs-2 align-items-top ">
         <img class="mx-auto d-block img-thumbnail"
         {% if edit_user.profile.avatar %}
           src="data:image/jpeg;base64, {{ edit_user.profile.avatar|decode_utf8 }}"

@@ -6,9 +6,9 @@ import markdown
 register = template.Library()
 
 @register.simple_tag
-def markdown_cred(description):
+def render_markdown(text):
     out = markdown.markdown(
-        text=description,
+        text=text,
         extensions=[
             'fenced_code',
             'nl2br',

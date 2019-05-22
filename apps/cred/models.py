@@ -75,8 +75,10 @@ class SearchManager(models.Manager):
 class Project(models.Model):
     title = models.CharField(verbose_name=_('Title'), max_length=128, db_index=True)
     url = models.URLField(verbose_name=_('URL'), blank=True, null=True)
-    icon = SizedImageFileField(verbose_name=_('Icon'), max_upload_size=100000, null=True, blank=True, upload_to='icons/project')
+    icon = models.BinaryField(null=True, default=None)
     description = models.TextField(verbose_name=_('Description'), blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True, blank=True)
+    modified = models.DateTimeField(auto_now=True, blank=True)
 
     def getAllCreds(self):
         return self.cred_set.filter(latest=None)

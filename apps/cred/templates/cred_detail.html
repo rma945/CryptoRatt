@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static from staticfiles %}
 {% load i18n %}
-{% load cred_markdown %}
+{% load markdown %}
 
 {% block title %}{{ cred.title }} - {% trans "Rattic" %}{% endblock %}
 
@@ -81,8 +81,12 @@
 {% if cred.is_latest and not readonly %}
 <div class="pb-2 pt-2 btn-group btn-group-sm" role="group" aria-label="credential-tools-buttons">
   <a class="btn btn-primary" href="{% url 'cred:cred_edit' cred.id %}" role="button"><i class="far fa-edit"></i> {% trans "Edit" %}</a>
-  <a class="btn btn-success" href="{% url 'cred:cred_list' 'history' cred.id 'ascending' 'id' %}" role="button"><i class="fas fa-history"></i> {% trans "History" %}</a>
-  <button class="btn btn-warning" id="toggle-favorite-button" role="button"><i class="far fa-star"></i> {% trans "Favorite" %}</button>
+  <a class="btn btn-success" href="{% url 'cred:cred_list' 'history' cred.id 'ascending' 'id' %}" role="button">
+    <i class="fas fa-history"></i> {% trans "History" %}
+  </a>
+  <button class="btn btn-secondary {% if cred in user.profile.favourite_credentials.all %} btn-warning {% endif %}" id="set-favorite-button" role="button">
+    <i class="far fa-star"></i> {% trans "Favorite" %}
+  </button>
   {% if not cred.is_deleted %}
     <button class="btn btn-danger" id="delete-credential-button" role="button"><i class="far fa-trash-alt"></i> {% trans "Delete" %}</button>
     <a class="btn btn-info" href="{% url 'cred:cred_add_to_queue' cred.id %}" role="button"><i class="fas fa-exchange-alt"></i> {% trans "Expire" %}</a>
@@ -136,7 +140,7 @@
     </div>
     <div id="description-collapse-body" class="collapse show" aria-labelledby="attachments-header" data-parent="#description-collapse">
       <div class="card-body card-body-sm description-body">
-        {% markdown_cred cred.description %}
+        {% render_markdown cred.description %}
       </div>
     </div>
   </div>
