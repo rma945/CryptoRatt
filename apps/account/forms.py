@@ -1,4 +1,4 @@
-from django.forms import ModelForm, CharField, PasswordInput, CheckboxInput, SelectMultiple, Select
+from django.forms import ModelForm, CharField, PasswordInput, CheckboxInput, SelectMultiple, Select, FileField, ClearableFileInput
 from django.contrib.auth.forms import SetPasswordForm
 from django.utils.translation import ugettext_lazy as _
 
@@ -28,6 +28,9 @@ class LDAPPassChangeForm(SetPasswordForm):
         return self.user
 
 class UserProfileForm(ModelForm):
+    icon = FileField(widget=ClearableFileInput(
+        attrs={'multiple': False, 'style': 'display: none;', 'accept': 'image/*' }), required=False)
+        
     class Meta:
         custom_themes = [
             ('bootstrap.default.min.css', 'Default'),
@@ -46,7 +49,7 @@ class UserProfileForm(ModelForm):
         ]
 
         model = UserProfile
-        exclude = ('user', 'password_changed',)
+        exclude = ('user', 'password_changed', 'favourite_projects', 'favourite_credentials')
         widgets = {
             'favourite_menu': CheckboxInput(attrs={'class': 'custom-control-input'}),
             'favourite_tags': SelectMultiple(attrs={'class': 'single-select'}),
@@ -64,7 +67,7 @@ class ApiKeyForm(ModelForm):
         exclude = ('user', 'key', 'active', 'created', 'expires')
 
     def save(self):
-        if self.instance.expires < self.instance.created + timedelta(minutes=1):
+        if self.instance.expires < self.instance.created:
             self.instance.expires = self.instance.created
         return super(ApiKeyForm, self).save()
 

@@ -22,12 +22,10 @@
           src="{% static "rattic/img/project-default.png" %}"
         {% endif %}
         width="160" height="160">
-        <div class="pt-1">
-          <label class="btn btn-primary" for="{{ form.icon.id_for_label }}" style="width: 160px; height: 38px;" role="button">
+          <label class="btn btn-outline-primary btn-sm" style="width: 160px;" data-toggle="tooltip" data-html="true" title="160 x 160 <b>px</b></br>50 <b>kb</b>">
             {% trans "Update icon" %}
             {{ form.icon }}
           </label>
-        </div>
       </div>
 
       <div class="col">

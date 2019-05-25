@@ -9,7 +9,6 @@ from django.conf import settings
 from django.templatetags.static import static
 
 from apps.ratticweb.util import DictDiffer, field_file_compare
-from apps.cred.fields import SizedImageFileField
 
 class Tag(models.Model):
     name = models.CharField(max_length=64, unique=True)
@@ -22,10 +21,6 @@ class Tag(models.Model):
 
     def visible_count(self, user):
         return Cred.cred.objects.visible(user).filter(tags=self).count()
-
-class CredIconAdmin(admin.ModelAdmin):
-    list_display = ('name', 'filename')
-
 
 class SearchManager(models.Manager):
     def visible(self, user, historical=False, deleted=False):
@@ -72,6 +67,13 @@ class SearchManager(models.Manager):
         # Fetch the list of credentials to change from the DB for the view
         return Cred.objects.filter(id__in=tochange)
 
+class CredentialIcon(models.Model):
+    name = models.CharField(max_length=64, unique=True)
+    icon = models.BinaryField(null=True, default=None)
+
+    def __str__(self):
+        return self.name
+
 class Project(models.Model):
     title = models.CharField(verbose_name=_('Title'), max_length=128, db_index=True)
     url = models.URLField(verbose_name=_('URL'), blank=True, null=True)
@@ -102,13 +104,12 @@ class Cred(models.Model):
     url = models.URLField(verbose_name=_('URL'), blank=True, null=True, db_index=True)
     username = models.CharField(verbose_name=_('Username'), max_length=250, blank=True, null=True, db_index=True)
     password = models.CharField(verbose_name=_('Password'), max_length=250, blank=True, null=True)
-    descriptionmarkdown = models.BooleanField(verbose_name=_('Markdown Description'), default=True, )
     description = models.TextField(verbose_name=_('Description'), blank=True, null=True)
     group = models.ForeignKey(Group, verbose_name=_('Group'), blank=True, null=True, on_delete=models.SET_NULL)
     groups = models.ManyToManyField(Group, verbose_name=_('Groups'), related_name="child_creds", blank=True, default=None)
     users = models.ManyToManyField(User, verbose_name=_('Users'), related_name="child_creds", blank=True, default=None)
     tags = models.ManyToManyField(Tag, verbose_name=_('Tags'), related_name='child_creds', blank=True, default=None)
-    iconname = models.CharField(verbose_name=_('Icon'), default='Key.png', max_length=64)
+    icon = models.ForeignKey(CredentialIcon, verbose_name=_('Icon'), blank=True, null=True, default=None, on_delete=models.SET_DEFAULT)
 
     # Application controlled fields
     is_deleted = models.BooleanField(default=False, db_index=True)

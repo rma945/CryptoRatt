@@ -1,13 +1,16 @@
 from django.contrib.auth.models import User, Group
 from django.utils.translation import ugettext_lazy as _
-from django.forms import ModelForm, Form, MultipleChoiceField, ModelMultipleChoiceField, SelectMultiple, CharField, PasswordInput, CheckboxInput, TextInput
+from django.forms import ModelForm, Form, MultipleChoiceField, ModelMultipleChoiceField, SelectMultiple, CharField, PasswordInput, CheckboxInput, TextInput, FileField, ClearableFileInput
 
 from apps.cred.models import CredAudit
 
 class EditUserForm(ModelForm):
+    icon = FileField(widget=ClearableFileInput(
+        attrs={'multiple': False, 'style': 'display: none;', 'accept': 'image/*' }), required=False)
+
     class Meta:
         model = User
-        fields = ['username', 'email', 'is_staff', 'is_active', 'groups']
+        fields = ['username', 'email', 'is_staff', 'is_active', 'groups', 'icon']
         widgets = {
             'username': TextInput(attrs={'class': 'form-control'}),
             'email': TextInput(attrs={'class': 'form-control'}),

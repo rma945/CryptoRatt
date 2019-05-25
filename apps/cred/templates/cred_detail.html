@@ -63,7 +63,7 @@
     </div>
 
     <div class="col-xs justify-content-md-left">
-      <b>{% trans "Updated" %}</b> : {{ cred.created|date:"Y/m/d H:m" }}
+      <b>{% trans "Updated" %}</b> : {{ cred.modified|date:"Y/m/d H:m" }}
     </div>
 
     {% if cred.tags.all|length %}
@@ -78,20 +78,24 @@
   </div>
 </div>
 
-{% if cred.is_latest and not readonly %}
+{% if cred.is_latest %}
 <div class="pb-2 pt-2 btn-group btn-group-sm" role="group" aria-label="credential-tools-buttons">
-  <a class="btn btn-primary" href="{% url 'cred:cred_edit' cred.id %}" role="button"><i class="far fa-edit"></i> {% trans "Edit" %}</a>
-  <a class="btn btn-success" href="{% url 'cred:cred_list' 'history' cred.id 'ascending' 'id' %}" role="button">
-    <i class="fas fa-history"></i> {% trans "History" %}
-  </a>
+  {% if  not readonly %}
+    <a class="btn btn-primary" href="{% url 'cred:cred_edit' cred.id %}" role="button"><i class="far fa-edit">
+      </i> {% trans "Edit" %}
+    </a>
+    <a class="btn btn-success" href="{% url 'cred:cred_list' 'history' cred.id 'ascending' 'id' %}" role="button">
+      <i class="fas fa-history"></i> {% trans "History" %}
+    </a>
+  {% endif %}
   <button class="btn btn-secondary {% if cred in user.profile.favourite_credentials.all %} btn-warning {% endif %}" id="set-favorite-button" role="button">
     <i class="far fa-star"></i> {% trans "Favorite" %}
   </button>
-  {% if not cred.is_deleted %}
+  {% if not cred.is_deleted and not readonly %}
     <button class="btn btn-danger" id="delete-credential-button" role="button"><i class="far fa-trash-alt"></i> {% trans "Delete" %}</button>
     <a class="btn btn-info" href="{% url 'cred:cred_add_to_queue' cred.id %}" role="button"><i class="fas fa-exchange-alt"></i> {% trans "Expire" %}</a>
   {% endif %}
-  {% if cred.is_deleted and not undelete %}
+  {% if cred.is_deleted and not readonly %}
     <button class="btn btn-danger" id="undelete-credential-button" role="button"><i class="fas fa-trash-restore"></i> {% trans "Undelete" %}</button>
   {% endif %}
 </div>

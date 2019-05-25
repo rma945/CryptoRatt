@@ -4,9 +4,10 @@
 
 <div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="profile-tab">
   <div class="row p-4 no-margin-right">
-
+    
     <!-- profile image -->
     <div class="col-xs-2 align-items-center">
+    <form id="profile-submit-form" enctype="multipart/form-data" autocomplete="off" action="{{ action }}" method="POST">{% csrf_token %}
       <img class="mx-auto d-block img-thumbnail"
       {% if user.profile.avatar %}
         src="data:image/jpeg;base64, {{ user.profile.avatar|decode_utf8 }}"
@@ -14,11 +15,14 @@
         src="{% static "rattic/img/avatar-default.png" %}"
       {% endif %}
       width="160" height="160">
-      <div class="text-center pb-1">
-        <a class="btn btn-outline-primary btn-sm" style="width: 160px" href="#" role="button">{% trans "Update image" %}</a>
+      <div class="text-center pt-1">
+        <label class="btn btn-outline-primary btn-sm" style="width: 160px;" data-toggle="tooltip" data-html="true" title="160 x 160 <b>px</b></br>50 <b>kb</b>">
+          {% trans "Update image" %}
+          {{ form.icon }}
+        </label>
       </div>
       {% if ALLOWPWCHANGE %}
-      <div class="text-center">
+      <div class="text-center pb-1">
         <a class="btn btn-outline-danger btn-sm" style="width: 160px" href="{% url "password_change" %}">{% trans "Update password" %}</a>
       </div>
       {% endif %}
@@ -50,7 +54,7 @@
         {% endif %}
       </div>
       <div class="col-xs">
-        <b>{% trans "Last Password Change" %}: </b> {{ user.profile.password_changed | date:"Y/m/d H:m"  }}
+        <b>{% trans "Last Password Change" %}: </b> {{ user.profile.password_changed | date:"Y/m/d H:m" }}
       </div>
       
       {% if user.groups.all|length %}
@@ -60,7 +64,7 @@
         {% for g in user.groups.all %}
           <li class="list-inline-item">
           <span class="badge badge-big badge-primary">
-            {% if user.is_staff %}              
+            {% if user.is_staff %}
               <a class="text-white" href="{% url "staff:group_detail" g.id %}">{{ g.name }}</a>
             {% else %}
               {{ g.name }}
@@ -72,13 +76,6 @@
       {% endif %}
 
       <hr class="col-xs-12">
-      <form id="profile-submit-form" action="" method="POST">{% csrf_token %}
-        <div class="col-xs pb-2">
-          <div class="custom-control custom-switch">
-            {{ form.favourite_menu }}
-            <label class="custom-control-label noselect" for="id_favourite_menu">{% trans form.favourite_menu.label %}</label>
-          </div>
-        </div>
         <div class="col-xs pb-2">
           <b>{% trans form.theme.label %}: </b>{{ form.theme }}
         </div>
@@ -89,7 +86,6 @@
           <b>{% trans form.favourite_tags.label %}: </b>{{ form.favourite_tags }}
         </div>
       </form>
-
     </div>
   </div>
 

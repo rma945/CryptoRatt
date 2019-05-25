@@ -22,8 +22,8 @@
     <div class="col-sm-1 pb-2 d-flex justify-content-center">
       <div class="cred-image">
         <img class="img-thumbnail" style="width: 128px;" src="{% static rattic_logo %}"/>
-        <a class="btn btn-outline-primary btn-sm btn-block" href="#" role="button">{% trans "Select icon" %}</a>
-      </div>  
+        <a class="btn btn-outline-primary btn-sm btn-block" id="icon-select-button" href="#" role="button">{% trans "Select icon" %}</a>
+      </div>
     </div>
 
     <!-- items row start -->
@@ -164,7 +164,7 @@
         </button>
       </div>
 
-      <div class="modal-body noselect">       
+      <div class="modal-body noselect">
         <h5>Password symbols</h5>
         <div class="custom-control custom-switch">
           <input type="checkbox" class="custom-control-input" id="lowercase-switch" checked="">
@@ -203,6 +203,25 @@
       <div class="modal-footer ">
         <button type="button" id="set-password-button" class="btn btn-primary btn-sm">{% trans "Generate" %}</button>
         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">{% trans "Cancel" %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- select icon modal -->
+<div class="modal fade bd-example-modal-lg" id="select-icons-modal" tabindex="-1" role="dialog" aria-labelledby="select-icons-modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{% trans "Select credential icon" %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="container">
+      <div class="row justify-content-center pt-4 pb-2">
+        <img class="rounded p-1" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
+      </div>
       </div>
     </div>
   </div>

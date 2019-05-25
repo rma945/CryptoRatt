@@ -1,3 +1,5 @@
+from base64 import b64encode
+
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.urls import reverse
@@ -53,8 +55,16 @@ def profile(request):
     # Process the form if we have data coming in
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=request.user.profile)
+
         if form.is_valid():
-            form.save()
+            saved_form = form.save()
+
+            if request.FILES.getlist('icon'):
+                f = request.FILES.getlist('icon')[0]
+                saved_form.avatar = b64encode(f.file.read())
+                saved_form.save()
+
+
     else:
         form = UserProfileForm(instance=request.user.profile)
 

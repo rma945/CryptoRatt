@@ -15,7 +15,7 @@ class TagForm(ModelForm):
 
 class ProjectForm(ModelForm):
     icon = FileField(widget=ClearableFileInput(
-        attrs={'multiple': False, 'class': 'custom-file-input'}), required=False)
+        attrs={'multiple': False, 'style': 'display: none;', 'accept': 'image/*' }), required=False)
 
     credentials = ModelMultipleChoiceField(
         queryset=Cred.objects.filter(is_deleted=False, latest=None),

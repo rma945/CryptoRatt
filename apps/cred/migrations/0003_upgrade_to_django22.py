@@ -5,11 +5,11 @@ from base64 import b64decode
 import django.db.models.deletion
 
 def migrate_attachments(apps, schema_editor):
-    """
+    '''
     convert legacy attachment \ ssh_keys to a new attachment model
     legacy attachments was stored as base64 encoded string
     new attachments stores as default BinaryField
-    """
+    '''
 
     Credentials = apps.get_model('cred', 'Cred')
     sql_cursor = connection.cursor()

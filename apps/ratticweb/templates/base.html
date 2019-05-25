@@ -25,15 +25,18 @@
   {% block customheader %}
   {% endblock %}
 </head>
+
 <body>
-  <div 
-    {% if user.profile.favourite_menu %}
+  <div
+    {% if request.COOKIES.favorites_menu == 'true' or not request.COOKIES.favorites_menu %}
       class="d-flex"
     {% else %}
       class="d-flex disabled"
     {% endif %}
-    {% if user.is_authenticated %} id="content-wrapper" {% endif %}>
-
+    {% if user.is_authenticated %} 
+      id="content-wrapper"
+    {% endif %}
+  >
     {% if user.is_authenticated %}
         {% include "sidebar.html" %}
     {% endif %}
@@ -49,11 +52,9 @@
       </div>
     </div>
   </div>
-
   <script type="application/javascript" src="{% static "jquery/jquery.min.js" %}"></script>
   <script type="application/javascript" src="{% static "bootstrap/js/bootstrap.bundle.min.js" %}"></script>
   <script type="application/javascript" src="{% static "rattic/js/base.js" %}"></script>
-  {% comment %} <script type="application/javascript" src="{% static "rattic/js/newcore.js" %}"></script> {% endcomment %}
   {% block customjs %}{% endblock %}
 </body>
 </html>

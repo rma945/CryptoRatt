@@ -10,9 +10,9 @@
 {% endblock %}
 
 <div class="col-xs-12 border mt-2">
-  <form class="pt-2" enctype="multipart/form-data" autocomplete="off" action="{{ action }}" method="post">{% csrf_token %}
-    <div class="row p-4 no-margin-right">
+  <form enctype="multipart/form-data" autocomplete="off" action="{{ action }}" method="POST">{% csrf_token %}
 
+    <div class="row p-4 no-margin-right">
       <!-- profile image -->
       <div class="col-xs-2 align-items-top ">
         <img class="mx-auto d-block img-thumbnail"
@@ -22,9 +22,10 @@
           src="{% static "rattic/img/avatar-default.png" %}"
         {% endif %}
         width="160" height="160">
-        <div class="text-center pt-1">
-          <a class="btn btn-outline-primary btn-sm" style="width: 160px" href="#" role="button">{% trans "Update image" %}</a>
-        </div>
+        <label class="btn btn-outline-primary btn-sm mt-1" style="width: 160px;" data-toggle="tooltip" data-html="true" title="160 x 160 <b>px</b></br>50 <b>kb</b>">
+          {% trans "Update image" %}
+          {{ form.icon }}
+        </label>
       </div>
 
       <div class="col">

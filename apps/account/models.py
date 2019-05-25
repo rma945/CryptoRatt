@@ -5,7 +5,7 @@ from django.db import models
 from django import forms
 from django.contrib import admin
 from django.contrib.auth.models import User
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
@@ -34,7 +34,6 @@ class UserProfile(models.Model):
     favourite_projects = models.ManyToManyField(Project, verbose_name=_('Favourite projects'), blank=True)
     password_changed = models.DateTimeField(default=now)
     avatar = models.BinaryField(null=True, default=None, verbose_name=_('Profile avatar'))
-    favourite_menu = models.BooleanField(default=True, verbose_name=_('Enable favorites menu'))
     theme = models.CharField(max_length=128, default='bootstrap.default.min.css', verbose_name=_('Theme'))
 
     def __str__(self):

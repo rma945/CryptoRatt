@@ -210,11 +210,16 @@ $(document).ready(function () {
     $('#password-length-slider').val($(this).val());
     calculatePasswordStrengthModal();
   });
-
-  
+ 
   $("input[type='checkbox']").click(function () {
     validatePasswordModal();
     calculatePasswordStrengthModal();
+  });
+
+
+  // register modal window for icon select
+  $('#icon-select-button').click(function () {
+    $('#select-icons-modal').modal('show')
   });
   
 });

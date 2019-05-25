@@ -1,4 +1,8 @@
 $(document).ready(function () {
+  // initialize tooltips
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
 
   // initialize users selectize
   $('#id_credentials').selectize({

@@ -1,3 +1,5 @@
+from base64 import b64encode
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect, Http404, JsonResponse
@@ -74,23 +76,6 @@ def trash(request):
 
     return render(request, 'staff_tab_trash.html',  {'creds': creds})
 
-
-@rattic_staff_required
-def user_detail(request, uid):
-    user = get_object_or_404(User, pk=uid)
-    credlogs = CredAudit.objects.filter(user=user, cred__group__in=request.user.groups.all())[:5]
-    
-    # disable user if it don`t exists in LDAP
-    if settings.LDAP_ENABLED and settings.USE_LDAP_GROUPS:
-        from django_auth_ldap.backend import LDAPBackend
-        popuser = LDAPBackend().populate_user(user.username)
-        if popuser is None:
-            user.is_active = False
-            user.save()
-
-    return render(
-        request, 'staff_detail_user.html',
-        {'viewuser': user, 'credlogs': credlogs,})
 
 @rattic_staff_required
 def user_detail(request, uid):
@@ -235,12 +220,30 @@ class NewUser(FormView):
 @rattic_staff_required
 def edit_user(request, uid):
     edituser = get_object_or_404(User, pk=uid)
+    # profile = edituser.profile
+    # profile.items_per_page = 66
+    # profile.save()
+    # print(profile.items_per_page)
+    # print(edituser.__dict__)
+    # print(edituser.profile.__dict__)
+    # print(edituser, ":", edituser.profile.items_per_page)
+    # edituser.profile.items_per_page = 30
+    # edituser.save()
+    # print(edituser, ":", edituser.profile.items_per_page)
+
     
     if request.method == 'POST':
-        form = EditUserForm(request.POST, request.user, instance=edituser)
+        form = EditUserForm(request.POST, request.FILES, request.user, instance=edituser)
+
         if form.is_valid():
-            print("valid")
-            form.save()
+            saved_form = form.save()
+
+            if request.FILES.getlist('icon'):
+                edituser_profile = edituser.profile
+                f = request.FILES.getlist('icon')[0]
+                edituser_profile.avatar = b64encode(f.file.read())
+                edituser_profile.save()
+
             return HttpResponseRedirect(reverse('staff:user_detail', args=(uid,)))
         else:
             print(form.errors)
