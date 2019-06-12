@@ -24,6 +24,7 @@
       {% endif %}
       width="160" height="160">
 
+      {% if user.is_staff %}
       <div class="text-center pb-1 pt-1">
         <a class="btn btn-outline-primary btn-sm" style="width: 160px" href="{% url 'cred:project_edit' project.id%}" role="button">
           <i class="fas fa-pencil-alt"></i>
@@ -43,6 +44,8 @@
           {% trans "Delete" %}
         </a>
       </div>
+      {% endif %}
+
     </div>
 
     <div class="col">
@@ -63,9 +66,9 @@
 
       {% if project.description %}
         <hr class="col-md-12">
-        <p>
+        <div class="description-body">
           {% render_markdown project.description %}
-        </p>
+        </div>
       {% endif %}
     </div>
   </div>
@@ -76,14 +79,13 @@
 
 {% for c in credentials %}
   <div class="media m-2">
-    <img class="rounded align-self-center mr-2 border border-secondary" 
-      {% if u.profile.avatar %}
-        src="{% static "rattic/img/avatar-default.png" %}"
+    <img class="pr-2 align-self-center" style="width: 32px;" 
+      {% if c.icon %}
+        src="data:image/png;base64,{{ c.icon.icon | decode_utf8 }}"
       {% else %}
-        src="{% static "rattic/img/avatar-default.png" %}"
+        src="{% static "rattic/img/credential-default.png" %}"
       {% endif %}
-      width="32" height="32">
-
+    >
     <div class="media-body border-bottom border-gray ml-1 mr-1 pb-2 row">
       <div class="col-md-12">
         <a href="{% url 'cred:cred_detail' c.id %}" style="text-decoration:none">

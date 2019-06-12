@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load custom_tags %}
 {% load static from staticfiles %}
 {% load i18n %}
 {% load markdown %}
@@ -36,8 +37,14 @@
 {% endif %}
 
 <div class="row pt-2 no-margin-right">
-  <div class="col-md-1 d-flex flex-wrap align-items-center">
-    <img class="mx-auto d-block img-thumbnail" style="width: 128px;" src="{% static rattic_logo %}"/>
+  <div class="d-flex flex-wrap align-items-center">
+    <img class="mx-auto d-block" style="width: 96px;" 
+    {% if cred.icon %}
+      src="data:image/png;base64,{{ cred.icon.icon | decode_utf8 }}"
+    {% else %}
+      src="{% static rattic_logo %}"
+    {% endif %}
+    />
   </div>
 
   <div class="col-md">
@@ -156,7 +163,7 @@
   <div class="card">
     <div class="card-header card-header-sm" id="attachments-header" data-toggle="collapse" data-target="#attachments-collapse-body" aria-expanded="false" aria-controls="attachments-collapse-body">
       <b>{% trans "Attachments" %}</b>
-      <span class="badge badge-pill badge-secondary pull-right">{{ attachments.all|length }}</span>
+      <span class="badge badge-pill badge-primary pull-right">{{ attachments.all|length }}</span>
     </div>
     <div id="attachments-collapse-body" class="collapse" aria-labelledby="attachments-header" data-parent="#attachments-collapse">
       <div class="card-body card-body-sm">

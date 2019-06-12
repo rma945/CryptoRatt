@@ -20,9 +20,6 @@ urlpatterns = [
     re_path(r"^list-by-(?P<cfilter>\w+)/(?P<value>[^/]*)/sort-(?P<sortdir>ascending|descending)-by-(?P<sort>\w+)/page-(?P<page>\d+)/$", list, name="cred_list"),
 
     # credentials 
-    path("search/", search, name="search"),
-
-    # credentials 
     path("detail/<int:cred_id>/", detail, name="cred_detail"),
     path("edit/<int:cred_id>/", edit, name="cred_edit"),
     path("delete/<int:cred_id>/", delete, name="cred_delete"),
@@ -36,12 +33,6 @@ urlpatterns = [
 
     # Adding to the change queue
     path("addtoqueue/<int:cred_id>/", addtoqueue, name="cred_add_to_queue"),
-
-    # bulk views (for buttons on list page)
-    path("addtoqueue/bulk/", bulkaddtoqueue, name="cred_bulk_add_to_queue"),
-    path("delete/bulk/", bulkdelete, name="cred_bulk_delete"),
-    path("undelete/bulk/", bulkundelete, name="cred_bulk_undelete"),
-    path("addtag/bulk/", bulktagcred, name="cred_bulk_tag_cred"),
 
     # Tags
     path("tag/", tags, name="tags"),

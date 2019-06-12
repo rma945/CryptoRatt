@@ -28,7 +28,7 @@
 
 <body>
   <div
-    {% if request.COOKIES.favorites_menu == 'true' or not request.COOKIES.favorites_menu %}
+    {% if not request.COOKIES.disable_favorites %}
       class="d-flex"
     {% else %}
       class="d-flex disabled"

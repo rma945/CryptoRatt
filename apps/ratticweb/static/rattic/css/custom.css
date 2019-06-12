@@ -83,8 +83,16 @@
         -ms-user-select: none;
             user-select: none;
 }
+/* add overflow for a favorites list */
+.favorites-list li { 
+  text-overflow: ellipsis;
+  overflow: hidden; 
+  width: 220px; 
+  white-space: nowrap;
+}
 
 .favorites-list a {
+    font-size: 1em;
     text-decoration: none;
       -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -122,8 +130,11 @@
 /* disable up-down arrows in a numbers imput type */
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
+  -webkit-appearance: none;
   margin: 0; 
+}
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 /* disable text selection for a different browsers */
@@ -236,4 +247,6 @@ input[type=number]::-webkit-outer-spin-button {
     outline: 0;
     background: transparent;
     border-bottom: 2px solid gray;
+    max-width: 64px;
+    color: black;
 }

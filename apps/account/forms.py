@@ -43,8 +43,6 @@ class UserProfileForm(ModelForm):
             ('bootstrap.pulse.min.css', 'Pulse'),
             ('bootstrap.lux.min.css', 'Lux'),
             ('bootstrap.lumen.min.css', 'Lumen'),
-            ('bootstrap.litera.min.css', 'Litera'),
-            ('bootstrap.slate.min.css', 'Slate'),
             ('bootstrap.spacelab.min.css', 'Spacelab'),
         ]
 

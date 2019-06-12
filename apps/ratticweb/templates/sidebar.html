@@ -28,7 +28,7 @@
       <h6 class="mb-0">Credentials</h6>
     </div>
     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-      <div class="card-body">
+      <div class="card-body favorites-card-body">
         <ul class="list-unstyled favorites-list">
           {% for c in user.profile.favourite_credentials.all %}
             <a href="{% url "cred:cred_detail" c.id %}">

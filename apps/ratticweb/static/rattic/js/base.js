@@ -25,16 +25,11 @@ function searchCredentials() {
 }
 
 function toggleFavoritesMenu() {
-  value = document.cookie.match(new RegExp('(^| )' + 'favorites_menu' + '=([^;]+)'));
-  
+  value = document.cookie.match(new RegExp('(^| )' + 'disable_favorites' + '=([^;]+)'));
   if (value) {
-    if (value[2] == 'false') {
-      document.cookie = 'favorites_menu=true; path=/;';
-    } else {
-      document.cookie = 'favorites_menu=false; path=/;';
-    }
+    document.cookie = 'disable_favorites=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   } else {
-    document.cookie = 'favorites_menu=false; path=/;';
+    document.cookie = 'disable_favorites=true; path=/;';
   }
 }
 

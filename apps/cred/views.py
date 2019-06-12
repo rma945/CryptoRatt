@@ -10,13 +10,12 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.translation import ugettext as _
 
-from apps.cred.models import Project, Cred, Attachment, CredAudit, Tag, CredChangeQ
+from apps.cred.models import Project, Cred, Attachment, CredAudit, Tag, CredChangeQ, CredentialIcon
 from apps.cred.search import cred_search
 from apps.cred.forms import ExportForm, ProjectForm, CredForm, TagForm
 
 from django.contrib.auth.models import Group
 
-@login_required
 def list(request, cfilter='special', value='all', sortdir='ascending', sort='title', page=1):
     # Setup basic stuff
     viewdict = {
@@ -33,9 +32,9 @@ def list(request, cfilter='special', value='all', sortdir='ascending', sort='tit
         'buttons': {
             'add': True,
             'delete': True,
-            'bulkchange': True,
             'changeq': True,
             'tagger': True,
+            'export': False,
         }
     }
 
@@ -53,12 +52,15 @@ def list(request, cfilter='special', value='all', sortdir='ascending', sort='tit
     # Apply the filters
     if cfilter == 'tag':
         viewdict['credtitle'] = _('Passwords tagged with %(tagname)s') % {'tagname': search_object.name, }
+        viewdict['buttons']['export'] = True
 
     elif cfilter == 'group':
         viewdict['credtitle'] = _('Passwords in group %(groupname)s') % {'groupname': search_object.name, }
+        viewdict['buttons']['export'] = True
 
     elif cfilter == 'search':
         viewdict['credtitle'] = _('Passwords for search "%(searchstring)s"') % {'searchstring': search_object, }
+        viewdict['buttons']['export'] = True
 
     elif cfilter == 'history':
         viewdict['credtitle'] = _('Versions of: "%(credtitle)s"') % {'credtitle': search_object.title, }
@@ -88,6 +90,7 @@ def list(request, cfilter='special', value='all', sortdir='ascending', sort='tit
         viewdict['buttons']['undelete'] = True
         viewdict['buttons']['changeq'] = False
         viewdict['buttons']['tagger'] = False
+        viewdict['buttons']['export'] = True
 
     elif cfilter == 'special' and value == 'changeq':
         viewdict['credtitle'] = _('Passwords on the Change Queue')
@@ -119,6 +122,9 @@ def list(request, cfilter='special', value='all', sortdir='ascending', sort='tit
     # Get variables to give the template
     viewdict['credlist'] = cred
 
+    # Create the form for exporting
+    # viewdict['exportform'] = ExportForm()
+
     return render(request, 'cred_list.html', viewdict)
 
 @login_required
@@ -135,14 +141,11 @@ def projects(request):
 
 @login_required
 def project_detail(request, project_id):
-    # Restrict project view only to staff members
-    # if not request.user.is_staff:
-    #     raise Http404
 
     project = get_object_or_404(Project, pk=project_id)
 
     paginator = Paginator(
-        Cred.objects.filter(project=project).order_by('title'),
+        Cred.objects.filter(project=project,is_deleted=False, latest=None).order_by('title'),
         request.user.profile.items_per_page
     )
     
@@ -401,14 +404,13 @@ def edit(request, cred_id):
                     return HttpResponseRedirect(reverse('cred:cred_detail', args=(cred.id,)))
                 else:
                     return HttpResponseRedirect(next)
-        else:
-            print(form.errors)
     else:
         form = CredForm(request.user, instance=cred)
         CredAudit(audittype=CredAudit.CREDPASSVIEW, cred=cred, user=request.user).save()
 
     # get all attachments
     attachments = Attachment.objects.filter(credential=cred)
+    icons = CredentialIcon.objects.all().order_by('name')
     
     return render(
         request, 'cred_edit.html',
@@ -418,6 +420,7 @@ def edit(request, cred_id):
             'next': next,
             'cred': cred,
             'attachments': attachments,
+            'icons': icons,
         }
     )
 
@@ -492,11 +495,6 @@ def cred_undelete(request, cred_id):
     return HttpResponseRedirect(reverse('cred:cred_list'))
 
 @login_required
-def search(request):
-    return render(request, 'cred_search.html', {})
-
-
-@login_required
 def tagadd(request):
     if request.method == 'POST':
         form = TagForm(request.POST)
@@ -541,53 +539,3 @@ def addtoqueue(request, cred_id):
     CredChangeQ.objects.add_to_changeq(cred)
     CredAudit(audittype=CredAudit.CREDSCHEDCHANGE, cred=cred, user=request.user).save()
     return HttpResponseRedirect(reverse('cred:cred_list', args=('special', 'changeq')))
-
-
-@login_required
-def bulkdelete(request):
-    todel = Cred.objects.filter(id__in=request.POST.getlist('credcheck'))
-    for c in todel:
-        if c.is_owned_by(request.user) and c.latest is None:
-            CredAudit(audittype=CredAudit.CREDDELETE, cred=c, user=request.user).save()
-            c.delete()
-
-    redirect = request.POST.get('next', reverse('cred:cred_list'))
-    return HttpResponseRedirect(redirect)
-
-
-@login_required
-def bulkundelete(request):
-    toundel = Cred.objects.filter(id__in=request.POST.getlist('credcheck'))
-    for c in toundel:
-        if c.is_owned_by(request.user):
-            CredAudit(audittype=CredAudit.CREDADD, cred=c, user=request.user).save()
-            c.is_deleted = False
-            c.save()
-
-    redirect = request.POST.get('next', reverse('cred:cred_list'))
-    return HttpResponseRedirect(redirect)
-
-
-@login_required
-def bulkaddtoqueue(request):
-    tochange = Cred.objects.filter(id__in=request.POST.getlist('credcheck'))
-    for c in tochange:
-        if c.is_owned_by(request.user) and c.latest is None:
-            CredAudit(audittype=CredAudit.CREDSCHEDCHANGE, cred=c, user=request.user).save()
-            CredChangeQ.objects.add_to_changeq(c)
-
-    redirect = request.POST.get('next', reverse('cred:cred_list'))
-    return HttpResponseRedirect(redirect)
-
-
-@login_required
-def bulktagcred(request):
-    tochange = Cred.objects.filter(id__in=request.POST.getlist('credcheck'))
-    tag = get_object_or_404(Tag, pk=request.POST.get('tag'))
-    for c in tochange:
-        if c.is_owned_by(request.user) and c.latest is None:
-            CredAudit(audittype=CredAudit.CREDMETACHANGE, cred=c, user=request.user).save()
-            c.tags.add(tag)
-
-    redirect = request.POST.get('next', reverse('cred:cred_list'))
-    return HttpResponseRedirect(redirect)

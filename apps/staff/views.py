@@ -220,17 +220,6 @@ class NewUser(FormView):
 @rattic_staff_required
 def edit_user(request, uid):
     edituser = get_object_or_404(User, pk=uid)
-    # profile = edituser.profile
-    # profile.items_per_page = 66
-    # profile.save()
-    # print(profile.items_per_page)
-    # print(edituser.__dict__)
-    # print(edituser.profile.__dict__)
-    # print(edituser, ":", edituser.profile.items_per_page)
-    # edituser.profile.items_per_page = 30
-    # edituser.save()
-    # print(edituser, ":", edituser.profile.items_per_page)
-
     
     if request.method == 'POST':
         form = EditUserForm(request.POST, request.FILES, request.user, instance=edituser)
@@ -245,8 +234,6 @@ def edit_user(request, uid):
                 edituser_profile.save()
 
             return HttpResponseRedirect(reverse('staff:user_detail', args=(uid,)))
-        else:
-            print(form.errors)
     else:
         form = EditUserForm(instance=edituser)
 
@@ -262,7 +249,6 @@ def deactivate_user(request):
         user = get_object_or_404(User, pk=request_json['user_id'])
         user.is_active = request_json['is_active']
         user.save()
-        print(user.is_active)
 
         return JsonResponse({'user_id':request_json['user_id'], 'is_active': user.is_active})
     return Http404

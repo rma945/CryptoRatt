@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load custom_tags %}
 {% load static from staticfiles %}
 {% load i18n %}
 
@@ -17,11 +18,17 @@
 {% endblock %}
 
 <form class="pt-2" enctype="multipart/form-data" autocomplete="off" action="{{ action }}" method="post">{% csrf_token %}
-
   <div class="row no-margin-right">
-    <div class="col-sm-1 pb-2 d-flex justify-content-center">
+    <div class="pb-2 d-flex justify-content-center">
       <div class="cred-image">
-        <img class="img-thumbnail" style="width: 128px;" src="{% static rattic_logo %}"/>
+        {{ form.icon.as_hidden }}
+        <img class="p-1" id="credential-icon" style="width: 96px;" 
+        {% if cred.icon %}
+          src="data:image/png;base64,{{ cred.icon.icon|decode_utf8 }}"
+        {% else %}
+          src="{% static rattic_logo %}"
+        {% endif %}
+        />
         <a class="btn btn-outline-primary btn-sm btn-block" id="icon-select-button" href="#" role="button">{% trans "Select icon" %}</a>
       </div>
     </div>
@@ -188,7 +195,7 @@
           <div class="col-10">
             <input type="range" min="1" max="128" value="24" class="password-length-slider" id="password-length-slider">
           </div>
-          <div class="col-2">
+          <div class="col-sm-2">
             <input type="number" class="password-length-input"
             id="password-length-custom-input" min="2" max="128" value="24">
           </div>
@@ -212,15 +219,11 @@
 <div class="modal fade bd-example-modal-lg" id="select-icons-modal" tabindex="-1" role="dialog" aria-labelledby="select-icons-modal-label" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{% trans "Select credential icon" %}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
       <div class="container">
-      <div class="row justify-content-center pt-4 pb-2">
-        <img class="rounded p-1" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
+      <div class="row justify-content-center pt-2 pb-2">
+        {% for i in icons %}
+          <img class="p-1 credential-icon-image" src="data:image/png;base64,{{ i.icon|decode_utf8 }}" alt="{{ i.name }}" data-id="{{i.id}}" width="96px" height="96px">
+        {% endfor %}
       </div>
       </div>
     </div>

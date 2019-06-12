@@ -216,10 +216,15 @@ $(document).ready(function () {
     calculatePasswordStrengthModal();
   });
 
-
   // register modal window for icon select
   $('#icon-select-button').click(function () {
-    $('#select-icons-modal').modal('show')
+    $('#select-icons-modal').modal('show');
   });
-  
+
+  // register action for icons in a icons modal window
+  $('.credential-icon-image').click(function () {
+    $('#credential-icon').attr('src', this.src)
+    $('#id_icon').val(this.dataset.id)
+    $('#select-icons-modal').modal('hide');
+  });
 });

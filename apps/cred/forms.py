@@ -61,7 +61,6 @@ class CredForm(ModelForm):
     
     uploads = FileField(widget=ClearableFileInput(
         attrs={'multiple': True, 'class': 'custom-file-input'}), required=False)
-
     iconname = CharField(required=False)
 
     def __init__(self, requser, *args, **kwargs):
@@ -75,9 +74,11 @@ class CredForm(ModelForm):
         self.fields['groups'].label = _('Viewers Groups')
         self.fields['users'].label = _('Viewers Users')
         self.fields['uploads'].label = _('Upload files')
-
         # Make the URL invalid message a bit more clear
         self.fields['url'].error_messages['invalid'] = _("Please enter a valid HTTP/HTTPS URL")
+        
+        # requre owners group
+        self.fields['group'].required = True
 
     class Meta:
         model = Cred

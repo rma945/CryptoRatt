@@ -13,19 +13,18 @@
   <form class="pt-2" enctype="multipart/form-data" autocomplete="off" action="{{ action }}" method="post">{% csrf_token %}
     <div class="row p-4 no-margin-right">
 
-      <!-- profile image -->
       <div class="col-xs-2 align-items-top ">
-        <img class="mx-auto d-block"
+        <img class="mx-auto d-block pb-1"
         {% if project.icon %}
           src="data:image/png;base64,{{ project.icon|decode_utf8 }}"
         {% else %}
           src="{% static "rattic/img/project-default.png" %}"
         {% endif %}
         width="160" height="160">
-          <label class="btn btn-outline-primary btn-sm" style="width: 160px;" data-toggle="tooltip" data-html="true" title="160 x 160 <b>px</b></br>50 <b>kb</b>">
-            {% trans "Update icon" %}
-            {{ form.icon }}
-          </label>
+        <label class="btn btn-outline-primary btn-sm" style="width: 160px;" data-toggle="tooltip" data-html="true" title="160 x 160 <b>px</b></br>50 <b>kb</b>">
+          {% trans "Update icon" %}
+          {{ form.icon }}
+        </label>
       </div>
 
       <div class="col">
