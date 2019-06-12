@@ -355,7 +355,7 @@ def create_credential_icons(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cred', '0010_remove_cred_descriptionmarkdown'),
+        ('cred', '0004_upgrade_to_boostrap'),
     ]
 
     operations = [

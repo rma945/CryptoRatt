@@ -75,7 +75,7 @@ class CredentialIcon(models.Model):
         return self.name
 
 class Project(models.Model):
-    title = models.CharField(verbose_name=_('Title'), max_length=128, db_index=True)
+    title = models.CharField(verbose_name=_('Title'), max_length=128, db_index=True, unique=True)
     url = models.URLField(verbose_name=_('URL'), blank=True, null=True)
     icon = models.BinaryField(null=True, default=None)
     description = models.TextField(verbose_name=_('Description'), blank=True, null=True)
@@ -216,7 +216,7 @@ class Cred(models.Model):
 class Attachment(models.Model):
     credential = models.ForeignKey(Cred, on_delete=models.CASCADE)
     filename = models.CharField(verbose_name=_('Filename'), max_length=256)
-    created = models.DateTimeField(auto_now_add=True, null=True)
+    created = models.DateTimeField(auto_now_add=True, blank=True)
     mime = models.CharField(verbose_name=_('Mime'), max_length=64, blank=True, null=True, default=None)
     content = models.BinaryField(null=True, default=None)
 

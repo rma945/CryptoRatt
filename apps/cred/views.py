@@ -343,12 +343,14 @@ def add(request):
             return HttpResponseRedirect(reverse('cred:cred_detail', args=(saved_form.id,)))
     else:
         form = CredForm(request.user)
+        icons = CredentialIcon.objects.all().order_by('name')
 
     return render(
         request, 'cred_edit.html',
         {
             'form': form,
             'action':reverse('cred:cred_add'),
+            'icons': icons,
         }
     )
 

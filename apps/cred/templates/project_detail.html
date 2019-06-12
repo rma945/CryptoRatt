@@ -32,19 +32,20 @@
         </a>
       </div>
       <div class="text-center pb-1">
-        <a class="btn btn-secondary btn-sm {% if project in user.profile.favourite_projects.all %} btn-warning {% endif %}"
-        style="width: 160px" href="#" id="set-farovire-button">
-          <i class="far fa-star"></i>
-          {% trans "Favorite" %}
-        </a>
-      </div>
-      <div class="text-center">
         <a class="btn btn-danger btn-sm" style="width: 160px" href="#" id="delete-project-button">
           <i class="far fa-trash-alt"></i>
           {% trans "Delete" %}
         </a>
       </div>
       {% endif %}
+
+      <div class="text-center">
+        <a class="btn btn-secondary btn-sm {% if project in user.profile.favourite_projects.all %} btn-warning {% endif %}"
+        style="width: 160px" href="#" id="set-farovire-button">
+          <i class="far fa-star"></i>
+          {% trans "Favorite" %}
+        </a>
+      </div>
 
     </div>
 

@@ -1,4 +1,5 @@
 from django.utils.translation import ugettext_lazy as _
+from django.core.exceptions import ValidationError
 from django.forms import Form, ModelForm, SelectMultiple, Select, PasswordInput, CharField, TextInput, ClearableFileInput, FileField, Textarea, ModelMultipleChoiceField
 
 from apps.cred.models import Project, Cred, Tag, Group
@@ -28,6 +29,8 @@ class ProjectForm(ModelForm):
         self.fields['title'].label = _('Project title')
         self.fields['url'].label = _('Project URL')
         self.fields['description'].label = _('Project description')
+        self.fields['credentials'].required = False
+
         if self.instance:
             self.fields["credentials"].initial = (
                 self.instance.cred_set.all().values_list('id', flat=True)
@@ -50,9 +53,14 @@ class ProjectForm(ModelForm):
 
         if project.cred_set.all():
             project.cred_set.clear()
-
-        for c in credentials:
-            project.cred_set.add(c)
+        
+        # TODO: fix project creating
+        if Project.objects.filter(title = self.cleaned_data['title']).exists():
+            for c in credentials:
+                project.cred_set.add(c)
+        
+        if Project.objects.filter(title = self.cleaned_data['title']).exists():
+            raise ValidationError({'title': ['Project with same name already exists',]})
 
         return self.cleaned_data
 
