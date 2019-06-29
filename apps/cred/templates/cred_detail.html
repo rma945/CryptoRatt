@@ -4,7 +4,7 @@
 {% load i18n %}
 {% load markdown %}
 
-{% block title %}{{ cred.title }} - {% trans "Rattic" %}{% endblock %}
+{% block title %}{{ cred.title }} - {% trans "CryptoRatt" %}{% endblock %}
 
 {% block customheader %}
   <meta name="cred-id" content="{{ cred.id }}" />
@@ -26,7 +26,8 @@
 {% if cred.on_changeq and not readonly %}
   <div class="alert alert-warning mt-2" role="alert">
     <strong>{% trans "Change Required" %}</strong>
-    {% blocktrans %}This credential is on the change queue and should have its password changed as soon as possible.{% endblocktrans %} {% trans "Why not" %} <a href="{% url "cred:cred_edit" cred.id %}">{% trans "do it now" %}</a>{% trans "?" %}
+    {% blocktrans %}This credential is on the change queue and should have its password changed as soon as possible.{% endblocktrans %}
+    <a href="{% url "cred:cred_edit" cred.id %}">{% trans "Why not do it now?" %}</a>
   </div>
 {% endif %}
 {% if cred.is_expired %}

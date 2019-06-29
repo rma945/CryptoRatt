@@ -1,4 +1,4 @@
-import apps.cred.fields
+# import apps.cred.fields
 from django.conf import settings
 from django.db import migrations, models, connection
 from base64 import b64decode

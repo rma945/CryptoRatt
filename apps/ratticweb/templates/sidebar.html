@@ -2,85 +2,92 @@
 {% load i18n %}
 
 <div class="bg-light d-none d-sm-block" id="sidebar">
- <div class="accordion" id="accordionExample">
- 
-  <div class="card favorites-card">
-    <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-      <h6 class="mb-0">Projects</h6>
+  <div class="accordion" id="favoritesAccordion">  
+    <div class="card favorites-card">
+
+      <div class="row p-2 bg-light border-bottom noselect">
+        <div class="col-2">
+          <img width="32" alt="{% trans "CryptoRatt" %}" src="{% static rattic_logo %}"/>
+        </div>
+        <div class="col-10 pt-1">
+          <h5>CryptoRatt</h5>
+        </div>
+      </div>
+
+      <div class="card-header" id="collapse-projects-header" data-toggle="collapse" data-target="#collapse-projects" aria-expanded="false" aria-controls="collapse-projects">
+        <h6 class="mb-0">Projects</h6>
+      </div>
+      <div id="collapse-projects" class="collapse" aria-labelledby="collapse-projects-header" data-parent="#favoritesAccordion">
+        <div class="card-body">
+          <ul class="list-unstyled favorites-list">
+            {% for p in user.profile.favourite_projects.all %}
+              <a href="{% url "cred:project_detail" p.id %}">
+                <li>
+                  <i class="fas fa-minus"></i> {{ p.title }}
+                </li>
+              </a>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
     </div>
-    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-      <div class="card-body">
-        <ul class="list-unstyled favorites-list">
-          {% for p in user.profile.favourite_projects.all %}
-            <a href="{% url "cred:project_detail" p.id %}">
+
+    <div class="card favorites-card">
+      <div class="card-header" id="collapse-credentials-header" data-toggle="collapse" data-target="#collapse-credentials" aria-expanded="false" aria-controls="collapse-credentials">
+        <h6 class="mb-0">Credentials</h6>
+      </div>
+      <div id="collapse-credentials" class="collapse" aria-labelledby="collapse-credentials-header" data-parent="#favoritesAccordion">
+        <div class="card-body favorites-card-body">
+          <ul class="list-unstyled favorites-list">
+            {% for c in user.profile.favourite_credentials.all %}
+              <a href="{% url "cred:cred_detail" c.id %}">
+                <li>
+                  <i class="fas fa-minus"></i> {{ c.title }}
+                </li>
+              </a>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card favorites-card">
+      <div class="card-header" id="collapse-groups-header" data-toggle="collapse" data-target="#collapse-groups" aria-expanded="false" aria-controls="collapse-groups">
+        <h6 class="mb-0">Groups</h6>
+      </div>
+      <div id="collapse-groups" class="collapse" aria-labelledby="collapse-groups-header" data-parent="#favoritesAccordion">
+        <div class="card-body">
+          <ul class="list-unstyled favorites-list">
+          {% for g in user.groups.all %}
+            <a href="{% url "cred:cred_list" "group" g.id %}">
               <li>
-                <i class="fas fa-minus"></i> {{ p.title }}
+                <i class="fas fa-minus"></i> {{ g.name }}
               </li>
             </a>
           {% endfor %}
-        </ul>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="card favorites-card">
-    <div class="card-header" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-      <h6 class="mb-0">Credentials</h6>
-    </div>
-    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-      <div class="card-body favorites-card-body">
-        <ul class="list-unstyled favorites-list">
-          {% for c in user.profile.favourite_credentials.all %}
-            <a href="{% url "cred:cred_detail" c.id %}">
+    <div class="card favorites-card">
+      <div class="card-header" id="collapse-tags-header" data-toggle="collapse" data-target="#collapse-tags" aria-expanded="false" aria-controls="collapse-tags">
+        <h6 class="mb-0">Tags</h6>
+      </div>
+      <div id="collapse-tags" class="collapse" aria-labelledby="collapse-tags-header" data-parent="#favoritesAccordion">
+        <div class="card-body">
+          <ul class="list-unstyled favorites-list">
+          {% for tag in user.profile.favourite_tags.all %}
+            <a href="{% url "cred:cred_list" "tag" tag.id %}">
               <li>
-                <i class="fas fa-minus"></i> {{ c.title }}
+                <i class="fas fa-minus"></i> {{ tag.name }}
               </li>
             </a>
           {% endfor %}
-        </ul>
+          </ul>
+        </div>
       </div>
     </div>
+
   </div>
-
-  <div class="card favorites-card">
-    <div class="card-header" id="collapse-groups-header" data-toggle="collapse" data-target="#collapse-groups" aria-expanded="false" aria-controls="collapse-groups">
-      <h6 class="mb-0">Groups</h6>
-    </div>
-    <div id="collapse-groups" class="collapse" aria-labelledby="collapse-groups-header" data-parent="#accordionExample">
-      <div class="card-body">
-        <ul class="list-unstyled favorites-list">
-        {% for g in user.groups.all %}
-          <a href="{% url "cred:cred_list" "group" g.id %}">
-            <li>
-              <i class="fas fa-minus"></i> {{ g.name }}
-            </li>
-          </a>
-        {% endfor %}
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div class="card favorites-card">
-    <div class="card-header" id="collapse-tags-header" data-toggle="collapse" data-target="#collapse-tags" aria-expanded="false" aria-controls="collapse-tags">
-      <h6 class="mb-0">Tags</h6>
-    </div>
-    <div id="collapse-tags" class="collapse" aria-labelledby="collapse-tags-header" data-parent="#accordionExample">
-      <div class="card-body">
-        <ul class="list-unstyled favorites-list">
-        {% for tag in user.profile.favourite_tags.all %}
-          <a href="{% url "cred:cred_list" "tag" tag.id %}">
-            <li>
-              <i class="fas fa-minus"></i> {{ tag.name }}
-            </li>
-          </a>
-        {% endfor %}
-        </ul>
-      </div>
-    </div>
-  </div>
-
-
-</div>
-
 </div>

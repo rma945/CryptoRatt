@@ -21,14 +21,14 @@ from apps.cred.models import CredAudit, Cred, Tag
 from apps.cred.forms import CredForm
 from apps.staff.forms import UserForm, GroupForm, AuditFilterForm
 from apps.staff.forms import EditUserForm
-from apps.staff.decorators import rattic_staff_required
+from apps.staff.decorators import staff_required
 
 
-@rattic_staff_required
+@staff_required
 def app_settings(request):
     return render(request, 'staff_tab_settings.html')
 
-@rattic_staff_required
+@staff_required
 def users(request):
     paginator = Paginator(
         User.objects.all().order_by('username'),
@@ -40,7 +40,7 @@ def users(request):
     
     return render(request, 'staff_tab_users.html', {'users': users})
 
-@rattic_staff_required
+@staff_required
 def groups(request):
     paginator = Paginator(
         Group.objects.all().order_by('name'),
@@ -52,7 +52,7 @@ def groups(request):
 
     return render(request, 'staff_tab_groups.html', {'groups': groups})
 
-@rattic_staff_required
+@staff_required
 def tags(request):
     paginator = Paginator(
         Tag.objects.all().order_by('name'),
@@ -64,7 +64,7 @@ def tags(request):
 
     return render(request, 'staff_tab_tags.html',  {'tags': tags})
 
-@rattic_staff_required
+@staff_required
 def trash(request):
     paginator = Paginator(
         Cred.objects.filter(is_deleted=True).order_by('title'),
@@ -77,7 +77,7 @@ def trash(request):
     return render(request, 'staff_tab_trash.html',  {'creds': creds})
 
 
-@rattic_staff_required
+@staff_required
 def user_detail(request, uid):
     user = get_object_or_404(User, pk=uid)
     credlogs = CredAudit.objects.filter(user=user, cred__group__in=request.user.groups.all())[:5]
@@ -94,17 +94,17 @@ def user_detail(request, uid):
         request, 'staff_detail_user.html',
         {'viewuser': user, 'credlogs': credlogs,})
 
-@rattic_staff_required
+@staff_required
 def group_detail(request, gid):
     group = get_object_or_404(Group, pk=gid)
     return render(request, 'staff_detail_group.html', {'group': group})
 
-@rattic_staff_required
+@staff_required
 def tag_detail(request, tid):
     tag = get_object_or_404(Tag, pk=tid)
     return render(request, 'staff_detail_tag.html', {'tag': tag})
 
-@rattic_staff_required
+@staff_required
 def group_add(request):
     if request.method == 'POST':
         form = GroupForm(request.POST)
@@ -117,7 +117,7 @@ def group_add(request):
 
     return render(request, 'staff_groupedit.html', {'form': form})
 
-@rattic_staff_required
+@staff_required
 def edit_group(request, gid):
     group = get_object_or_404(Group, pk=gid)
     if request.method == 'POST':
@@ -131,7 +131,7 @@ def edit_group(request, gid):
     return render(request, 'staff_edit_group.html', {'edit_group': group, 'form': form})
 
 
-@rattic_staff_required
+@staff_required
 def delete_group(request, gid):
     group = get_object_or_404(Group, pk=gid)
     if request.method == 'POST':
@@ -139,14 +139,14 @@ def delete_group(request, gid):
     return HttpResponseRedirect(reverse('staff:groups'))
 
 
-@rattic_staff_required
+@staff_required
 def delete_user(request, uid):
     if request.method == 'POST':
         user = get_object_or_404(User, pk=uid)
         user.delete()
     return HttpResponseRedirect(reverse('staff:users'))
 
-@rattic_staff_required
+@staff_required
 def delete_tag(request, tid):
     tag = get_object_or_404(Tag, pk=tid)
     if request.method == 'POST':
@@ -154,7 +154,7 @@ def delete_tag(request, tid):
     return HttpResponseRedirect(reverse('staff:tags'))
 
 
-@rattic_staff_required
+@staff_required
 def audit(request, by, byarg):
     auditlog = CredAudit.objects.all()
     audit_item = None
@@ -206,7 +206,7 @@ class NewUser(FormView):
     success_url = reverse_lazy('staff:settings')
 
     # Staff access only
-    @method_decorator(rattic_staff_required)
+    @method_decorator(staff_required)
     def dispatch(self, *args, **kwargs):
         return super(NewUser, self).dispatch(*args, **kwargs)
 
@@ -217,7 +217,7 @@ class NewUser(FormView):
         user.save()
         return super(NewUser, self).form_valid(form)
 
-@rattic_staff_required
+@staff_required
 def edit_user(request, uid):
     edituser = get_object_or_404(User, pk=uid)
     
@@ -241,7 +241,7 @@ def edit_user(request, uid):
 
 
 # TODO: Move to API
-@rattic_staff_required 
+@staff_required 
 def deactivate_user(request):
     if request.method == 'POST':
         request_json = json.loads(request.body)
@@ -254,7 +254,7 @@ def deactivate_user(request):
     return Http404
 
 
-@rattic_staff_required
+@staff_required
 def credundelete(request, cred_id):
     cred = get_object_or_404(Cred, pk=cred_id)
 
@@ -280,7 +280,7 @@ def credundelete(request, cred_id):
     return render(request, 'cred_detail.html', {'cred': cred, 'lastchange': lastchange, 'action': reverse('cred:cred_delete', args=(cred_id,)), 'undelete': True})
 
 
-@rattic_staff_required
+@staff_required
 def delete_token(request, uid):
     # Grab the user
     user = get_object_or_404(User, pk=uid)

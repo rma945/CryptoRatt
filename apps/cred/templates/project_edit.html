@@ -62,10 +62,10 @@
       </div>
       <div class="col">
         <a class="btn btn-secondary btn-block" 
-        {% if edit_user.id %}
-          href="{% url 'staff:user_detail' edit_user.id %}"
+        {% if project.id %}
+          href="{% url 'cred:project_detail' project.id %}"
         {% else %}
-          href="{% url 'staff:users' %}"
+          href="{% url 'cred:projects' %}"
         {% endif %}
         role="button">{% trans "Cancel" %}</a>
       </div>

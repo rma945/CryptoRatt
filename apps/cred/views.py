@@ -13,6 +13,7 @@ from django.utils.translation import ugettext as _
 from apps.cred.models import Project, Cred, Attachment, CredAudit, Tag, CredChangeQ, CredentialIcon
 from apps.cred.search import cred_search
 from apps.cred.forms import ExportForm, ProjectForm, CredForm, TagForm
+from apps.staff.decorators import staff_required
 
 from django.contrib.auth.models import Group
 
@@ -154,23 +155,33 @@ def project_detail(request, project_id):
 
     return render(request, 'project_detail.html', {'project': project, 'credentials': credentials})
 
-@login_required
+@staff_required
 def project_add(request):
-    # Restrict project add only to staff members
     if not request.user.is_staff:
         raise Http404
 
     if request.method == 'POST':
         form = ProjectForm(request.user, request.POST)
+        
         if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse("cred:projects"))
+            saved_form = form.save()
+
+            if request.FILES.getlist('icon'):
+                f = request.FILES.getlist('icon')[0]
+                saved_form.icon = b64encode(f.file.read())
+                saved_form.save()
+            
+            if form.cleaned_data['credentials']:
+                for c in form.cleaned_data['credentials']:
+                    saved_form.cred_set.add(c)
+            
+            return HttpResponseRedirect(reverse("cred:project_detail", args=(saved_form.id,)))
     else:
         form = ProjectForm(request.user)
 
     return render(request, 'project_edit.html', {'form': form, 'action':reverse("cred:project_add")})
 
-@login_required
+@staff_required
 def project_edit(request, project_id):
     if not request.user.is_staff:
         raise Http404
@@ -181,6 +192,7 @@ def project_edit(request, project_id):
     if request.method == 'POST':
         form = ProjectForm(request.user, request.POST, request.FILES, instance=project)
         
+        print('form status:', form.is_valid())
         if form.is_valid():
             saved_form = form.save()
 
@@ -188,6 +200,11 @@ def project_edit(request, project_id):
                 f = request.FILES.getlist('icon')[0]
                 saved_form.icon = b64encode(f.file.read())
                 saved_form.save()
+
+            if form.cleaned_data['credentials']:
+                saved_form.cred_set.clear()
+                for c in form.cleaned_data['credentials']:
+                    saved_form.cred_set.add(c)
 
         if next is None:
             return HttpResponseRedirect(reverse("cred:project_detail", args=(project.id,)))
@@ -207,7 +224,7 @@ def project_edit(request, project_id):
         }
     )
 
-@login_required
+@staff_required
 def project_delete(request, project_id):
     if not request.user.is_staff:
         raise Http404

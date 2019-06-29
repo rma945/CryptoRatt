@@ -1,11 +1,22 @@
 {% extends "base.html" %}
+{% load static from staticfiles %}
 {% load i18n %}
 
-
 {% block content %}
-<h1>500 - {% trans "Something went Splork!" %} :(</h1>
-<p>{% blocktrans %}Something went wrong and the server was unable to process this request. Check your servers error logs for more details.{% endblocktrans %}</p>
-<p>{% blocktrans %}If you would like to report an issue with RatticDB please visit{% endblocktrans %} <a href="https://github.com/tildaslash/RatticWeb/issues/new">{% trans "Github Issues" %}</a>.</p>
+
+<div class="col p-4">
+  <img class="mx-auto d-block" width="200" alt="{% trans "CryptoRatt" %}" src="{% static rattic_logo %}"/>
+</div>
+
+<h1 class="text-center text-danger display-3 font-weight-bold">500 error</h1>
+<div class="col justify-content-center text-center">
+  <h4>
+    {% blocktrans %}
+    Oops, something goes wrong! Looks like server can`t process your request!<br>
+    But out best specialists already working on a fixing this error!
+    {% endblocktrans %}
+  </h4>
+</div>
 
 {% endblock %}
 

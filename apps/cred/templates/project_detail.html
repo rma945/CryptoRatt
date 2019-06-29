@@ -11,7 +11,6 @@
 {% block content %}
 
 <div class="border mt-2">
-  
   <div class="row p-4 no-margin-right">
 
     <!-- project image -->
@@ -24,6 +23,7 @@
       {% endif %}
       width="160" height="160">
 
+
       {% if user.is_staff %}
       <div class="text-center pb-1 pt-1">
         <a class="btn btn-outline-primary btn-sm" style="width: 160px" href="{% url 'cred:project_edit' project.id%}" role="button">
@@ -31,6 +31,16 @@
           {% trans "Edit" %}
         </a>
       </div>
+      {% endif %}
+      
+      <div class="text-center pb-1 pt-1">
+        <a class="btn btn-primary btn-sm" style="width: 160px" href="{% url 'cred:cred_add' %}" role="button">
+          <i class="fas fa-plus"></i>
+          {% trans "Add" %}
+        </a>
+      </div>
+
+      {% if user.is_staff %}
       <div class="text-center pb-1">
         <a class="btn btn-danger btn-sm" style="width: 160px" href="#" id="delete-project-button">
           <i class="far fa-trash-alt"></i>

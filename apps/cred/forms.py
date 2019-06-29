@@ -47,34 +47,22 @@ class ProjectForm(ModelForm):
             'description': Textarea(attrs={'class': 'form-control'}),
         }
 
-    def clean(self):
-        project = self.instance
-        credentials = self.cleaned_data['credentials']
-
-        if project.cred_set.all():
-            project.cred_set.clear()
-        
-        # TODO: fix project creating
-        if Project.objects.filter(title = self.cleaned_data['title']).exists():
-            for c in credentials:
-                project.cred_set.add(c)
-        
-        if Project.objects.filter(title = self.cleaned_data['title']).exists():
-            raise ValidationError({'title': ['Project with same name already exists',]})
-
-        return self.cleaned_data
-
 
 class CredForm(ModelForm):
     
-    uploads = FileField(widget=ClearableFileInput(
-        attrs={'multiple': True, 'class': 'custom-file-input'}), required=False)
     iconname = CharField(required=False)
+    uploads = FileField(
+        widget=ClearableFileInput(attrs={'multiple': True, 'class': 'custom-file-input'}),
+        required=False)
+    
 
     def __init__(self, requser, *args, **kwargs):
         super(CredForm, self).__init__(*args, **kwargs)
 
-        # Limit the group options to groups that the user is in, for non staff users
+        # sort projects 
+        self.fields['project'].queryset = Project.objects.order_by('title')
+
+        # limit the group options to groups that the user is in, for non staff users
         if not requser.is_staff:
             self.fields['group'].queryset = Group.objects.filter(user=requser)
 

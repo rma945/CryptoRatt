@@ -7,7 +7,7 @@
   <a class="btn d-none d-sm-block" id="favorites-menu-toggle"><i class="fas fa-bars"></i></a>
     
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation-bar"
-   aria-controls="navigation-bar" aria-expanded="false" aria-label="toggle fav-bar">
+   aria-controls="navigation-bar" aria-expanded="false" aria-label="toggle fav-bar"><i class="fas fa-bars"></i>
   </button>
 
   <div class="collapse navbar-collapse" id="navigation-bar">
@@ -20,7 +20,7 @@
         <a class="nav-link" href="{% url "cred:cred_list" %}">{% trans "Passwords" %}</a>
       </li>
 
-      <li class="nav-item {% if request.resolver_match.view_name == "cred_views_viewqueue" %}active{% endif %}">
+      <li class="nav-item {% if request.resolver_match.view_name == "cred:cred_views_viewqueue" %}active{% endif %}">
         <a class="nav-link" href="{{ cred_views_viewqueue }}">{% trans "Change queue" %}
         {% if changeqcount > 0 %}<span class="badge badge-primary">{{ changeqcount }}</span>{% endif %}
         </a>

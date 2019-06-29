@@ -7,7 +7,9 @@
   <nav>
     <div class="nav nav-tabs " id="account-tabs" role="tablist">
       <a class="nav-item nav-link active" id="profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="true">Profile</a>
-      <a class="nav-item nav-link" id="api-tab" data-toggle="tab" href="#nav-api" role="tab" aria-controls="nav-api" aria-selected="false">API Keys</a>
+      {% if user.is_staff %}
+        <a class="nav-item nav-link" id="api-tab" data-toggle="tab" href="#nav-api" role="tab" aria-controls="nav-api" aria-selected="false">API Keys</a>
+      {% endif %}
       <a class="nav-item nav-link" id="sessions-tab" data-toggle="tab" href="#nav-sessions" role="tab" aria-controls="nav-sessions" aria-selected="false">Sessions</a>
     </div>
   </nav>
@@ -17,7 +19,9 @@
     {% include "account_tab_profile.html" %}
     
     <!-- api keys -->
-    {% include "account_tab_apikeys.html" %}
+    {% if user.is_staff %}
+      {% include "account_tab_apikeys.html" %}
+    {% endif %}
     
     <!-- sessions -->
     {% include "account_tab_sessions.html" %}

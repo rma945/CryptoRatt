@@ -1,0 +1,1120 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-06-25 23:59+0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: apps/account/forms.py:9
+msgid "Old password"
+msgstr ""
+
+#: apps/account/forms.py:17
+msgid "Incorrect password"
+msgstr ""
+
+#: apps/account/models.py:31
+msgid "Items at page"
+msgstr ""
+
+#: apps/account/models.py:32
+msgid "Favourite tags"
+msgstr ""
+
+#: apps/account/models.py:33
+msgid "Favourite credentials"
+msgstr ""
+
+#: apps/account/models.py:34
+msgid "Favourite projects"
+msgstr ""
+
+#: apps/account/models.py:36
+msgid "Profile avatar"
+msgstr ""
+
+#: apps/account/models.py:37
+msgid "Theme"
+msgstr ""
+
+#: apps/account/templates/account_changepass.html:3
+#: apps/account/templates/password_reset_confirm.html:4
+msgid "Setting New password"
+msgstr ""
+
+#: apps/account/templates/account_changepass.html:6
+#: apps/account/templates/password_reset_confirm.html:8
+msgid "Please enter your new password twice."
+msgstr ""
+
+#: apps/account/templates/account_changepass.html:7
+#: apps/account/templates/password_reset_confirm.html:9
+msgid "So we can verify you typed it in correctly."
+msgstr ""
+
+#: apps/account/templates/account_changepass.html:20
+msgid "Change Password"
+msgstr ""
+
+#: apps/account/templates/account_ldaperror.html:5
+msgid "LDAP Error"
+msgstr ""
+
+#: apps/account/templates/account_ldaperror.html:6
+msgid "Your LDAP server returned the following error:"
+msgstr ""
+
+#: apps/account/templates/account_ldaperror.html:7 apps/cred/models.py:81
+#: apps/cred/models.py:107 apps/cred/templates/cred_detail.html:150
+#: apps/cred/templates/cred_part_passgenmodal.html:9
+#: apps/cred/templates/project_edit.html:50
+msgid "Description"
+msgstr ""
+
+#: apps/account/templates/account_ldaperror.html:8
+msgid "Further Info"
+msgstr ""
+
+#: apps/account/templates/account_tab_apikeys.html:14
+msgid "Key Name"
+msgstr ""
+
+#: apps/account/templates/account_tab_apikeys.html:15
+#: apps/cred/templates/cred_detail.html:69
+#: apps/cred/templates/project_detail.html:72
+msgid "Created"
+msgstr ""
+
+#: apps/account/templates/account_tab_apikeys.html:16
+msgid "Expires"
+msgstr ""
+
+#: apps/account/templates/account_tab_apikeys.html:27
+msgid "Never"
+msgstr ""
+
+#: apps/account/templates/account_tab_apikeys.html:44
+msgid "New API Key"
+msgstr ""
+
+#: apps/account/templates/account_tab_apikeys.html:54
+msgid "Create new API key"
+msgstr ""
+
+#: apps/account/templates/account_tab_apikeys.html:63
+#: apps/cred/templates/cred_list.html:15
+#: apps/cred/templates/cred_part_newtagmodal.html:18
+#: apps/cred/templates/project_list.html:10
+msgid "Create"
+msgstr ""
+
+#: apps/account/templates/account_tab_apikeys.html:64
+#: apps/account/templates/account_tab_apikeys.html:85
+#: apps/account/templates/account_tab_sessions.html:61
+#: apps/cred/templates/cred_edit.html:158
+#: apps/cred/templates/cred_edit.html:212
+#: apps/cred/templates/cred_part_passgenmodal.html:39
+#: apps/cred/templates/project_detail.html:131
+#: apps/cred/templates/project_edit.html:70
+#: apps/staff/templates/staff_detail_group.html:66
+#: apps/staff/templates/staff_detail_user.html:122
+#: apps/staff/templates/staff_edit_group.html:54
+#: apps/staff/templates/staff_edit_user.html:98
+#: apps/staff/templates/staff_tab_groups.html:68
+#: apps/staff/templates/staff_tab_tags.html:68
+#: apps/staff/templates/staff_tab_users.html:84
+msgid "Cancel"
+msgstr ""
+
+#: apps/account/templates/account_tab_apikeys.html:75
+#: apps/account/templates/account_tab_sessions.html:51
+msgid "Delete API key"
+msgstr ""
+
+#: apps/account/templates/account_tab_apikeys.html:81
+msgid "Do you really want to delete this API key?"
+msgstr ""
+
+#: apps/account/templates/account_tab_apikeys.html:84
+#: apps/account/templates/account_tab_sessions.html:60
+#: apps/cred/templates/cred_detail.html:102
+#: apps/cred/templates/project_detail.html:47
+#: apps/cred/templates/project_detail.html:130
+#: apps/cred/templates/project_list.html:44
+#: apps/staff/templates/staff_detail_group.html:22
+#: apps/staff/templates/staff_detail_group.html:65
+#: apps/staff/templates/staff_detail_user.html:37
+#: apps/staff/templates/staff_detail_user.html:121
+#: apps/staff/templates/staff_tab_groups.html:35
+#: apps/staff/templates/staff_tab_groups.html:67
+#: apps/staff/templates/staff_tab_tags.html:35
+#: apps/staff/templates/staff_tab_tags.html:67
+#: apps/staff/templates/staff_tab_users.html:51
+#: apps/staff/templates/staff_tab_users.html:83
+msgid "Delete"
+msgstr ""
+
+#: apps/account/templates/account_tab_profile.html:20
+#: apps/staff/templates/staff_edit_group.html:19
+#: apps/staff/templates/staff_edit_user.html:26
+msgid "Update image"
+msgstr ""
+
+#: apps/account/templates/account_tab_profile.html:26
+msgid "Update password"
+msgstr ""
+
+#: apps/account/templates/account_tab_profile.html:31
+msgid "Disable 2FA"
+msgstr ""
+
+#: apps/account/templates/account_tab_profile.html:33
+msgid "Enable 2FA"
+msgstr ""
+
+#: apps/account/templates/account_tab_profile.html:43
+#: apps/staff/templates/staff_detail_user.html:47
+msgid "Role"
+msgstr ""
+
+#: apps/account/templates/account_tab_profile.html:46
+#: apps/staff/templates/staff_detail_user.html:64
+msgid "Email"
+msgstr ""
+
+#: apps/account/templates/account_tab_profile.html:49
+#: apps/staff/templates/staff_detail_user.html:67
+msgid "Two Factor Authentication"
+msgstr ""
+
+#: apps/account/templates/account_tab_profile.html:51
+#: apps/staff/templates/staff_detail_user.html:69
+#: apps/staff/templates/staff_edit_user.html:64
+msgid "Enabled"
+msgstr ""
+
+#: apps/account/templates/account_tab_profile.html:53
+#: apps/staff/templates/staff_detail_user.html:71
+msgid "Disabled"
+msgstr ""
+
+#: apps/account/templates/account_tab_profile.html:57
+#: apps/staff/templates/staff_detail_user.html:78
+msgid "Last Password Change"
+msgstr ""
+
+#: apps/account/templates/account_tab_profile.html:62 apps/cred/models.py:109
+#: apps/staff/templates/staff_detail_user.html:83
+#: apps/staff/templates/staff_edit_user.html:80
+#: apps/staff/templates/staff_tab_groups.html:12
+#: apps/staff/templates/staff_tab_settings.html:11
+#: apps/staff/templates/staff_tab_tags.html:12
+#: apps/staff/templates/staff_tab_trash.html:12
+#: apps/staff/templates/staff_tab_users.html:12
+msgid "Groups"
+msgstr ""
+
+#: apps/account/templates/account_tab_profile.html:93
+msgid "Save changes"
+msgstr ""
+
+#: apps/account/templates/account_tab_sessions.html:14
+msgid "Device"
+msgstr ""
+
+#: apps/account/templates/account_tab_sessions.html:15
+msgid "IP Address"
+msgstr ""
+
+#: apps/account/templates/account_tab_sessions.html:16
+msgid "Last Activity"
+msgstr ""
+
+#: apps/account/templates/account_tab_sessions.html:27
+msgid "This Session"
+msgstr ""
+
+#: apps/account/templates/account_tab_sessions.html:57
+msgid "Do you really want to delete this session?"
+msgstr ""
+
+#: apps/account/templates/account_tfa_backup_tokens.html:5
+msgid "Backup Tokens"
+msgstr ""
+
+#: apps/account/templates/account_tfa_backup_tokens.html:6
+msgid ""
+"Backup tokens can be used when your primary and backup\n"
+"      phone numbers aren't available. The backup tokens below can be used\n"
+"      for login verification. If you've used up all your backup tokens, you\n"
+"      can generate a new set of backup tokens. Only the backup tokens shown\n"
+"      below will be valid."
+msgstr ""
+
+#: apps/account/templates/account_tfa_backup_tokens.html:18
+msgid "Print these tokens and keep them somewhere safe."
+msgstr ""
+
+#: apps/account/templates/account_tfa_backup_tokens.html:20
+msgid "You don't have any backup codes yet."
+msgstr ""
+
+#: apps/account/templates/account_tfa_backup_tokens.html:25
+msgid "Back to Account Profile"
+msgstr ""
+
+#: apps/account/templates/account_tfa_backup_tokens.html:26
+msgid "Generate Tokens"
+msgstr ""
+
+#: apps/account/templates/account_tfa_disable.html:8
+msgid ""
+"\n"
+"      You are about to disable two-factor authentication. This compromises "
+"your account security, <b>are you sure?</b>\n"
+"    "
+msgstr ""
+
+#: apps/account/templates/account_tfa_disable.html:22
+#: apps/staff/templates/staff_edit_user.html:75
+msgid "2FA"
+msgstr ""
+
+#: apps/account/templates/account_tfa_disable.html:25
+msgid "I understand, disable"
+msgstr ""
+
+#: apps/account/templates/account_tfa_login.html:10
+#: apps/ratticweb/templates/404.html:8 apps/ratticweb/templates/500.html:8
+#: apps/ratticweb/templates/home.html:11
+#: apps/ratticweb/templates/sidebar.html:10
+msgid "CryptoRatt"
+msgstr "CryptoRatt"
+
+#: apps/account/templates/account_tfa_login.html:26
+#: apps/account/templates/account_tfa_login.html:28
+#: apps/account/templates/account_tfa_setup.html:69
+#: apps/account/templates/account_tfa_setup.html:71
+msgid "Back"
+msgstr "Назад"
+
+#: apps/account/templates/account_tfa_login.html:32
+#: apps/account/templates/account_tfa_setup.html:75
+#: apps/cred/templates/cred_list.html:137
+#: apps/ratticweb/templates/paginator.html:43
+msgid "Next"
+msgstr "Дальше"
+
+#: apps/account/templates/account_tfa_login.html:37
+msgid "Forgot password?"
+msgstr "Забыли пароль?"
+
+#: apps/account/templates/account_tfa_setup.html:10
+msgid ""
+"\n"
+"          You are about to take your account security to the next level.\n"
+"          Follow the steps in this wizard to enable two-factor "
+"authentication.\n"
+"        "
+msgstr ""
+
+#: apps/account/templates/account_tfa_setup.html:15
+msgid ""
+"\n"
+"          Please select which authentication method you would like to use.\n"
+"        "
+msgstr ""
+
+#: apps/account/templates/account_tfa_setup.html:19
+msgid ""
+"\n"
+"          To start using a token generator, please use your smartphone to "
+"scan the QR code below.\n"
+"          For example, use Google Authenticator.\n"
+"          Then, enter the token generated by the app.\n"
+"        "
+msgstr ""
+
+#: apps/account/templates/account_tfa_setup.html:25
+msgid ""
+"\n"
+"          Please enter the phone number you wish to receive the text "
+"messages on.\n"
+"          This number will be validated in the next step.\n"
+"        "
+msgstr ""
+
+#: apps/account/templates/account_tfa_setup.html:30
+msgid ""
+"\n"
+"          Please enter the phone number you wish to be called on.\n"
+"          This number will be validated in the next step.\n"
+"        "
+msgstr ""
+
+#: apps/account/templates/account_tfa_setup.html:36
+msgid ""
+"\n"
+"            We are calling your phone right now, please enter the digits you "
+"hear.\n"
+"          "
+msgstr ""
+
+#: apps/account/templates/account_tfa_setup.html:40
+msgid ""
+"\n"
+"            We sent you a text message, please enter the tokens we sent\n"
+"          "
+msgstr ""
+
+#: apps/account/templates/password_reset.html:5
+msgid "Reset Password"
+msgstr "Сбросить пароль"
+
+#: apps/account/templates/password_reset.html:8
+msgid ""
+"Please specify your email address to receive instructions for resetting it."
+msgstr "Пожалуйста, укажите ваш почтовый адрес, для отправки инструкций для сброса пароля."
+
+#: apps/account/templates/password_reset.html:15
+msgid "Reset password"
+msgstr "Сбросить пароль"
+
+#: apps/account/templates/password_reset_complete.html:4
+msgid "Password reset complete"
+msgstr "Сброс пароля завершен"
+
+#: apps/account/templates/password_reset_complete.html:7
+msgid "Your password has been set. You may go ahead and log in now."
+msgstr "Новый пароль установлен, теперь вы можете войти в систему."
+
+#: apps/account/templates/password_reset_complete.html:8
+msgid "Log in"
+msgstr "Войти"
+
+#: apps/account/templates/password_reset_confirm.html:17
+msgid "New password"
+msgstr "Новый пароль"
+
+#: apps/account/templates/password_reset_confirm.html:22
+msgid "Confirm password"
+msgstr "Подтвердите пароль"
+
+#: apps/account/templates/password_reset_confirm.html:27
+msgid "Change my password"
+msgstr "Изменить мой пароль"
+
+#: apps/account/templates/password_reset_confirm.html:32
+msgid "Password reset unsuccessful"
+msgstr "Ошибка при сбросе пароля"
+
+#: apps/account/templates/password_reset_confirm.html:33
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used. Please request a new password reset."
+msgstr "Ссылка для сброса пароля - уже использовалась. Пожалуйста, запросите новую ссылку."
+
+#: apps/account/templates/password_reset_done.html:5
+msgid "Password reset successful"
+msgstr "Пароль успешно сброшен"
+
+#: apps/account/templates/password_reset_done.html:8
+msgid ""
+"We've e-mailed you instructions for setting\n"
+"your password to the e-mail address you submitted. You should be\n"
+"receiving it shortly."
+msgstr ""
+
+#: apps/account/templates/password_reset_email.html:4
+#, python-format
+msgid ""
+"\n"
+"You're receiving this e-mail because you requested a password reset for your "
+"user account at %(site_name)s.\n"
+"\n"
+"Please go to the following page and choose a new password:\n"
+msgstr ""
+
+#: apps/account/templates/password_reset_email.html:12
+#, python-format
+msgid ""
+"\n"
+"Your username, in case you've forgotten: %(user.username)s\n"
+"\n"
+"Thanks for using our site!\n"
+"\n"
+"The %(site_name)s team.\n"
+msgstr ""
+
+#: apps/cred/forms.py:29
+msgid "Project title"
+msgstr "Название проекта"
+
+#: apps/cred/forms.py:30
+msgid "Project URL"
+msgstr "URL проекта"
+
+#: apps/cred/forms.py:31
+msgid "Project description"
+msgstr "Описание проекта"
+
+#: apps/cred/forms.py:39 apps/cred/forms.py:74
+msgid "Please enter a valid HTTP/HTTPS URL"
+msgstr "Пожалуйста, укажите правильную HTTP/HTTPS ссылку"
+
+#: apps/cred/forms.py:69
+msgid "Owner Group"
+msgstr "Группа владельцев"
+
+#: apps/cred/forms.py:70
+msgid "Viewers Groups"
+msgstr "Viewers Groups"
+
+#: apps/cred/forms.py:71
+msgid "Viewers Users"
+msgstr "Viewers Users"
+
+#: apps/cred/forms.py:72
+msgid "Upload files"
+msgstr "Загрузить файлы"
+
+#: apps/cred/models.py:78 apps/cred/models.py:103
+#: apps/cred/templates/cred_list.html:24 apps/cred/templates/cred_list.html:26
+#: apps/staff/templates/staff_changeadvice.html:19
+#: apps/staff/templates/staff_tab_trash.html:23
+msgid "Title"
+msgstr "Название"
+
+#: apps/cred/models.py:79 apps/cred/models.py:104
+#: apps/cred/templates/project_detail.html:68
+msgid "URL"
+msgstr "Ссылка"
+
+#: apps/cred/models.py:102
+msgid "Project"
+msgstr "Проект"
+
+#: apps/cred/models.py:105 apps/cred/templates/cred_detail.html:116
+msgid "Username"
+msgstr "Имя пользователя"
+
+#: apps/cred/models.py:106 apps/cred/templates/cred_detail.html:130
+msgid "Password"
+msgstr "Пароль"
+
+#: apps/cred/models.py:108 apps/staff/templates/staff_changeadvice.html:21
+msgid "Group"
+msgstr "Группа"
+
+#: apps/cred/models.py:110 apps/staff/templates/staff_detail_group.html:33
+#: apps/staff/templates/staff_edit_group.html:36
+#: apps/staff/templates/staff_tab_groups.html:11
+#: apps/staff/templates/staff_tab_settings.html:10
+#: apps/staff/templates/staff_tab_tags.html:11
+#: apps/staff/templates/staff_tab_trash.html:11
+#: apps/staff/templates/staff_tab_users.html:11
+msgid "Users"
+msgstr "Пользователи"
+
+#: apps/cred/models.py:111 apps/cred/templates/cred_detail.html:78
+#: apps/cred/templates/cred_list.html:47
+#: apps/staff/templates/staff_changeadvice.html:22
+#: apps/staff/templates/staff_tab_groups.html:13
+#: apps/staff/templates/staff_tab_settings.html:12
+#: apps/staff/templates/staff_tab_tags.html:13
+#: apps/staff/templates/staff_tab_trash.html:13
+#: apps/staff/templates/staff_tab_trash.html:35
+#: apps/staff/templates/staff_tab_users.html:13
+msgid "Tags"
+msgstr "Тэги"
+
+#: apps/cred/models.py:112
+msgid "Icon"
+msgstr "Иконка"
+
+#: apps/cred/models.py:218
+msgid "Filename"
+msgstr "Имя файла"
+
+#: apps/cred/models.py:220
+msgid "Mime"
+msgstr "Mime"
+
+#: apps/cred/models.py:262
+msgid "Added"
+msgstr "Добавлен"
+
+#: apps/cred/models.py:263
+msgid "Changed"
+msgstr "Изменен"
+
+#: apps/cred/models.py:264
+msgid "Only Metadata Changed"
+msgstr "Изменены только мета-данные"
+
+#: apps/cred/models.py:265
+msgid "Only Details Viewed"
+msgstr "Просмотр сведений"
+
+#: apps/cred/models.py:266
+msgid "Exported"
+msgstr "Экспортирован"
+
+#: apps/cred/models.py:267
+msgid "Deleted"
+msgstr "Удален"
+
+#: apps/cred/models.py:268
+msgid "Restored"
+msgstr "Восстановлен"
+
+#: apps/cred/models.py:269
+msgid "Scheduled For Change"
+msgstr "Добавлен в очередь на изменение"
+
+#: apps/cred/models.py:270
+msgid "Password Viewed"
+msgstr "Просмотрен пароль"
+
+#: apps/cred/models.py:271
+msgid "Attachment Added"
+msgstr "Добавлен файл"
+
+#: apps/cred/models.py:272
+msgid "Attachment Viewed"
+msgstr "Файл скачан"
+
+#: apps/cred/models.py:273
+msgid "Attachment Deleted"
+msgstr "Файл удален"
+
+#: apps/cred/templates/cred_audit_list.html:12
+msgid "Audit Logs"
+msgstr "Аудит логов"
+
+#: apps/cred/templates/cred_audit_list.html:28
+#: apps/staff/templates/staff_audit.html:18
+msgid "Action"
+msgstr "Действие"
+
+#: apps/cred/templates/cred_audit_list.html:30
+#: apps/cred/templates/cred_list.html:31 apps/cred/templates/cred_list.html:33
+#: apps/staff/templates/staff_audit.html:20
+#: apps/staff/templates/staff_changeadvice.html:20
+#: apps/staff/templates/staff_tab_trash.html:26
+msgid "User"
+msgstr "Пользователь"
+
+#: apps/cred/templates/cred_audit_list.html:32
+#: apps/staff/templates/staff_audit.html:23
+msgid "Credential"
+msgstr "Реквизит"
+
+#: apps/cred/templates/cred_audit_list.html:34
+#: apps/staff/templates/staff_audit.html:25
+msgid "When"
+msgstr "Когда"
+
+#: apps/cred/templates/cred_audit_list.html:45
+#: apps/staff/templates/staff_audit.html:35
+msgid "deleted user"
+msgstr "пользователь удален"
+
+#: apps/cred/templates/cred_audit_list.html:56
+msgid "More logs..."
+msgstr "Больше логов..."
+
+#: apps/cred/templates/cred_detail.html:17
+msgid ""
+"This credential has been deleted and is in the trash can. It is only visible "
+"to staff. You can alter it if you wish, its history will still be recorded. "
+"Click the undelete button to restore it. If you click the Delete Permanently "
+"button then the password, its entire history and all its audit logs will be "
+"removed."
+msgstr ""
+"Этот реквизит был удален, и находится в корзине. В данный момент - он виден только Администраторам"
+"Вы можете восстановить его, нажмите на кнопку 'Восстановить' или 'Удалить навсегда',"
+"для полного удаления этого реквизита"
+
+#: apps/cred/templates/cred_detail.html:22
+#: apps/cred/templates/cred_detail.html:34
+msgid "Hey there!"
+msgstr "Эй, Чувак!"
+
+#: apps/cred/templates/cred_detail.html:23
+msgid "This credential is an historical version."
+msgstr "Это старая версия реквизита"
+
+#: apps/cred/templates/cred_detail.html:23
+msgid "Click here"
+msgstr "Нажмите сюда"
+
+#: apps/cred/templates/cred_detail.html:23
+msgid "to see the latest version."
+msgstr "для того чтобы перейти к последней версии"
+
+#: apps/cred/templates/cred_detail.html:28
+msgid "Change Required"
+msgstr "Требуется изменение"
+
+#: apps/cred/templates/cred_detail.html:29
+msgid ""
+"This credential is on the change queue and should have its password changed "
+"as soon as possible."
+msgstr "Этот реквизит добавлен в очередь на изменение,"
+"измените пароль данного реквизита как можно скорее."
+
+#: apps/cred/templates/cred_detail.html:29
+msgid "Why not"
+msgstr "Почему бы"
+
+#: apps/cred/templates/cred_detail.html:29
+msgid "do it now"
+msgstr "не сделать этого сейчас?"
+
+#: apps/cred/templates/cred_detail.html:29
+msgid "?"
+msgstr ""
+
+#: apps/cred/templates/cred_detail.html:35
+msgid "  Looks like this credential is expired! So it should won`t work!"
+msgstr ""
+
+#: apps/cred/templates/cred_detail.html:73
+msgid "Updated"
+msgstr ""
+
+#: apps/cred/templates/cred_detail.html:92
+#: apps/cred/templates/project_detail.html:31
+#: apps/cred/templates/project_list.html:43
+#: apps/staff/templates/staff_detail_group.html:19
+#: apps/staff/templates/staff_detail_user.html:25
+#: apps/staff/templates/staff_tab_groups.html:34
+#: apps/staff/templates/staff_tab_tags.html:34
+#: apps/staff/templates/staff_tab_users.html:43
+msgid "Edit"
+msgstr ""
+
+#: apps/cred/templates/cred_detail.html:95
+msgid "History"
+msgstr ""
+
+#: apps/cred/templates/cred_detail.html:99
+#: apps/cred/templates/project_detail.html:56
+msgid "Favorite"
+msgstr ""
+
+#: apps/cred/templates/cred_detail.html:103
+msgid "Expire"
+msgstr ""
+
+#: apps/cred/templates/cred_detail.html:106
+msgid "Undelete"
+msgstr ""
+
+#: apps/cred/templates/cred_detail.html:165
+msgid "Attachments"
+msgstr ""
+
+#: apps/cred/templates/cred_detail.html:189
+msgid "Permissions"
+msgstr ""
+
+#: apps/cred/templates/cred_edit.html:8
+msgid "Create credential"
+msgstr ""
+
+#: apps/cred/templates/cred_edit.html:10
+msgid "Update credential"
+msgstr ""
+
+#: apps/cred/templates/cred_edit.html:32
+msgid "Select icon"
+msgstr ""
+
+#: apps/cred/templates/cred_edit.html:125
+msgid "Choose file"
+msgstr ""
+
+#: apps/cred/templates/cred_edit.html:149
+#: apps/cred/templates/project_edit.html:61
+#: apps/staff/templates/staff_edit_group.html:45
+#: apps/staff/templates/staff_edit_user.html:89
+msgid "Save"
+msgstr ""
+
+#: apps/cred/templates/cred_edit.html:168
+msgid "Generate password"
+msgstr ""
+
+#: apps/cred/templates/cred_edit.html:178
+msgid "Lowercase alphabet"
+msgstr ""
+
+#: apps/cred/templates/cred_edit.html:182
+msgid "Uppercase alphabet"
+msgstr ""
+
+#: apps/cred/templates/cred_edit.html:186
+#: apps/cred/templates/cred_part_passgenmodal.html:23
+msgid "Numbers"
+msgstr ""
+
+#: apps/cred/templates/cred_edit.html:190
+msgid "Special symbols"
+msgstr ""
+
+#: apps/cred/templates/cred_edit.html:211
+#: apps/cred/templates/cred_part_passgenmodal.html:40
+msgid "Generate"
+msgstr ""
+
+#: apps/cred/templates/cred_export.html:18
+#: apps/cred/templates/cred_tagedit.html:17
+msgid "Submit"
+msgstr ""
+
+#: apps/cred/templates/cred_list.html:6
+#: apps/cred/templates/project_edit.html:54
+msgid "Credentials"
+msgstr ""
+
+#: apps/cred/templates/cred_list.html:38 apps/cred/templates/cred_list.html:40
+#: apps/staff/templates/staff_tab_trash.html:29
+msgid "Owner"
+msgstr ""
+
+#: apps/cred/templates/cred_list.html:44
+#: apps/staff/templates/staff_tab_trash.html:32
+msgid "Viewer"
+msgstr ""
+
+#: apps/cred/templates/cred_list.html:110
+#: apps/ratticweb/templates/paginator.html:14
+msgid "Prev"
+msgstr ""
+
+#: apps/cred/templates/cred_part_logomodal.html:13
+msgid "Icons"
+msgstr ""
+
+#: apps/cred/templates/cred_part_logomodal.html:21
+msgid "Close"
+msgstr ""
+
+#: apps/cred/templates/cred_part_newtagmodal.html:7
+msgid "Add New Tag"
+msgstr ""
+
+#: apps/cred/templates/cred_part_passgenmodal.html:5
+msgid "Password Generator"
+msgstr ""
+
+#: apps/cred/templates/cred_part_passgenmodal.html:9
+msgid "Must Have"
+msgstr ""
+
+#: apps/cred/templates/cred_part_passgenmodal.html:9
+msgid "Can Have"
+msgstr ""
+
+#: apps/cred/templates/cred_part_passgenmodal.html:13
+msgid "Lowercase Alphabet"
+msgstr ""
+
+#: apps/cred/templates/cred_part_passgenmodal.html:18
+msgid "Uppercase Alphabet"
+msgstr ""
+
+#: apps/cred/templates/cred_part_passgenmodal.html:28
+msgid "Special"
+msgstr ""
+
+#: apps/cred/templates/cred_part_passgenmodal.html:33
+msgid "Spaces"
+msgstr ""
+
+#: apps/cred/templates/cred_part_passgenmodal.html:36
+msgid "Password Length"
+msgstr ""
+
+#: apps/cred/templates/cred_search.html:9
+msgid "Type your Query"
+msgstr ""
+
+#: apps/cred/templates/cred_search.html:10
+#: apps/ratticweb/templates/navbar.html:47
+msgid "Search"
+msgstr ""
+
+#: apps/cred/templates/cred_tagdelete.html:7
+msgid "Deleting tag"
+msgstr ""
+
+#: apps/cred/templates/cred_tagdelete.html:8
+msgid "Confirm"
+msgstr ""
+
+#: apps/cred/templates/project_detail.html:39
+msgid "Add"
+msgstr ""
+
+#: apps/cred/templates/project_detail.html:75
+msgid "Modified"
+msgstr ""
+
+#: apps/cred/templates/project_detail.html:119
+msgid "Delete project"
+msgstr ""
+
+#: apps/cred/templates/project_detail.html:125
+msgid ""
+"\n"
+"        Deleting this project will remove or make expired all associated "
+"credentials, do you really want to continue?\n"
+"      "
+msgstr ""
+
+#: apps/cred/templates/project_edit.html:25
+msgid "Update icon"
+msgstr ""
+
+#: apps/cred/views.py:23
+msgid "All passwords"
+msgstr ""
+
+#: apps/cred/views.py:55
+#, python-format
+msgid "Passwords tagged with %(tagname)s"
+msgstr ""
+
+#: apps/cred/views.py:59
+#, python-format
+msgid "Passwords in group %(groupname)s"
+msgstr ""
+
+#: apps/cred/views.py:63
+#, python-format
+msgid "Passwords for search \"%(searchstring)s\""
+msgstr ""
+
+#: apps/cred/views.py:67
+#, python-format
+msgid "Versions of: \"%(credtitle)s\""
+msgstr ""
+
+#: apps/cred/views.py:75
+msgid ""
+"That user is now disabled. Here is a list of passwords that they have viewed "
+"that have not since been changed. You probably want to add them all to the "
+"change queue."
+msgstr ""
+
+#: apps/cred/views.py:78
+#, python-format
+msgid "Changes required for \"%(username)s\""
+msgstr ""
+
+#: apps/cred/views.py:89
+msgid "Passwords in the trash"
+msgstr ""
+
+#: apps/cred/views.py:97
+msgid "Passwords on the Change Queue"
+msgstr ""
+
+#: apps/cred/views.py:460 apps/staff/views.py:267
+msgid "Unknown (Logs deleted)"
+msgstr ""
+
+#: apps/ratticweb/templates/404.html:14
+msgid ""
+"\n"
+"    This is not the credentials page you are looking for.\n"
+"    Contact your systems administrator if you believe you have recieved this "
+"in error.\n"
+"    "
+msgstr ""
+
+#: apps/ratticweb/templates/500.html:14
+msgid ""
+"\n"
+"    Oops, something goes wrong! Looks like server can`t process your request!"
+"<br>\n"
+"    But out best specialists already working on a fixing this error!\n"
+"    "
+msgstr ""
+
+#: apps/ratticweb/templates/navbar.html:16
+#: apps/ratticweb/templates/navbar.html:73
+msgid "Projects"
+msgstr ""
+
+#: apps/ratticweb/templates/navbar.html:20
+#: apps/ratticweb/templates/navbar.html:74
+msgid "Passwords"
+msgstr ""
+
+#: apps/ratticweb/templates/navbar.html:24
+#: apps/ratticweb/templates/navbar.html:76
+msgid "Change queue"
+msgstr ""
+
+#: apps/ratticweb/templates/navbar.html:31
+#: apps/ratticweb/templates/navbar.html:85
+msgid "Help"
+msgstr ""
+
+#: apps/ratticweb/templates/navbar.html:36
+#: apps/ratticweb/templates/navbar.html:70
+msgid "Profile"
+msgstr ""
+
+#: apps/ratticweb/templates/navbar.html:39
+#: apps/ratticweb/templates/navbar.html:89
+msgid "Logout"
+msgstr ""
+
+#: apps/ratticweb/templates/navbar.html:81
+#: apps/staff/templates/staff_tab_groups.html:10
+#: apps/staff/templates/staff_tab_settings.html:9
+#: apps/staff/templates/staff_tab_tags.html:10
+#: apps/staff/templates/staff_tab_trash.html:10
+#: apps/staff/templates/staff_tab_users.html:10
+msgid "Settings"
+msgstr ""
+
+#: apps/settings.py:41
+msgid "English"
+msgstr ""
+
+#: apps/settings.py:42
+msgid "French"
+msgstr ""
+
+#: apps/settings.py:43
+msgid "German"
+msgstr ""
+
+#: apps/settings.py:44
+msgid "Italian"
+msgstr ""
+
+#: apps/settings.py:45
+msgid "Russian"
+msgstr ""
+
+#: apps/staff/forms.py:62
+msgid "Passwords do not match"
+msgstr ""
+
+#: apps/staff/templates/staff_audit.html:6
+msgid "Audit access logs"
+msgstr ""
+
+#: apps/staff/templates/staff_changeadvice.html:6
+#, python-format
+msgid "Changes for user: %(username)s"
+msgstr ""
+
+#: apps/staff/templates/staff_changeadvice.html:7
+msgid ""
+"We noticed that you are disabling a user account, or removing groups\n"
+"from a user. To help you RatticDB has analysed the auditlogs to see what\n"
+"passwords the user knows, and no longer has access to. We recommend that\n"
+"you add all these passwords to the change queue. To do this press the\n"
+"&quot;Add to Change Queue&quot; button, if you don't want to change some\n"
+"of the passwords, simply uncheck them first."
+msgstr ""
+
+#: apps/staff/templates/staff_changeadvice.html:37
+msgid "Add to Change Queue"
+msgstr ""
+
+#: apps/staff/templates/staff_detail_group.html:54
+#: apps/staff/templates/staff_tab_groups.html:56
+msgid "Delete group"
+msgstr ""
+
+#: apps/staff/templates/staff_detail_group.html:60
+#: apps/staff/templates/staff_tab_groups.html:62
+msgid ""
+"\n"
+"        Do you really want to delete this group?\n"
+"      "
+msgstr ""
+
+#: apps/staff/templates/staff_detail_user.html:30
+#: apps/staff/templates/staff_tab_users.html:46
+msgid "Deactivate"
+msgstr ""
+
+#: apps/staff/templates/staff_detail_user.html:32
+#: apps/staff/templates/staff_tab_users.html:48
+msgid "Activate"
+msgstr ""
+
+#: apps/staff/templates/staff_detail_user.html:55
+msgid "Status"
+msgstr ""
+
+#: apps/staff/templates/staff_detail_user.html:57
+msgid "Active"
+msgstr ""
+
+#: apps/staff/templates/staff_detail_user.html:59
+msgid "Deactivated"
+msgstr ""
+
+#: apps/staff/templates/staff_detail_user.html:75
+msgid "Last login"
+msgstr ""
+
+#: apps/staff/templates/staff_detail_user.html:110
+#: apps/staff/templates/staff_tab_users.html:72
+msgid "Delete user"
+msgstr ""
+
+#: apps/staff/templates/staff_detail_user.html:116
+#: apps/staff/templates/staff_tab_users.html:78
+msgid ""
+"\n"
+"        Deleting this user will remove any associated auditlogs, maybe "
+"deactivate their account instead?\n"
+"      "
+msgstr ""
+
+#: apps/staff/templates/staff_edit_user.html:52
+msgid "Admin"
+msgstr ""
+
+#: apps/staff/templates/staff_tab_groups.html:14
+#: apps/staff/templates/staff_tab_settings.html:13
+#: apps/staff/templates/staff_tab_tags.html:14
+#: apps/staff/templates/staff_tab_trash.html:14
+#: apps/staff/templates/staff_tab_users.html:14
+msgid "Trash box"
+msgstr ""
+
+#: apps/staff/templates/staff_tab_tags.html:56
+msgid "Delete tag"
+msgstr ""
+
+#: apps/staff/templates/staff_tab_tags.html:62
+msgid ""
+"\n"
+"        Do you really want to delete this tag?\n"
+"      "
+msgstr ""

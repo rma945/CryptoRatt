@@ -34,15 +34,9 @@ class UserProfileForm(ModelForm):
     class Meta:
         custom_themes = [
             ('bootstrap.default.min.css', 'Default'),
-            ('bootstrap.cosmo.min.css', 'Cosmo'),
             ('bootstrap.cerulean.min.css', 'Cerulean'),
             ('bootstrap.darkly.min.css', 'Darkly'),
-            ('bootstrap.neonglow.min.css', 'Neon glow'),
-            ('bootstrap.flatly.min.css', 'Flatly'),
             ('bootstrap.litera.min.css', 'Litera'),
-            ('bootstrap.pulse.min.css', 'Pulse'),
-            ('bootstrap.lux.min.css', 'Lux'),
-            ('bootstrap.lumen.min.css', 'Lumen'),
             ('bootstrap.spacelab.min.css', 'Spacelab'),
         ]
 
