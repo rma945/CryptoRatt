@@ -4,7 +4,8 @@ django-tastypie==0.14.2
 django-celery==3.2.2
 django-user-sessions==1.5.3
 django-two-factor-auth==1.8.0
-django_saml2_auth==2.2.1
+# update after 2.2.2 versin release
+git+ssh://github.com/fangli/django-saml2-auth.git@master
 django-auth-ldap==1.7.0
 Markdown==3.1
 python-mimeparse==1.6.0

@@ -39,4 +39,5 @@ urlpatterns = [
     path("tag/add/", tagadd, name="tag_add"),
     path("tag/edit/<int:tag_id>/", tagedit, name="tag_edit"),
     path("tag/delete/<int:tag_id>/", tagdelete, name="tag_delete"),
+
 ]

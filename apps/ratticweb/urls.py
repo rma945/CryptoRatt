@@ -11,7 +11,7 @@ from django.conf import settings
 
 import apps.ratticweb.views
 import apps.account.urls
-import apps.cred.urls
+import apps.cred.urls, apps.cred.views
 import apps.staff.urls
 import apps.help.urls
 
@@ -47,6 +47,9 @@ base_urlpatterns += [
 
     # API
     path('api/', include(v1_api.urls)),
+
+    # render base64 encoded icons as static TODO: move to api
+    path('api/static/rattic/img/icons/<int:cred_id>.png', apps.cred.views.get_icon, name='render_credential_icon' ),
 
     # Language
     # (r'^i18n/', i18n),

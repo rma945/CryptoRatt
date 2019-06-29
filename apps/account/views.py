@@ -142,31 +142,25 @@ def ldap_password_change(request,
     return TemplateResponse(request, template_name, context,
                             current_app=current_app)
 
-
 class RatticSessionDeleteView(SessionDeleteView):
     def get_success_url(self):
         return reverse('account:profile')
-
 
 class RatticTFADisableView(DisableView):
     template_name = 'account_tfa_disable.html'
     redirect_url = 'account:profile'
 
-
 class RatticTFABackupTokensView(BackupTokensView):
     template_name = 'account_tfa_backup_tokens.html'
     redirect_url = 'tfa_backup'
-
 
 class RatticTFASetupView(SetupView):
     template_name = 'account_tfa_setup.html'
     qrcode_url = 'account:tfa_qr'
     redirect_url = 'account:profile'
 
-
 class RatticTFALoginView(LoginView):
     template_name = 'account_tfa_login.html'
-
 
 class RatticTFAGenerateApiKey(LoginView):
     def get(self, request, *args, **kwargs):

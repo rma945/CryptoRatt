@@ -17,7 +17,6 @@ config = RawConfigParser()
 config.read_file(open('conf/defaults.cfg'))
 CONFIGURED_BY = config.read(['conf/local.cfg', '/etc/ratticweb.cfg'])
 
-
 def confget(section, var, default):
     try:
         return config.get(section, var)
@@ -30,13 +29,17 @@ def confgetbool(section, var, default):
     except NoOptionError:
         return default
 
-# The Internationalization Settings
+# debug settings
+DEBUG = confgetbool('ratticweb', 'debug', False)
+
+# the Internationalization Settings
 USE_I18N = True
 USE_L10N = True
 
 LOCALE_PATHS = (
     'apps/locale',
 )
+
 LANGUAGES = (
     ('en', _('English')),
     ('ru', _('Russian')),
@@ -91,7 +94,7 @@ TEMPLATES = [
         ],
         'APP_DIRS': True,
         'OPTIONS': {
-            'debug': True,
+            'debug': DEBUG,
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -191,6 +194,7 @@ LOGGING = {
 # URLs
 PUBLIC_HELP_WIKI_BASE = 'https://github.com/rma945/CryptoRatt/wiki/'
 LOGIN_REDIRECT_URL = urljoin(RATTIC_ROOT_URL, "cred/list/")
+LOGOUT_REDIRECT_URL = urljoin(RATTIC_ROOT_URL, "/")
 LOGIN_URL = RATTIC_ROOT_URL
 
 # django-user-sessions
@@ -206,7 +210,6 @@ AUTH_LDAP_USER_FLAGS_BY_GROUP = {}
 ###############################
 
 # [ratticweb]
-DEBUG = confgetbool('ratticweb', 'debug', False)
 TIME_ZONE = config.get('ratticweb', 'timezone')
 SECRET_KEY = config.get('ratticweb', 'secretkey')
 HOSTNAME = config.get('ratticweb', 'hostname')

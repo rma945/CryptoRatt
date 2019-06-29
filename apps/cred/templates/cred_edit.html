@@ -222,7 +222,7 @@
       <div class="container">
       <div class="row justify-content-center pt-2 pb-2">
         {% for i in icons %}
-          <img class="p-1 credential-icon-image" src="data:image/png;base64,{{ i.icon|decode_utf8 }}" alt="{{ i.name }}" data-id="{{i.id}}" width="96px" height="96px">
+          <img class="p-1 credential-icon-image" src="{% url 'render_credential_icon' i.id %}" alt="{{ i.name }}" data-id="{{i.id}}" width="96px" height="96px">
         {% endfor %}
       </div>
       </div>

@@ -1,4 +1,4 @@
-from base64 import b64encode
+from base64 import b64encode, b64decode
 
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -17,6 +17,7 @@ from apps.staff.decorators import staff_required
 
 from django.contrib.auth.models import Group
 
+@login_required
 def list(request, cfilter='special', value='all', sortdir='ascending', sort='title', page=1):
     # Setup basic stuff
     viewdict = {
@@ -558,3 +559,8 @@ def addtoqueue(request, cred_id):
     CredChangeQ.objects.add_to_changeq(cred)
     CredAudit(audittype=CredAudit.CREDSCHEDCHANGE, cred=cred, user=request.user).save()
     return HttpResponseRedirect(reverse('cred:cred_list', args=('special', 'changeq')))
+
+#TODO: move to API
+def get_icon(self, cred_id):
+    credential_icon = get_object_or_404(CredentialIcon, pk=cred_id)
+    return HttpResponse(b64decode(credential_icon.icon), content_type="image/png")
