@@ -6,7 +6,6 @@ function getCredentialID() {
   return $("[name='cred-id']").attr("content");
 }
 
-
 // get credential password from API and cache it in local JS
 function getCredentialPassword() {
   if (credentialPassword == 'all-passwords-are-encrypted') {
@@ -103,35 +102,72 @@ function setFavorite() {
       xhr.setRequestHeader('X-CSRFToken', CSRF);
     },
     contentType: 'application/json; charset=utf-8',
-    success: function () {
+    success: function (data) {
+      if (data.action == 'added') {
+        $("#credentials-favorites-list").append(
+          "<li data-id='" + cred_id + "'>\
+          <a href='" + window.location.href + "'>\
+          <i class='fas fa-minus'>\
+          </i> " + $('#credential-title').text() + "</a>\
+          </li>"
+        );
+      } else {
+        $("#credentials-favorites-list").find("[data-id='" + cred_id + "']").remove()
+      }
       $("#set-favorite-button").toggleClass("btn-warning")
-    }
+    },
   });
 }
 
+// toggle tooptip state for copy username\password buttons
+function tooltipToggle(element) {
+  element.tooltip('show')
+  setTimeout(function () {
+    element.tooltip('hide');
+  }, 1000);
+}
+
+
 $(document).ready(function () {
+
   // initialize js clipboards and add default unselect actions on it
+  var urlClipboard = new ClipboardJS('#copy-url-button');
   var usernameClipboard = new ClipboardJS('#copy-username-button');
   var passwordClipboard = new ClipboardJS('#copy-password-button-hidden');
-
+  
+  urlClipboard.on('success', function (e) {
+    e.clearSelection();
+    tooltipToggle($('#copy-url-button'))
+  });
+  
   usernameClipboard.on('success', function(e) {
     e.clearSelection();
+    tooltipToggle($('#copy-username-button'))
   });
-
+  
   passwordClipboard.on('success', function (e) {
     e.clearSelection();
+    tooltipToggle($('#copy-password-button'))
   });
-
+  
+  
   // register - show password toggle button
   $('#show-password-field-button').click(function () {
     showPasswordToggle();
   });
-
+  
   // register - copy password button
   $('#copy-password-button').click(function () {
     copyPassword();
   });
 
+  // initialize tooltip for copy buttons
+  $('.copy-button').tooltip({
+    trigger: 'manual',
+    placement: 'top',
+    title: 'Copied!',
+  });
+  
   // register - undelete button
   $('#undelete-credential-button').click(function () {
     undeleteCredentialModalToggle()

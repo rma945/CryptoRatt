@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-27 00:10+0700\n"
+"POT-Creation-Date: 2019-06-30 21:49+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,7 +30,7 @@ msgstr "Неверный пароль"
 
 #: apps/account/models.py:31
 msgid "Items at page"
-msgstr "Предметов на странице"
+msgstr "Реквизитов на странице"
 
 #: apps/account/models.py:32
 msgid "Favourite tags"
@@ -80,7 +80,7 @@ msgid "Your LDAP server returned the following error:"
 msgstr "LDAP сервер вернул ошибку:"
 
 #: apps/account/templates/account_ldaperror.html:7 apps/cred/models.py:81
-#: apps/cred/models.py:107 apps/cred/templates/cred_detail.html:151
+#: apps/cred/models.py:107 apps/cred/templates/cred_detail.html:160
 #: apps/cred/templates/cred_part_passgenmodal.html:9
 #: apps/cred/templates/project_edit.html:50
 msgid "Description"
@@ -90,12 +90,30 @@ msgstr "Описание"
 msgid "Further Info"
 msgstr ""
 
+#: apps/account/templates/account_profile.html:9
+#: apps/ratticweb/templates/navbar.html:36
+#: apps/ratticweb/templates/navbar.html:70
+msgid "Profile"
+msgstr "Профиль"
+
+#: apps/account/templates/account_profile.html:11
+#, fuzzy
+#| msgid "New API Key"
+msgid "API Keys"
+msgstr "Новый API ключ"
+
+#: apps/account/templates/account_profile.html:13
+#, fuzzy
+#| msgid "Permissions"
+msgid "Sessions"
+msgstr "Доступ"
+
 #: apps/account/templates/account_tab_apikeys.html:14
 msgid "Key Name"
 msgstr "Имя ключа"
 
 #: apps/account/templates/account_tab_apikeys.html:15
-#: apps/cred/templates/cred_detail.html:70
+#: apps/cred/templates/cred_detail.html:73
 #: apps/cred/templates/project_detail.html:72
 msgid "Created"
 msgstr "Создан"
@@ -110,7 +128,7 @@ msgstr "Никогда"
 
 #: apps/account/templates/account_tab_apikeys.html:44
 msgid "New API Key"
-msgstr ""
+msgstr "Новый API ключ"
 
 #: apps/account/templates/account_tab_apikeys.html:54
 msgid "Create new API key"
@@ -152,7 +170,7 @@ msgstr "Вы точно хотите удалить этот API ключ?"
 
 #: apps/account/templates/account_tab_apikeys.html:84
 #: apps/account/templates/account_tab_sessions.html:60
-#: apps/cred/templates/cred_detail.html:103
+#: apps/cred/templates/cred_detail.html:106
 #: apps/cred/templates/project_detail.html:47
 #: apps/cred/templates/project_detail.html:130
 #: apps/cred/templates/project_list.html:44
@@ -200,7 +218,7 @@ msgstr "Email"
 #: apps/account/templates/account_tab_profile.html:49
 #: apps/staff/templates/staff_detail_user.html:67
 msgid "Two Factor Authentication"
-msgstr "2х факторная аутентификация"
+msgstr "Двухфакторная аутентификация"
 
 #: apps/account/templates/account_tab_profile.html:51
 #: apps/staff/templates/staff_detail_user.html:69
@@ -219,6 +237,7 @@ msgid "Last Password Change"
 msgstr "Последняя смена пароля"
 
 #: apps/account/templates/account_tab_profile.html:62 apps/cred/models.py:109
+#: apps/ratticweb/templates/sidebar.html:56
 #: apps/staff/templates/staff_detail_user.html:83
 #: apps/staff/templates/staff_edit_user.html:80
 #: apps/staff/templates/staff_tab_groups.html:12
@@ -497,11 +516,11 @@ msgstr "Граппа владельцев"
 
 #: apps/cred/forms.py:70
 msgid "Viewers Groups"
-msgstr ""
+msgstr "Доступ группе на просмотр"
 
 #: apps/cred/forms.py:71
 msgid "Viewers Users"
-msgstr ""
+msgstr "Доступ пользователю на просмотр"
 
 #: apps/cred/forms.py:72
 msgid "Upload files"
@@ -523,11 +542,11 @@ msgstr "Ссылка"
 msgid "Project"
 msgstr "Проект"
 
-#: apps/cred/models.py:105 apps/cred/templates/cred_detail.html:117
+#: apps/cred/models.py:105 apps/cred/templates/cred_detail.html:120
 msgid "Username"
-msgstr "Имя пользователя"
+msgstr "Логин"
 
-#: apps/cred/models.py:106 apps/cred/templates/cred_detail.html:131
+#: apps/cred/models.py:106 apps/cred/templates/cred_detail.html:136
 msgid "Password"
 msgstr "Пароль"
 
@@ -545,8 +564,9 @@ msgstr "Группы"
 msgid "Users"
 msgstr "Пользователи"
 
-#: apps/cred/models.py:111 apps/cred/templates/cred_detail.html:79
+#: apps/cred/models.py:111 apps/cred/templates/cred_detail.html:82
 #: apps/cred/templates/cred_list.html:47
+#: apps/ratticweb/templates/sidebar.html:75
 #: apps/staff/templates/staff_changeadvice.html:22
 #: apps/staff/templates/staff_tab_groups.html:13
 #: apps/staff/templates/staff_tab_settings.html:12
@@ -651,7 +671,7 @@ msgstr "несуществующий пользователь"
 
 #: apps/cred/templates/cred_audit_list.html:56
 msgid "More logs..."
-msgstr "Логи..."
+msgstr "Еще..."
 
 #: apps/cred/templates/cred_detail.html:17
 msgid ""
@@ -660,10 +680,11 @@ msgid ""
 "Click the undelete button to restore it. If you click the Delete Permanently "
 "button then the password, its entire history and all its audit logs will be "
 "removed."
-msgstr "Данный реквизит удален и находится в корзине. В данный момент, он доступен только для адмнистраторов,"
-"но вы можете восстановить его."
-"Нажмите на кнопку 'Восстановить'."
-"Нажмите на удаление, если хотите окончательно удалить этот реквизит и всю его историю."
+msgstr ""
+"Данный реквизит удален и находится в корзине. В данный момент, он доступен "
+"только для адмнистраторов,но вы можете восстановить его.Нажмите на кнопку "
+"'Восстановить'.Нажмите на удаление, если хотите окончательно удалить этот "
+"реквизит и всю его историю."
 
 #: apps/cred/templates/cred_detail.html:22
 #: apps/cred/templates/cred_detail.html:35
@@ -684,13 +705,15 @@ msgstr "для просмотра последней версии"
 
 #: apps/cred/templates/cred_detail.html:28
 msgid "Change Required"
-msgstr "Требуется изменение"
+msgstr "Требуется изменения!"
 
 #: apps/cred/templates/cred_detail.html:29
 msgid ""
 "This credential is on the change queue and should have its password changed "
 "as soon as possible."
-msgstr "Этот реквизит находится в очереди на изменение, необходимо изменить его как можно быстрее!"
+msgstr ""
+"Этот реквизит находится в очереди на изменение, необходимо изменить его как "
+"можно быстрее!"
 
 #: apps/cred/templates/cred_detail.html:30
 msgid "Why not do it now?"
@@ -700,11 +723,11 @@ msgstr "Почему бы не сделать это сейчас?"
 msgid "  Looks like this credential is expired! So it should won`t work!"
 msgstr "Похоже этот реквизит истёк, следовательно, он может не работать!"
 
-#: apps/cred/templates/cred_detail.html:74
+#: apps/cred/templates/cred_detail.html:77
 msgid "Updated"
 msgstr "Обновить"
 
-#: apps/cred/templates/cred_detail.html:93
+#: apps/cred/templates/cred_detail.html:96
 #: apps/cred/templates/project_detail.html:31
 #: apps/cred/templates/project_list.html:43
 #: apps/staff/templates/staff_detail_group.html:19
@@ -715,28 +738,28 @@ msgstr "Обновить"
 msgid "Edit"
 msgstr "Изменить"
 
-#: apps/cred/templates/cred_detail.html:96
+#: apps/cred/templates/cred_detail.html:99
 msgid "History"
 msgstr "История"
 
-#: apps/cred/templates/cred_detail.html:100
+#: apps/cred/templates/cred_detail.html:103
 #: apps/cred/templates/project_detail.html:56
 msgid "Favorite"
 msgstr "В избранное"
 
-#: apps/cred/templates/cred_detail.html:104
-msgid "Expire"
-msgstr "Истёк"
-
 #: apps/cred/templates/cred_detail.html:107
+msgid "Expire"
+msgstr "Просрочить"
+
+#: apps/cred/templates/cred_detail.html:110
 msgid "Undelete"
 msgstr "Восстановить"
 
-#: apps/cred/templates/cred_detail.html:166
+#: apps/cred/templates/cred_detail.html:175
 msgid "Attachments"
 msgstr "Файлы"
 
-#: apps/cred/templates/cred_detail.html:190
+#: apps/cred/templates/cred_detail.html:199
 msgid "Permissions"
 msgstr "Доступ"
 
@@ -796,6 +819,7 @@ msgstr "Подтвердить"
 
 #: apps/cred/templates/cred_list.html:6
 #: apps/cred/templates/project_edit.html:54
+#: apps/ratticweb/templates/sidebar.html:37
 msgid "Credentials"
 msgstr "Реквизиты"
 
@@ -893,58 +917,62 @@ msgid ""
 "        Deleting this project will remove or make expired all associated "
 "credentials, do you really want to continue?\n"
 "      "
-msgstr "Удаление этого проекта - изменит все добавленные в него реквизиты как 'истёкшие',"
-"вы точно хотите продолжить?"
+msgstr ""
+"Удаление этого проекта - изменит все добавленные в него реквизиты как "
+"'истёкшие',вы точно хотите продолжить?"
 
 #: apps/cred/templates/project_edit.html:25
 msgid "Update icon"
 msgstr "Обновить иконку"
 
-#: apps/cred/views.py:23
+#: apps/cred/views.py:22
 msgid "All passwords"
 msgstr "Все пароли"
 
-#: apps/cred/views.py:55
+#: apps/cred/views.py:54
 #, python-format
 msgid "Passwords tagged with %(tagname)s"
 msgstr "Реквизиты с тегом %(tagname)s"
 
-#: apps/cred/views.py:59
+#: apps/cred/views.py:58
 #, python-format
 msgid "Passwords in group %(groupname)s"
 msgstr "Реквизиты в группе %(groupname)s"
 
-#: apps/cred/views.py:63
+#: apps/cred/views.py:62
 #, python-format
 msgid "Passwords for search \"%(searchstring)s\""
 msgstr "Реквизиты для поиска \"%(searchstring)s\""
 
-#: apps/cred/views.py:67
+#: apps/cred/views.py:66
 #, python-format
 msgid "Versions of: \"%(credtitle)s\""
 msgstr "Версии: \"%(credtitle)s\""
 
-#: apps/cred/views.py:75
+#: apps/cred/views.py:74
 msgid ""
 "That user is now disabled. Here is a list of passwords that they have viewed "
 "that have not since been changed. You probably want to add them all to the "
 "change queue."
 msgstr ""
+"Аккаунт этого пользователя - отключен. Вы можете просмотреть список всех "
+"реквизитовкоторые были просмотренны данным пользователем, и возможно "
+"добавить их в очередь на изменение."
 
-#: apps/cred/views.py:78
+#: apps/cred/views.py:77
 #, python-format
 msgid "Changes required for \"%(username)s\""
-msgstr "Требуються изменения для \"%(username)s\""
+msgstr "Требуются изменения для \"%(username)s\""
 
-#: apps/cred/views.py:89
+#: apps/cred/views.py:88
 msgid "Passwords in the trash"
-msgstr ""
+msgstr "Удаленные реквизиты"
 
-#: apps/cred/views.py:97
+#: apps/cred/views.py:96
 msgid "Passwords on the Change Queue"
 msgstr "Пароли в очереди на изменение"
 
-#: apps/cred/views.py:460 apps/staff/views.py:267
+#: apps/cred/views.py:463 apps/staff/views.py:267
 msgid "Unknown (Logs deleted)"
 msgstr "Неизвестно (Логи удалены)"
 
@@ -956,6 +984,8 @@ msgid ""
 "in error.\n"
 "    "
 msgstr ""
+"Это не те реквизиты что ищешь ты!Свяжитесь с вашим системным "
+"администратором, и уточните, есть ли у вас доступ!"
 
 #: apps/ratticweb/templates/500.html:14
 msgid ""
@@ -965,36 +995,34 @@ msgid ""
 "    But out best specialists already working on a fixing this error!\n"
 "    "
 msgstr ""
+"Ой, что-то пошло не так!Наши лучшие специалиты уже работают над решением "
+"данной проблемы!"
 
 #: apps/ratticweb/templates/navbar.html:16
 #: apps/ratticweb/templates/navbar.html:73
+#: apps/ratticweb/templates/sidebar.html:18
 msgid "Projects"
 msgstr "Проекты"
 
 #: apps/ratticweb/templates/navbar.html:20
 #: apps/ratticweb/templates/navbar.html:74
 msgid "Passwords"
-msgstr "Пароли"
+msgstr "Реквизиты"
 
 #: apps/ratticweb/templates/navbar.html:24
 #: apps/ratticweb/templates/navbar.html:76
 msgid "Change queue"
-msgstr "Требуют изменений"
+msgstr "Очередь на изменение"
 
 #: apps/ratticweb/templates/navbar.html:31
 #: apps/ratticweb/templates/navbar.html:85
 msgid "Help"
 msgstr "Помошь"
 
-#: apps/ratticweb/templates/navbar.html:36
-#: apps/ratticweb/templates/navbar.html:70
-msgid "Profile"
-msgstr "Профиль"
-
 #: apps/ratticweb/templates/navbar.html:39
 #: apps/ratticweb/templates/navbar.html:89
 msgid "Logout"
-msgstr "Выйти"
+msgstr "Выход"
 
 #: apps/ratticweb/templates/navbar.html:81
 #: apps/staff/templates/staff_tab_groups.html:10
@@ -1005,13 +1033,13 @@ msgstr "Выйти"
 msgid "Settings"
 msgstr "Настройки"
 
-#: apps/settings.py:41
+#: apps/settings.py:44
 msgid "English"
 msgstr "English"
 
-#: apps/settings.py:42
+#: apps/settings.py:45
 msgid "Russian"
-msgstr ""
+msgstr "Русский"
 
 #: apps/staff/forms.py:62
 msgid "Passwords do not match"
@@ -1103,7 +1131,7 @@ msgstr "Админ"
 #: apps/staff/templates/staff_tab_trash.html:14
 #: apps/staff/templates/staff_tab_users.html:14
 msgid "Trash box"
-msgstr "Мусорка"
+msgstr "Удаленные реквизиты"
 
 #: apps/staff/templates/staff_tab_tags.html:56
 msgid "Delete tag"

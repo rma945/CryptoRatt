@@ -15,17 +15,17 @@
       </div>
 
       <div class="card-header" id="collapse-projects-header" data-toggle="collapse" data-target="#collapse-projects" aria-expanded="false" aria-controls="collapse-projects">
-        <h6 class="mb-0">Projects</h6>
+        <h6 class="mb-0">{% trans "Projects" %}</h6>
       </div>
       <div id="collapse-projects" class="collapse" aria-labelledby="collapse-projects-header" data-parent="#favoritesAccordion">
         <div class="card-body">
-          <ul class="list-unstyled favorites-list">
+          <ul class="list-unstyled favorites-list" id="projects-favorites-list">
             {% for p in user.profile.favourite_projects.all %}
-              <a href="{% url "cred:project_detail" p.id %}">
-                <li>
+              <li data-id="{{p.id}}">
+                <a href="{% url "cred:project_detail" p.id %}">
                   <i class="fas fa-minus"></i> {{ p.title }}
-                </li>
-              </a>
+                </a>
+              </li>
             {% endfor %}
           </ul>
         </div>
@@ -34,17 +34,17 @@
 
     <div class="card favorites-card">
       <div class="card-header" id="collapse-credentials-header" data-toggle="collapse" data-target="#collapse-credentials" aria-expanded="false" aria-controls="collapse-credentials">
-        <h6 class="mb-0">Credentials</h6>
+        <h6 class="mb-0">{% trans "Credentials" %}</h6>
       </div>
       <div id="collapse-credentials" class="collapse" aria-labelledby="collapse-credentials-header" data-parent="#favoritesAccordion">
         <div class="card-body favorites-card-body">
-          <ul class="list-unstyled favorites-list">
+          <ul class="list-unstyled favorites-list" id="credentials-favorites-list">
             {% for c in user.profile.favourite_credentials.all %}
-              <a href="{% url "cred:cred_detail" c.id %}">
-                <li>
+              <li data-id="{{c.id}}">
+                <a href="{% url "cred:cred_detail" c.id %}">
                   <i class="fas fa-minus"></i> {{ c.title }}
-                </li>
-              </a>
+                </a>
+              </li>
             {% endfor %}
           </ul>
         </div>
@@ -53,17 +53,17 @@
 
     <div class="card favorites-card">
       <div class="card-header" id="collapse-groups-header" data-toggle="collapse" data-target="#collapse-groups" aria-expanded="false" aria-controls="collapse-groups">
-        <h6 class="mb-0">Groups</h6>
+        <h6 class="mb-0">{% trans "Groups" %}</h6>
       </div>
       <div id="collapse-groups" class="collapse" aria-labelledby="collapse-groups-header" data-parent="#favoritesAccordion">
         <div class="card-body">
           <ul class="list-unstyled favorites-list">
-          {% for g in user.groups.all %}
-            <a href="{% url "cred:cred_list" "group" g.id %}">
-              <li>
+          {% for g in user.groups.all %}           
+            <li>
+              <a href="{% url "cred:cred_list" "group" g.id %}">
                 <i class="fas fa-minus"></i> {{ g.name }}
-              </li>
-            </a>
+              </a>
+            </li>
           {% endfor %}
           </ul>
         </div>
@@ -72,17 +72,17 @@
 
     <div class="card favorites-card">
       <div class="card-header" id="collapse-tags-header" data-toggle="collapse" data-target="#collapse-tags" aria-expanded="false" aria-controls="collapse-tags">
-        <h6 class="mb-0">Tags</h6>
+        <h6 class="mb-0">{% trans "Tags" %}</h6>
       </div>
       <div id="collapse-tags" class="collapse" aria-labelledby="collapse-tags-header" data-parent="#favoritesAccordion">
         <div class="card-body">
           <ul class="list-unstyled favorites-list">
           {% for tag in user.profile.favourite_tags.all %}
-            <a href="{% url "cred:cred_list" "tag" tag.id %}">
-              <li>
+            <li>
+              <a href="{% url "cred:cred_list" "tag" tag.id %}">
                 <i class="fas fa-minus"></i> {{ tag.name }}
-              </li>
-            </a>
+              </a>
+            </li>
           {% endfor %}
           </ul>
         </div>

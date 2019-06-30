@@ -26,7 +26,18 @@ function setFavorite() {
       xhr.setRequestHeader('X-CSRFToken', CSRF);
     },
     contentType: 'application/json; charset=utf-8',
-    success: function () {
+    success: function (data) {
+      if (data.action == 'added') {
+        $("#projects-favorites-list").append(
+          "<li data-id='" + project_id + "'>\
+          <a href='" + window.location.href + "'>\
+          <i class='fas fa-minus'>\
+          </i> " + $('#project-title').text() + "</a>\
+          </li>"
+        );
+      } else {
+        $("#projects-favorites-list").find("[data-id='" + project_id + "']").remove()
+      }
       $("#set-farovire-button").toggleClass("btn-warning")
     }
   });

@@ -15,7 +15,7 @@ uuid._uuid_generate_random = None
 
 config = RawConfigParser()
 config.read_file(open('conf/defaults.cfg'))
-CONFIGURED_BY = config.read(['conf/local.cfg', '/etc/ratticweb.cfg'])
+CONFIGURED_BY = config.read(['conf/local.cfg'])
 
 def confget(section, var, default):
     try:

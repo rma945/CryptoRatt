@@ -2,9 +2,7 @@ from base64 import b64encode, b64decode
 
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-from django.http import HttpResponseRedirect
-from django.http import HttpResponse
-from django.http import Http404
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse, Http404
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -240,11 +238,15 @@ def project_delete(request, project_id):
 @login_required
 def set_favorite_project(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
+    
     if request.method == 'POST':
         if project in request.user.profile.favourite_projects.all():
+            json_data = {'action': 'removed'}            
             request.user.profile.favourite_projects.remove(project)
         else:
+            json_data = {'action': 'added'}            
             request.user.profile.favourite_projects.add(project)
+        return JsonResponse(json_data)
         
     return HttpResponseRedirect(reverse('cred:projects'))
 
@@ -484,12 +486,15 @@ def delete(request, cred_id):
 @login_required
 def set_favorite_credential(request, cred_id):
     credential = get_object_or_404(Cred, pk=cred_id)
-    
+
     if request.method == 'POST':
         if credential in request.user.profile.favourite_credentials.all():
+            json_data = {'action': 'removed'}
             request.user.profile.favourite_credentials.remove(credential)
         else:
+            json_data = {'action': 'added'}
             request.user.profile.favourite_credentials.add(credential)
+        return JsonResponse(json_data)
 
     return HttpResponseRedirect(reverse('cred:cred_list'))
 

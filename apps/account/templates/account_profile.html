@@ -6,11 +6,11 @@
 <div class="col-md-12 pt-2">
   <nav>
     <div class="nav nav-tabs " id="account-tabs" role="tablist">
-      <a class="nav-item nav-link active" id="profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="true">Profile</a>
+      <a class="nav-item nav-link active" id="profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="true">{% trans 'Profile' %}</a>
       {% if user.is_staff %}
-        <a class="nav-item nav-link" id="api-tab" data-toggle="tab" href="#nav-api" role="tab" aria-controls="nav-api" aria-selected="false">API Keys</a>
+        <a class="nav-item nav-link" id="api-tab" data-toggle="tab" href="#nav-api" role="tab" aria-controls="nav-api" aria-selected="false">{% trans 'API Keys' %}</a>
       {% endif %}
-      <a class="nav-item nav-link" id="sessions-tab" data-toggle="tab" href="#nav-sessions" role="tab" aria-controls="nav-sessions" aria-selected="false">Sessions</a>
+      <a class="nav-item nav-link" id="sessions-tab" data-toggle="tab" href="#nav-sessions" role="tab" aria-controls="nav-sessions" aria-selected="false">{% trans 'Sessions' %}</a>
     </div>
   </nav>
 

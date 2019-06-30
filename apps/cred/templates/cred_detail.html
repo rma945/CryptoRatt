@@ -51,7 +51,7 @@
   <div class="col-md">
 
     <div class="col-xs">
-      <h2>{{ cred.title }}</h2>
+      <h2 id="credential-title">{{ cred.title }}</h2>
     </div>
 
     <div class="col-xs">
@@ -62,7 +62,10 @@
 
     <div class="col-xs">
       {% if cred.url %}
-        <a href="{{ cred.url }}" target="_blank">{{ cred.url }}</a>
+        <a id="credential-url" href="{{ cred.url }}" target="_blank">{{ cred.url }}</a>
+        <span class="badge badge-light copy-button" id="copy-url-button" data-clipboard-target="#credential-url">
+          <i class="far fa-copy"></i>
+        </span>
       {% endif %}
     </div>
 
@@ -119,7 +122,9 @@
         <div class="input-group input-group-sm">
           <input type="text" id="username-field" value="{{ cred.username }}" readonly class="form-control" aria-label="input-username" aria-describedby="input-buttons">
           <div class="input-group-append" id="input-buttons">
-            <button class="btn btn-primary" id="copy-username-button" type="button" data-clipboard-target="#username-field"><i class="far fa-copy"></i></button>
+            <button class="btn btn-primary copy-button" id="copy-username-button" type="button" data-clipboard-target="#username-field">
+              <i class="far fa-copy"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -133,8 +138,12 @@
           <div class="input-group input-group-sm">
             <input type="password" id="password-field" value="all-passwords-are-encrypted" readonly class="form-control" aria-label="input-password" aria-describedby="input-buttons">
             <div class="input-group-append" id="credentials-input-buttons">
-              <button class="btn btn-info"id="show-password-field-button" type="button"><i class="far fa-eye"></i></button>
-              <button class="btn btn-primary"id="copy-password-button" type="button"><i class="far fa-copy"></i></button>
+              <button class="btn btn-info"id="show-password-field-button" type="button">
+                <i class="far fa-eye"></i>
+              </button>
+              <button class="btn btn-primary copy-button" id="copy-password-button" type="button">
+                <i class="far fa-copy"></i>
+              </button>
             </div>
           </div>
         </div>
