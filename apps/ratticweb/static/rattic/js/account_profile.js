@@ -70,11 +70,6 @@ function deleteSession(button) {
 }
 
 $(document).ready(function () {
-  // initialize tooltips
-  $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-  })
-
   // initialize users selectize
   $('#id_favourite_tags').selectize({
     persist: false,

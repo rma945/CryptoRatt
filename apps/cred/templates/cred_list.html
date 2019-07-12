@@ -11,10 +11,6 @@
   <div class="alert alert-{{ alert.type }}" role="alert">{{ alert.message }}</div>
 {% endfor %}
 
-<div class="pt-2 pb-2 btn-group btn-group-sm" role="group" aria-label="credential-buttons">
-  <a class="btn btn-primary" href="{% url "cred:cred_add" %}"><i class="fas fa-plus"></i> {% trans "Create" %}</a>
-</div>
-
 <div class="table-responsive">
   <table class="table table-hover table-sm">
     <thead>

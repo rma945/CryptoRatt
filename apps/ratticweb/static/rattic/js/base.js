@@ -34,11 +34,29 @@ function toggleFavoritesMenu() {
 }
 
 $(document).ready(function () {
-  // register favorites menu toggle
+  // initialize all tooltips
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+
+  // open selected favorites item
+  $(function () {
+    favorites = localStorage.getItem('favorites_item')
+    if (favorites) {
+      $(favorites).collapse('show')
+    }
+  })
+
+  // toggle favorites sidebar menu
   $('#favorites-menu-toggle').click(function (e) {
     e.preventDefault();
     $('#content-wrapper').toggleClass('disabled');
     toggleFavoritesMenu()
+  });
+
+  // toggle favorites 
+  $('.card-header').click(function(e) {
+    localStorage.setItem('favorites_item', e.target.parentNode.dataset.target);
   });
  
   // register search form

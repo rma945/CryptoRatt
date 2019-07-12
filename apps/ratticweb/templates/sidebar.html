@@ -5,14 +5,16 @@
   <div class="accordion" id="favoritesAccordion">  
     <div class="card favorites-card">
 
+      <a class="text-dark noselect" href="/">
       <div class="row p-2 bg-light border-bottom noselect">
-        <div class="col-2">
-          <img width="32" alt="{% trans "CryptoRatt" %}" src="{% static rattic_logo %}"/>
-        </div>
-        <div class="col-10 pt-1">
-          <h5>CryptoRatt</h5>
-        </div>
+          <div class="col-2">
+            <img width="32" alt="{% trans "CryptoRatt" %}" src="{% static rattic_logo %}"/>
+          </div>
+          <div class="col-10 pt-1">
+              <h5>CryptoRatt</h5>
+          </div>
       </div>
+      </a>
 
       <div class="card-header" id="collapse-projects-header" data-toggle="collapse" data-target="#collapse-projects" aria-expanded="false" aria-controls="collapse-projects">
         <h6 class="mb-0">{% trans "Projects" %}</h6>

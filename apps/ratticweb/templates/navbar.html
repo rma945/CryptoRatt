@@ -12,17 +12,33 @@
 
   <div class="collapse navbar-collapse" id="navigation-bar">
     <ul class="navbar-nav mr-auto">
+
+      <!-- create new items menu -->
+      <ul class="navbar-nav pull-right">
+        <li class="nav-item dropdown d-none d-sm-block">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="badge badge-primary">
+              <i class="fas fa-plus"></i>
+            </span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url "cred:cred_add" %}"><i class="fas fa-asterisk"></i> {% trans "Create credential" %}</a>
+            <a class="dropdown-item" href="{% url "cred:project_add" %}"><i class="far fa-paper-plane"></i> {% trans "Create project" %}</a>
+          </div>
+        </li>
+      </ul>
+
       <li class="nav-item {% if request.resolver_match.view_name == "cred:projects" %}active{% endif %}">
         <a class="nav-link" href="{% url "cred:projects" %}">{% trans "Projects" %}</a>
       </li>
 
       <li class="nav-item {% if request.resolver_match.view_name == "cred:cred_list" %}active{% endif %}">
-        <a class="nav-link" href="{% url "cred:cred_list" %}">{% trans "Passwords" %}</a>
-      </li>
-
-      <li class="nav-item {% if request.resolver_match.view_name == "cred:cred_views_viewqueue" %}active{% endif %}">
-        <a class="nav-link" href="{{ cred_views_viewqueue }}">{% trans "Change queue" %}
-        {% if changeqcount > 0 %}<span class="badge badge-primary">{{ changeqcount }}</span>{% endif %}
+        <a class="nav-link" href="{% url "cred:cred_list" %}">{% trans "Passwords" %}
+          {% if changeqcount > 0 %}
+            <span class="badge badge-warning" data-toggle="tooltip" data-placement="bottom" title="{% trans "Credentials awaitings for a update!" %}">
+              {{ changeqcount }}
+            </span>
+          {% endif %}
         </a>
       </li>
 
@@ -31,7 +47,13 @@
           <a class="nav-link" href="{% url "help:home" %}">{% trans "Help" %}</a>
         </li>
       {% endif %}
-      
+
+      <li class="nav-item d-block d-sm-none">
+        <a class="nav-link" href="{% url "cred:cred_add" %}">{% trans "Create credential" %}</a>
+      </li>
+      <li class="nav-item d-block d-sm-none">
+        <a class="nav-link" href="{% url "cred:project_add" %}">{% trans "Create project" %}</a>
+      </li>
       <li class="nav-item d-block d-sm-none">
         <a class="nav-link" href="{% url "account:profile" %}">{% trans "Profile" %}</a>
       </li>
@@ -71,7 +93,7 @@
           <div class="dropdown-divider"></div>
 
           <a class="dropdown-item" href="{% url "cred:projects" %}"><i class="far fa-paper-plane"></i>  {% trans "Projects" %}</a>
-          <a class="dropdown-item" href="{% url "cred:cred_list" %}"><i class="fas fa-list"></i></i> {% trans "Passwords" %}</a>
+          <a class="dropdown-item" href="{% url "cred:cred_list" %}"><i class="fas fa-asterisk"></i></i> {% trans "Passwords" %}</a>
 
           <a class="dropdown-item" href="{{ cred_views_viewqueue }}"><i class="fas fa-exchange-alt"></i> {% trans "Change queue" %}
           {% if changeqcount > 0 %}<span class="badge badge-primary">{{ changeqcount }}</span>{% endif %}</a>

@@ -138,7 +138,8 @@ input[type=number] {
 }
 
 /* disable text selection for a different browsers */
-.noselect {
+.noselect a:hover, a:link, a:active {
+  text-decoration: none;
   -webkit-touch-callout: none;
     -webkit-user-select: none;
      -khtml-user-select: none;

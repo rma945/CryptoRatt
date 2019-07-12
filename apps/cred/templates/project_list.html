@@ -6,11 +6,7 @@
 {% block content %}
 
 <div class="col-md-12 pt-2">
-<div class="btn-group btn-group-sm" role="group" aria-label="credential-buttons">
-  <a class="btn btn-primary" href="{% url "cred:project_add" %}"><i class="fas fa-plus"></i> {% trans "Create" %}</a>
-</div>
 
-  
   {% for p in projects %}
     <div class="media pl-2 pt-1">
       <img class="align-self-center mr-3" 
