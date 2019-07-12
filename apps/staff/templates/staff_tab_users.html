@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_tags %}
+{% load i18n %}
+
+{% block content %}
+<div class="col-md-12 pt-2">
+  <nav>
+    <div class="nav nav-tabs" role="tablist">
+      <a class="nav-item nav-link" href={% url 'staff:settings' %}>{% trans 'Settings' %}</a>
+      <a class="nav-item nav-link active" href={% url 'staff:users' %}>{% trans 'Users' %}</a>
+      <a class="nav-item nav-link" href={% url 'staff:groups' %}>{% trans 'Groups' %}</a>
+      <a class="nav-item nav-link" href={% url 'staff:tags' %}>{% trans 'Tags' %}</a>
+      <a class="nav-item nav-link" href={% url 'staff:trash' %}>{% trans 'Trash box' %}</a>
+    </div>
+  </nav>
+  <div class="tab-content border-right border-left border-bottom">
+
+    {% for u in users %}
+      <div class="users-tab media pl-2 pt-1 {% if not u.is_active %} bg-light {% endif %}">
+        <img class="rounded align-self-center mr-2 border border-secondary" 
+          {% if u.profile.avatar %}
+          src="data:image/jpeg;base64, {{ u.profile.avatar|decode_utf8 }}"
+          {% else %}
+            src="{% static "rattic/img/avatar-default.png" %}"
+          {% endif %}
+          width="48" height="48">
+
+        <div class="media-body border-bottom border-gray mr-5 row">
+          <div class="col-4 mr-auto">
+            <a href="{% url 'staff:user_detail' u.id %}" style="text-decoration:none">
+              <small><b>{{u.username}}</b></small></br>
+            </a>
+            <small>email: {{ u.email}}</small></br>
+            <small>role: {% if not u.is_staff %} user {% else %} <span class="badge badge-pill badge-danger">admin</span> {% endif %}</small></br>
+          </div>
+          <div class="col-xs-1 ml-auto align-self-center">
+            <div class="dropdown">
+              <a class="d-none d-sm-block" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bars"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{% url 'staff:user_detail' u.id %}">{% trans 'Edit' %}</a>
+                <a class="dropdown-item deactivate-user-button" data-userid="{{u.id}}" data-isactive="{{ u.is_active }}" href="#">
+                {% if  u.is_active %}
+                  {% trans 'Deactivate' %}
+                {% else %}
+                  {% trans 'Activate' %}
+                {% endif %}
+                </a>
+                <a class="dropdown-item text-danger delete-user-button" data-userid="{{u.id}}" data-isactive="{{ u.is_active }}" href="#" >{% trans 'Delete' %}</i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+  </div>
+
+</div>
+
+{% block paginator %}
+  {% include "paginator.html" with itemlist=users %}
+{% endblock %}
+
+<!-- Modal -->
+<div class="modal fade" id="delete-user-modal" tabindex="-1" role="dialog" aria-labelledby="delete-user-modal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="delete-user-modal-label">{% trans 'Delete user' %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      {% blocktrans %}
+        Deleting this user will remove any associated auditlogs, maybe deactivate their account instead?
+      {% endblocktrans %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" id="delete-user-modal-button">{% trans 'Delete' %}</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Cancel' %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block customjs %}
+  <script type="application/javascript" src="{% static "rattic/js/staff_tab_users.js" %}"></script>
+{% endblock %}

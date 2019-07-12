@@ -1,0 +1,48 @@
+{% load i18n %}
+
+<nav aria-label="pagination" class="pt-2">
+  <ul class="pagination justify-content-center">
+
+    <!--paginator  previous button-->
+    <li class="page-item  {% if not itemlist.has_previous %} disabled {% endif %}">
+        <a class="page-link"
+          {% if itemlist.has_previous %}
+            href="?page={{ itemlist.previous_page_number }}"
+          {% endif %}
+        aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">{% trans "Prev" %}</span>
+      </a>
+    </li>
+
+    <!--paginator pages button-->
+    {% for p in  itemlist.paginator.page_range %}
+        {% if p <= itemlist.number|add:20 and p >= itemlist.number|add:-10 %}
+          {% if itemlist.number == p %}
+            <li class="d-none d-sm-block page-item active">
+              <a class="page-link" href="#"><b>{{ forloop.counter }}</b></a>
+            </li>
+          {% else %}
+            <li class="d-none d-sm-block page-item">
+              <a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a>
+            </li>
+          {% endif %}
+        {% endif %}
+    {% endfor %}
+    
+    <!--paginator next button-->
+    <li class="page-item  {% if not itemlist.has_next %} disabled {% endif %}">
+        <a class="page-link"
+      {% if itemlist.has_next %}
+        href="?page={{itemlist.next_page_number}}"
+      {% else %}
+        href="#"
+      {% endif %}
+      aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">{% trans "Next" %}</span>
+      </a>
+    </li>
+
+  </ul>
+</nav>

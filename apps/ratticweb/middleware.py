@@ -34,7 +34,8 @@ class CSPMiddleware(MiddlewareMixin):
     makes browsers refuse to load content from domains that are not Rattic.
     """
     def process_response(self, request, response):
-        policy = "default-src 'self';style-src 'self' 'unsafe-inline'"
+        policy = "default-src 'self';style-src 'self' 'unsafe-inline'; img-src 'self' data:;"
+        # policy = ""
         response['Content-Security-Policy'] = policy
         return response
 

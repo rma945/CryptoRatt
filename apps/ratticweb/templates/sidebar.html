@@ -1,38 +1,95 @@
 {% load static from staticfiles %}
 {% load i18n %}
 
-{% if user.is_authenticated %}
-    <h4>{% trans "You" %}</h4>
-        <p>{% blocktrans with username=user.username|title %}Welcome {{ username }}.{% endblocktrans %}<p>
-        <a class="btn" href="{% url "account:profile" %}">{% trans "Profile" %}</a>
-        <a class="btn btn-danger" href="{% url "account:logout" %}">{% trans "Logout" %}</a>
-    <h4><a href="{% url "cred:tags"  %}">{% trans "Tags" %}</a></h4>
-    {% if user.is_authenticated %}
-        {% for tag in user.profile.favourite_tags.all %}
-        <p><i class="icon-minus"></i> <a href="{% url "cred:cred_list" "tag" tag.id %}">{{ tag.name }}</a></p>
-        {% empty %}
-        <p>{% blocktrans %}Add Favourite Tags on the {% endblocktrans %}
-        <a href="{% url 'account:profile' %}">{% trans "profile" %}</a> {% blocktrans %}page to see them here.{% endblocktrans %}</p>
-        {% endfor %}
-		<h4>{% trans "Groups" %}</h4>
-        {% for g in user.groups.all %}
-        <p><i class="icon-minus"></i> <a href="{% url "cred:cred_list" "group" g.id %}">{{ g.name }}</a></p>
-        {% empty %}
-        <p>{% blocktrans %}If you are a member of any groups, you will see them listed here. {% endblocktrans %}</p>
-        {% endfor %}
-    {% endif %}
-{% else %}
-    {% if not SAML_ENABLED or DEBUG_ENABLED %}
-        <h4>{% trans "Login" %}</h4>
-        <form class="form-inline" method="post" action="{% url "account:login" %}?next={{ next|default:'' }}">{% csrf_token %}
-            <label for="id_username">{% trans "Username" %}</label><input class="parent-sized" id="id_username" type="text" name="auth-username" maxlength="30" />
-            <label for="id_password">{% trans "Password" %}</label><input class="parent-sized" type="password" name="auth-password" id="id_password" />
-            <input type="submit" class="btn" value="{% trans "Login" %}"/>
-        {% if LDAP_ENABLED == False and SAML_ENABLED == False %}
-            <p><a href="{% url "account:password_reset" %}">{% trans "Forgotten password?" %}</a></p>
-        {% endif %}
-            <input type="hidden" name="rattic_tfa_login_view-current_step" value="auth" />
-        </form>
-    {% endif %}
+<div class="bg-light d-none d-sm-block" id="sidebar">
+  <div class="accordion" id="favoritesAccordion">  
+    <div class="card favorites-card">
 
-{% endif %}
+      <a class="text-dark noselect" href="/">
+      <div class="row p-2 bg-light border-bottom noselect">
+          <div class="col-2">
+            <img width="32" alt="{% trans "CryptoRatt" %}" src="{% static rattic_logo %}"/>
+          </div>
+          <div class="col-10 pt-1">
+              <h5>CryptoRatt</h5>
+          </div>
+      </div>
+      </a>
+
+      <div class="card-header" id="collapse-projects-header" data-toggle="collapse" data-target="#collapse-projects" aria-expanded="false" aria-controls="collapse-projects">
+        <h6 class="mb-0">{% trans "Projects" %}</h6>
+      </div>
+      <div id="collapse-projects" class="collapse" aria-labelledby="collapse-projects-header" data-parent="#favoritesAccordion">
+        <div class="card-body">
+          <ul class="list-unstyled favorites-list" id="projects-favorites-list">
+            {% for p in user.profile.favourite_projects.all %}
+              <li data-id="{{p.id}}">
+                <a href="{% url "cred:project_detail" p.id %}">
+                  <i class="fas fa-minus"></i> {{ p.title }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card favorites-card">
+      <div class="card-header" id="collapse-credentials-header" data-toggle="collapse" data-target="#collapse-credentials" aria-expanded="false" aria-controls="collapse-credentials">
+        <h6 class="mb-0">{% trans "Credentials" %}</h6>
+      </div>
+      <div id="collapse-credentials" class="collapse" aria-labelledby="collapse-credentials-header" data-parent="#favoritesAccordion">
+        <div class="card-body favorites-card-body">
+          <ul class="list-unstyled favorites-list" id="credentials-favorites-list">
+            {% for c in user.profile.favourite_credentials.all %}
+              <li data-id="{{c.id}}">
+                <a href="{% url "cred:cred_detail" c.id %}">
+                  <i class="fas fa-minus"></i> {{ c.title }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card favorites-card">
+      <div class="card-header" id="collapse-groups-header" data-toggle="collapse" data-target="#collapse-groups" aria-expanded="false" aria-controls="collapse-groups">
+        <h6 class="mb-0">{% trans "Groups" %}</h6>
+      </div>
+      <div id="collapse-groups" class="collapse" aria-labelledby="collapse-groups-header" data-parent="#favoritesAccordion">
+        <div class="card-body">
+          <ul class="list-unstyled favorites-list">
+          {% for g in user.groups.all %}           
+            <li>
+              <a href="{% url "cred:cred_list" "group" g.id %}">
+                <i class="fas fa-minus"></i> {{ g.name }}
+              </a>
+            </li>
+          {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card favorites-card">
+      <div class="card-header" id="collapse-tags-header" data-toggle="collapse" data-target="#collapse-tags" aria-expanded="false" aria-controls="collapse-tags">
+        <h6 class="mb-0">{% trans "Tags" %}</h6>
+      </div>
+      <div id="collapse-tags" class="collapse" aria-labelledby="collapse-tags-header" data-parent="#favoritesAccordion">
+        <div class="card-body">
+          <ul class="list-unstyled favorites-list">
+          {% for tag in user.profile.favourite_tags.all %}
+            <li>
+              <a href="{% url "cred:cred_list" "tag" tag.id %}">
+                <i class="fas fa-minus"></i> {{ tag.name }}
+              </a>
+            </li>
+          {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

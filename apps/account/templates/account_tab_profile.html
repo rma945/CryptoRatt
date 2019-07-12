@@ -1,0 +1,96 @@
+{% load static %}
+{% load custom_tags %}
+{% load i18n %}
+
+<div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="profile-tab">
+  <div class="row p-4 no-margin-right">
+    
+    <!-- profile image -->
+    <div class="col-xs-2 align-items-center">
+    <form id="profile-submit-form" enctype="multipart/form-data" autocomplete="off" action="{{ action }}" method="POST">{% csrf_token %}
+      <img class="mx-auto d-block img-thumbnail"
+      {% if user.profile.avatar %}
+        src="data:image/jpeg;base64, {{ user.profile.avatar|decode_utf8 }}"
+      {% else %}
+        src="{% static "rattic/img/avatar-default.png" %}"
+      {% endif %}
+      width="160" height="160">
+      <div class="text-center pt-1">
+        <label class="btn btn-outline-primary btn-sm" style="width: 160px;" data-toggle="tooltip" data-html="true" title="160 x 160 <b>px</b></br>50 <b>kb</b>">
+          {% trans "Update image" %}
+          {{ form.icon }}
+        </label>
+      </div>
+      {% if ALLOWPWCHANGE %}
+      <div class="text-center pb-1">
+        <a class="btn btn-outline-danger btn-sm" style="width: 160px" href="{% url "password_change" %}">{% trans "Update password" %}</a>
+      </div>
+      {% endif %}
+      <div class="text-center">
+        {% if default_device %}
+          <a href="{% url 'account:tfa_disable' %}" style="width: 160px" class="btn btn-danger btn-sm">{% trans "Disable 2FA" %}</a>
+        {% else %}
+          <a href="{% url 'account:tfa_setup' %}" style="width: 160px" class="btn btn-success btn-sm">{% trans "Enable 2FA" %}</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="col-xs">
+        <h2>{{ user.username }}</h2>
+      </div>
+      <div class="col-xs">
+        <b>{% trans "Role" %}: </b> {% if user.is_staff %} Admin {% else %} User {% endif %}
+      </div>
+      <div class="col-xs">
+        <b>{% trans "Email" %}: </b> {{user.email }}
+      </div>
+      <div class="col-xs">
+        <b>{% trans "Two Factor Authentication" %}: </b>
+        {% if default_device %}
+          {% trans "Enabled" %}
+        {% else %}
+          {% trans "Disabled" %}
+        {% endif %}
+      </div>
+      <div class="col-xs">
+        <b>{% trans "Last Password Change" %}: </b> {{ user.profile.password_changed | date:"Y/m/d H:m" }}
+      </div>
+      
+      {% if user.groups.all|length %}
+      <hr class="col-xs-12">
+        <h6>{% trans 'Groups' %}</h6>
+        <ul class="list-inline" id="user_groups">
+        {% for g in user.groups.all %}
+          <li class="list-inline-item">
+          <span class="badge badge-big badge-primary">
+            {% if user.is_staff %}
+              <a class="text-white" href="{% url "staff:group_detail" g.id %}">{{ g.name }}</a>
+            {% else %}
+              {{ g.name }}
+            {% endif %}
+          </span>
+          </li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+
+      <hr class="col-xs-12">
+        <div class="col-xs pb-2">
+          <b>{% trans form.theme.label %}: </b>{{ form.theme }}
+        </div>
+        <div class="col-xs pb-2">
+          <b>{% trans form.items_per_page.label %}: </b>{{ form.items_per_page }}
+        </div>
+        <div class="col-xs pb-2">
+          <b>{% trans form.favourite_tags.label %}: </b>{{ form.favourite_tags }}
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="col pb-2">
+    <a class="btn btn-primary btn-block" href="#" id="profile-submit-button" role="button">{% trans "Save changes" %}</a>
+  </div>
+
+</div>

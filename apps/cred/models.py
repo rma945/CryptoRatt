@@ -6,23 +6,21 @@ from django.utils.translation import ugettext_lazy as _
 from django.forms.models import model_to_dict
 from django.utils.timezone import now
 from django.conf import settings
+from django.templatetags.static import static
 
 from apps.ratticweb.util import DictDiffer, field_file_compare
-from apps.cred.fields import SizedImageFileField
 
 class Tag(models.Model):
     name = models.CharField(max_length=64, unique=True)
 
     def __str__(self):
         return self.name
+    
+    def credentials_count(self):
+        return Cred.objects.filter(tags=self).count()
 
     def visible_count(self, user):
-        return Cred.objects.visible(user).filter(tags=self).count()
-
-
-class CredIconAdmin(admin.ModelAdmin):
-    list_display = ('name', 'filename')
-
+        return Cred.cred.objects.visible(user).filter(tags=self).count()
 
 class SearchManager(models.Manager):
     def visible(self, user, historical=False, deleted=False):
@@ -69,11 +67,20 @@ class SearchManager(models.Manager):
         # Fetch the list of credentials to change from the DB for the view
         return Cred.objects.filter(id__in=tochange)
 
+class CredentialIcon(models.Model):
+    name = models.CharField(max_length=64, unique=True)
+    icon = models.BinaryField(null=True, default=None)
+
+    def __str__(self):
+        return self.name
+
 class Project(models.Model):
-    title = models.CharField(verbose_name=_('Title'), max_length=128, db_index=True)
+    title = models.CharField(verbose_name=_('Title'), max_length=128, db_index=True, unique=True)
     url = models.URLField(verbose_name=_('URL'), blank=True, null=True)
-    icon = SizedImageFileField(verbose_name=_('Icon'), max_upload_size=100000, null=True, blank=True, upload_to='icons/project')
+    icon = models.BinaryField(null=True, default=None)
     description = models.TextField(verbose_name=_('Description'), blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True, blank=True)
+    modified = models.DateTimeField(auto_now=True, blank=True)
 
     def getAllCreds(self):
         return self.cred_set.filter(latest=None)
@@ -92,18 +99,17 @@ class Cred(models.Model):
     objects = SearchManager()
 
     # User changable fields
-    project = models.ForeignKey(Project, verbose_name=_('Project'), blank=True, null=True, default=None, on_delete=models.SET_NULL)
+    project = models.ForeignKey(Project, verbose_name=_('Project'), blank=True, null=True, default=None, on_delete=models.SET_DEFAULT)
     title = models.CharField(verbose_name=_('Title'), max_length=64, db_index=True)
     url = models.URLField(verbose_name=_('URL'), blank=True, null=True, db_index=True)
     username = models.CharField(verbose_name=_('Username'), max_length=250, blank=True, null=True, db_index=True)
     password = models.CharField(verbose_name=_('Password'), max_length=250, blank=True, null=True)
-    descriptionmarkdown = models.BooleanField(verbose_name=_('Markdown Description'), default=True, )
     description = models.TextField(verbose_name=_('Description'), blank=True, null=True)
-    group = models.ForeignKey(Group, verbose_name=_('Group'), null=True, on_delete=models.SET_NULL)
+    group = models.ForeignKey(Group, verbose_name=_('Group'), blank=True, null=True, on_delete=models.SET_NULL)
     groups = models.ManyToManyField(Group, verbose_name=_('Groups'), related_name="child_creds", blank=True, default=None)
     users = models.ManyToManyField(User, verbose_name=_('Users'), related_name="child_creds", blank=True, default=None)
     tags = models.ManyToManyField(Tag, verbose_name=_('Tags'), related_name='child_creds', blank=True, default=None)
-    iconname = models.CharField(verbose_name=_('Icon'), default='Key.png', max_length=64)
+    icon = models.ForeignKey(CredentialIcon, verbose_name=_('Icon'), blank=True, null=True, default=None, on_delete=models.SET_DEFAULT)
 
     # Application controlled fields
     is_deleted = models.BooleanField(default=False, db_index=True)
@@ -210,11 +216,29 @@ class Cred(models.Model):
 class Attachment(models.Model):
     credential = models.ForeignKey(Cred, on_delete=models.CASCADE)
     filename = models.CharField(verbose_name=_('Filename'), max_length=256)
+    created = models.DateTimeField(auto_now_add=True, blank=True)
     mime = models.CharField(verbose_name=_('Mime'), max_length=64, blank=True, null=True, default=None)
     content = models.BinaryField(null=True, default=None)
 
     def __str__(self):
         return self.filename
+
+    # TODO: get_icon - rewrite this function
+    def get_icon(self): 
+        icon = static("rattic/img/attachment-default.png")
+
+        if self.mime:
+            if self.mime in ('application/x-x509-ca-cert', 'application/x-x509-user-cert'):
+                icon = static("rattic/img/attachment-sshkey.png")
+            elif self.mime in ('application/pkix-crl','application/x-pkcs12', 'application/x-iwork-keynote-sffkey', 'application/pkix-cert', 'application/pkcs10'):
+                icon = static("rattic/img/attachment-certificate.png")
+            elif self.mime in ('image/png', 'image/jpeg', 'image/gif'):
+                icon = static("rattic/img/attachment-image.png")
+            elif self.mime in ('application/zip', 'application/x-bzip', 'application/x-tar'):
+                icon = static("rattic/img/attachment-archive.png")
+
+        return icon
+
 
 class CredAdmin(admin.ModelAdmin):
     list_display = ('title', 'username', 'group')
@@ -228,6 +252,7 @@ class CredAudit(models.Model):
     CREDEXPORT = 'X'
     CREDPASSVIEW = 'P'
     CREDDELETE = 'D'
+    CREDUNDELETE = 'R'
     CREDSCHEDCHANGE = 'S'
     CREDATTACHADDED = 'AD'
     CREDATTACHVIEW = 'AV'
@@ -240,6 +265,7 @@ class CredAudit(models.Model):
         (CREDVIEW, _('Only Details Viewed')),
         (CREDEXPORT, _('Exported')),
         (CREDDELETE, _('Deleted')),
+        (CREDUNDELETE, _('Restored')),
         (CREDSCHEDCHANGE, _('Scheduled For Change')),
         (CREDPASSVIEW, _('Password Viewed')),
         (CREDATTACHADDED, _('Attachment Added')),
@@ -271,7 +297,6 @@ class CredChangeQManager(models.Manager):
 
 class CredChangeQ(models.Model):
     objects = CredChangeQManager()
-
     cred = models.ForeignKey(Cred, on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True, blank=True)
 

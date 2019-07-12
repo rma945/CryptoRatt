@@ -8,7 +8,7 @@ from tastypie.resources import ModelResource
 from tastypie.authorization import Authorization
 from tastypie.exceptions import Unauthorized
 
-from apps.staff.models import GroupForm
+from apps.staff.forms import GroupForm
 
 
 class RatticGroupAuthorization(Authorization):

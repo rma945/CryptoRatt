@@ -6,8 +6,6 @@ from django.http import HttpResponseRedirect
 from django.utils.deprecation import MiddlewareMixin
 
 
-
-
 class StrictAuthentication(MiddlewareMixin):
     def process_view(self, request, view_func, view_args, view_kwargs):
         # Logout users who have been disabled

@@ -1,0 +1,14 @@
+Django==2.2
+django-otp==0.5.2
+django-tastypie==0.14.2
+django-celery==3.2.2
+django-user-sessions==1.5.3
+django-two-factor-auth==1.8.0
+# update after 2.2.2 versin release
+git+http://github.com/fangli/django-saml2-auth.git@master
+django-auth-ldap==1.7.0
+Markdown==3.1
+python-mimeparse==1.6.0
+python-dateutil==2.8.0
+python-ldap==3.2.0
+configparser==3.7.4

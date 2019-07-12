@@ -1,118 +1,240 @@
 {% extends "base.html" %}
+{% load custom_tags %}
+{% load static from staticfiles %}
 {% load i18n %}
-{% load credicons %}
+
+{% block title %}
+  {% if not cred.id %}
+    {% trans "Create credential" %}
+  {% else %}
+    {% trans "Update credential" %}: {{ cred.title }}
+  {% endif %}
+{% endblock %}
 
 {% block content %}
 
-{% include "cred_part_passgenmodal.html" %}
-{% include "cred_part_logomodal.html" with icons=icons txtfield='#id_iconname' imgfield='#logodisplay' %}
+{% block form_errors %}
+  {% include "form_errors.html" %}
+{% endblock %}
 
-<h1>
-    {% if not cred.id %}
-        {% trans "Create Password" %}
-    {% else %}
-        {% trans "Edit Password" %}: {{ cred.title }}
-    {% endif %}
-</h1>
-
-<form class="form-horizontal" enctype="multipart/form-data" autocomplete="off" action="{{ action }}{% if next %}?next={{ next }}{% endif %}" method="post">{% csrf_token %}
-
-    <div class="control-group">
-        {{ form.project.errors }}
-        <label class="control-label" for="{{ form.project.html_name }}">{{ form.project.label }} </label>
-        <div class="controls">{{ form.project }}</div>
+<form class="pt-2" enctype="multipart/form-data" autocomplete="off" action="{{ action }}" method="post">{% csrf_token %}
+  <div class="row no-margin-right">
+    <div class="pb-2 d-flex justify-content-center">
+      <div class="cred-image">
+        {{ form.icon.as_hidden }}
+        <img class="p-1" id="credential-icon" style="width: 96px;" 
+        {% if cred.icon %}
+          src="data:image/png;base64,{{ cred.icon.icon|decode_utf8 }}"
+        {% else %}
+          src="{% static rattic_logo %}"
+        {% endif %}
+        />
+        <a class="btn btn-outline-primary btn-sm btn-block" id="icon-select-button" href="#" role="button">{% trans "Select icon" %}</a>
+      </div>
     </div>
 
-    <div class="control-group">
-        {{ form.title.errors }}
-        <label class="control-label" for="{{ form.title.html_name }}">{{ form.title.label }} </label>
-        <div class="controls">{{ form.title }}</div>
-    </div>
-
-    <div class="control-group">
-        {{ form.url.errors }}
-        <label class="control-label" for="{{ form.url.html_name }}">{{ form.url.label }} </label>
-        <div class="controls">{{ form.url }}</div>
-    </div>
-
-    <div class="control-group">
-        {{ form.username.errors }}
-        <label class="control-label" for="{{ form.username.html_name }}">{{ form.username.label }} </label>
-        <div class="controls">{{ form.username }}</div>
-    </div>
-
-    <div class="control-group">
-        {{ form.password.errors }}
-        <label class="control-label" for="{{ form.password.html_name }}">{{ form.password.label }} </label>
-        <div class="controls">{{ form.password }}</div>
-    </div>
-
-    <div class="control-group">
-        <label class="control-label" for="{{ form.descriptionmarkdown.html_name }}">{{ form.descriptionmarkdown.label }} </label>
-        <div class="controls">{{ form.descriptionmarkdown }}</div>
-    </div>
-
-    <div class="control-group">
-        <label class="control-label" for="{{ form.description.html_name }}">{{ form.description.label }} </label>
-        <div class="controls">{{ form.description }}</div>
-    </div>
-
-    {% if attachments %}
-        <div class="control-group">
-            <label class="control-label">Attachments</label>
-            <div class="controls">
-                <ul class="unstyled">
-                    {% for a in attachments.all %}
-                    <li>
-                        <div class="btn-group" role="group" aria-label="attachment">
-                            <a class="btn btn-mini" href="{% url 'cred:download_attachment' a.id %}" role="button">{{ a.filename }}</a>
-                            <a class="btn btn-mini" href="{% url 'cred:delete_attachment' a.id %}" role="button">x</a>
-                        </div>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
+    <!-- items row start -->
+    <div class="col">
+      <div class="col-xs">
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="{{ form.project.html_name }}">{{ form.project.label }}</label>
+          </div>
+          {{ form.project }}
         </div>
-    {% endif %}
+      </div>
 
-    <div class="control-group">
-        <label class="control-label" for="{{ form.uploads.html_name }}">{{ form.uploads.label }} </label>
-        <div class="controls">{{ form.uploads }}</div>
+      <div class="col-xs">
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="{{ form.title.html_name }}">{{ form.title.label }}</label>
+          </div>
+          {{ form.title }}
+        </div>
+      </div>
+
+      <div class="col-xs">
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="{{ form.url.html_name }}">{{ form.url.label }}</label>
+          </div>
+          {{ form.url }}
+        </div>
+      </div>
     </div>
+    <!-- items row end -->
 
-    <div class="control-group">
-        {{ form.tags.errors }}
-        <label class="control-label" for="{{ form.tags.html_name }}">{{ form.tags.label }} </label>
-        <div class="controls">{{ form.tags }}</div>
+  </div>
+
+  <div class="input-group input-group-sm mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="{{ form.username.html_name }}">{{ form.username.label }}</label>
     </div>
+    {{ form.username }}
+  </div>
 
-    <div class="control-group">
-        {{ form.group.errors }}
-        <label class="control-label" for="{{ form.group.html_name }}">{{ form.group.label }} </label>
-        <div class="controls">{{ form.group }}</div>
+  <div class="input-group input-group-sm mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="{{ form.password.html_name }}">{{ form.password.label }}</label>
+      <button class="btn btn-sm btn-primary" type="button" id="show-password-button">
+        <i class="far fa-eye">
+      </i></button>
+      <button class="btn btn-sm btn-success" type="button" id="generate-password-button" data-toggle="modal" data-target="#generate-password-modal">
+        <i class="fas fa-redo"></i>
+      </button>
     </div>
+    {{ form.password }}
+  </div>
 
-    <div class="control-group">
-        {{ form.groups.errors }}
-        <label class="control-label" for="{{ form.groups.html_name }}">{{ form.groups.label }} </label>
-        <div class="controls">{{ form.groups }}</div>
+  {{ form.description }}
+
+  <div class="input-group input-group-sm mb-3 mt-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text">{{ form.tags.label }}</span>
     </div>
+    {{ form.tags }}
+  </div>
 
-    <div class="control-group">
-        {{ form.users.errors }}
-        <label class="control-label" for="{{ form.users.html_name }}">{{ form.users.label }} </label>
-        <div class="controls">{{ form.users }}</div>
+  <div class="input-group input-group-sm mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text">{{ form.group.label }}</label>
     </div>
+    {{ form.group }}
+  </div>
 
-    <div class="control-group">
-        {{ form.iconname.errors }}
-        <label class="control-label" for="{{ form.iconname.html_name }}">{{ form.iconname.label }} </label>
-        <div class="controls">{{ form.iconname }}</div>
-    </div> 
-
-    <div class="controls">
-        <input id="credsave" class="btn btn-primary" type="submit" value="{% trans "Submit" %}" />
+  <div class="input-group input-group-sm mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text">{{ form.groups.label }}</span>
     </div>
+    {{ form.groups }}
+  </div>
+
+  <div class="input-group input-group-sm mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text">{{ form.users.label }}</span>
+    </div>
+    {{ form.users }}
+  </div>
+     
+  <div class="input-group input-group-sm">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="{{ form.uploads.html_name }}">{{ form.uploads.label }}</label>
+    </div>
+    <div class="custom-file">
+      {{ form.uploads }}
+      <label class="custom-file-label" id="upload-field-label" for="id_uploads">{% trans "Choose file" %}</label>
+    </div>
+  </div>
+
+  {% if attachments %}
+  <div class="card cred-card-attachment">
+    <div class="card-body card-body-sm">
+        {% for a in attachments.all %}
+          <div class="btn-group mt-2 ml-2" role="group">
+            <a class="btn btn-outline-primary btn-sm" href="{% url 'cred:download_attachment' a.id %}" role="button">
+              <img height="24px" src="{{ a.get_icon }}">
+              {{ a.filename }}
+            </a>
+            <a class="btn btn-outline-primary btn-sm" href="{% url 'cred:delete_attachment' a.id %}" role="button">
+              <i class="fas fa-times"></i>
+            </a>
+          </div>
+        {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="row no-margin-right pt-2 pb-2">
+    <div class="col-6">
+      <input id="credsave" class="btn btn-success btn-block" type="submit" value="{% trans "Save" %}" />
+    </div>
+    <div class="col-6">
+      <a class="btn btn-secondary btn-block" 
+      {% if cred.id %}
+        href="{% url 'cred:cred_detail' cred.id %}"
+      {% else %}
+        href="{% url 'cred:cred_list' %}"
+      {% endif %}
+      role="button">{% trans "Cancel" %}</a>
+    </div>
+  </div>
 </form>
+
+<!-- generate password modal -->
+<div class="modal fade" id="generate-password-modal" tabindex="-1" role="dialog" aria-labelledby="generate-password-modal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div id="generate-password-modal-header" class="modal-header bg-success">
+        <h5 class="modal-title" id="generate-password-modal-title">{% trans "Generate password" %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body noselect">
+        <h5>Password symbols</h5>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="lowercase-switch" checked="">
+          <label class="custom-control-label" for="lowercase-switch">{% trans "Lowercase alphabet" %}</label>
+        </div>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="uppercase-switch" checked="">
+          <label class="custom-control-label" for="uppercase-switch">{% trans "Uppercase alphabet" %}</label>
+        </div>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="numbers-switch" checked="">
+          <label class="custom-control-label" for="numbers-switch">{% trans "Numbers" %}</label>
+        </div>
+        <div class="custom-control custom-switch pb-3">
+          <input type="checkbox" class="custom-control-input" id="special-switch">
+          <label class="custom-control-label" for="special-switch">{% trans "Special symbols" %}</label>
+        </div>
+
+        <h5>Password length</h5>
+        <div class="row">
+          <div class="col-10">
+            <input type="range" min="1" max="128" value="24" class="password-length-slider" id="password-length-slider">
+          </div>
+          <div class="col-sm-2">
+            <input type="number" class="password-length-input"
+            id="password-length-custom-input" min="2" max="128" value="24">
+          </div>
+        </div>
+
+        <h5 class="pt-3">Password strength</h5>
+        <div class="progress ">
+          <div id="password-strength-bar" class="progress-bar progress-bar-striped bg-success" role="progressbar" 
+          style="width: 80%" aria-valuenow="2" aria-valuemin="0" aria-valuemax="10"></div>
+        </div>
+      </div>
+      <div class="modal-footer ">
+        <button type="button" id="set-password-button" class="btn btn-primary btn-sm">{% trans "Generate" %}</button>
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">{% trans "Cancel" %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- select icon modal -->
+<div class="modal fade bd-example-modal-lg" id="select-icons-modal" tabindex="-1" role="dialog" aria-labelledby="select-icons-modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="container">
+      <div class="row justify-content-center pt-2 pb-2">
+        {% for i in icons %}
+          <img class="p-1 credential-icon-image" src="{% url 'render_credential_icon' i.id %}" alt="{{ i.name }}" data-id="{{i.id}}" width="96px" height="96px">
+        {% endfor %}
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block customjs %}
+  <script type="application/javascript" src="{% static "rattic/js/cred_edit.js" %}"></script>
+  <script type="application/javascript" src="{% static "selectize/js/selectize.min.js" %}"></script>
+  <script type="application/javascript" src="{% static "simple-mde/simplemde.min.js" %}"></script>
 {% endblock %}
 

@@ -1,24 +1,83 @@
 {% extends "base.html" %}
-
 {% load i18n %}
+{% load static %}
+{% load custom_tags %}
 
 {% block content %}
 
-<h1>{% if not project.id %}{% trans "Create project" %}{% else %}{% trans "Edit Project" %}: {{ project.title }}{% endif %}</h1>
+{% block form_errors %}
+  {% include "form_errors.html" %}
+{% endblock %}
 
-<form class="form-horizontal" enctype="multipart/form-data" action="{{ action }}{% if next %}?next={{ next }}{% endif %}" method="post">{% csrf_token %}
-    {% for field in form %}
-        <div class="control-group">
-            {{ field.errors }}
-            <label class="control-label" for="{{ field.html_name }}">{{ field.label }} </label>
-            <div class="controls">
-              {{ field }}
-            </div>
+<div class="col-xs-12 border mt-2">
+  <form class="pt-2" enctype="multipart/form-data" autocomplete="off" action="{{ action }}" method="post">{% csrf_token %}
+    <div class="row p-4 no-margin-right">
+
+      <div class="col-xs-2 align-items-top ">
+        <img class="mx-auto d-block pb-1"
+        {% if project.icon %}
+          src="data:image/png;base64,{{ project.icon|decode_utf8 }}"
+        {% else %}
+          src="{% static "rattic/img/project-default.png" %}"
+        {% endif %}
+        width="160" height="160">
+        <label class="btn btn-outline-primary btn-sm" style="width: 160px;" data-toggle="tooltip" data-html="true" title="160 x 160 <b>px</b></br>50 <b>kb</b>">
+          {% trans "Update icon" %}
+          {{ form.icon }}
+        </label>
+      </div>
+
+      <div class="col">
+        <div class="col-xs">
+          <h2>{{ edit_project.title }}</h2>
         </div>
-    {% endfor %}
-    <div class="controls">
-        <input id="project-save" class="btn btn-primary" type="submit" value="{% trans "Submit" %}" />
-    </div>
-</form>
+        
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+          </div>
+          {{form.title}}
+        </div>
 
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="{{ form.url.id_for_label }}">{{ form.url.label }}</label>
+          </div>
+          {{ form.url }}
+        </div>
+
+        <div class="form-group">
+        <label for="{{ form.description.id_for_label }}">{% trans "Description" %}</label>
+          {{ form.description }}
+        </div>
+
+        <h6> {% trans "Credentials" %}: </h6>
+        {{ form.credentials }}
+      </div>
+    </div>
+
+    <div class="row no-margin-right pt-2 pb-2 justify-content-md-center">
+      <div class="col">
+        <input id="credsave" class="btn btn-success btn-block" type="submit" value="{% trans "Save" %}" />
+      </div>
+      <div class="col">
+        <a class="btn btn-secondary btn-block" 
+        {% if project.id %}
+          href="{% url 'cred:project_detail' project.id %}"
+        {% else %}
+          href="{% url 'cred:projects' %}"
+        {% endif %}
+        role="button">{% trans "Cancel" %}</a>
+      </div>
+    </div>
+  </form>
+
+</div>
+
+{% endblock %}
+
+{% block customjs %}
+  <script type="application/javascript" src="{% static "selectize/js/selectize.min.js" %}"></script>
+  <script type="application/javascript" src="{% static "simple-mde/simplemde.min.js" %}"></script>
+  <script type="application/javascript" src="{% static "rattic/js/cred_edit_project.js" %}"></script>
 {% endblock %}

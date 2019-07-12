@@ -1,49 +1,141 @@
 {% extends "base.html" %}
-
-{% load i18n %}
-{% load cred_markdown %}
 {% load static %}
+{% load custom_tags %}
+{% load markdown %}
+{% load i18n %}
 
-{% block title %}{{ project.title }} - {% trans "Rattic" %}{% endblock %}
+{% block customheader %}
+  <meta name="project-id" content="{{project.id}}">
+{% endblock %}
 
 {% block content %}
-  <div class="btn-group">
-    <a class="btn" href="{% url "cred:project_edit" project.id %}">{% trans "Edit" %}</a>
-    <a class="btn btn-danger" href="{% url "cred:project_delete" project.id %}">{% trans "Delete" %}</a>
-  </div>
-  <p></p>
 
-  <table class="table table-striped table-bordered">
-    <tr>
-      <th style="width: 64px;">Title</th><td>{{ project.title }}</td>
-    </tr>
-    <tr>
-      <th style="width: 64px;">URL</th><td><a href="{{ project.url }}">{{ project.url }}</a></td>
-    </tr>
-      <tr>
-      <th style="width: 64px;">Icon</th>
-      <td>
-        <img style="width: 48px;" src="{% if project.icon %} {{ project.icon.url }} {% else %} {% static "rattic/img/project-default.png" %} {% endif %}" alt="{{ project.title }}">
-      </td> 
-    </tr>
-  </table>
+<div class="border mt-2">
+  <div class="row p-4 no-margin-right">
 
-  {% if project.description|length %}
-    <strong>{% trans "Description:" %}</strong>
-      <div class="description">
-        {% markdown_cred project.description %}
+    <!-- project image -->
+    <div class="col-xs-2 align-items-center">
+      <img class="mx-auto d-block"
+      {% if project.icon %}
+        src="data:image/png;base64,{{ project.icon|decode_utf8 }}"
+      {% else %}
+        src="{% static "rattic/img/project-default.png" %}"
+      {% endif %}
+      width="160" height="160">
+
+
+      {% if user.is_staff %}
+      <div class="text-center pb-1 pt-1">
+        <a class="btn btn-outline-primary btn-sm" style="width: 160px" href="{% url 'cred:project_edit' project.id%}" role="button">
+          <i class="fas fa-pencil-alt"></i>
+          {% trans "Edit" %}
+        </a>
       </div>
-  {% endif %}
+      {% endif %}
+      
+      <div class="text-center pb-1 pt-1">
+        <a class="btn btn-primary btn-sm" style="width: 160px" href="{% url 'cred:cred_add' %}" role="button">
+          <i class="fas fa-plus"></i>
+          {% trans "Add" %}
+        </a>
+      </div>
 
-  {% if project.cred_set.all|length %}
-    <strong>{% trans "Credentials:" %}</strong>
-    <div class="description">
-      <ul class="list-group">
-        {% for c in project.getAllCreds %}
-          <li class="list-group-item"><a href="{% url "cred:cred_detail" c.id %}">{{ c.title }}</a></li>
-        {% endfor %}
-      </ul>
+      {% if user.is_staff %}
+      <div class="text-center pb-1">
+        <a class="btn btn-danger btn-sm" style="width: 160px" href="#" id="delete-project-button">
+          <i class="far fa-trash-alt"></i>
+          {% trans "Delete" %}
+        </a>
+      </div>
+      {% endif %}
+
+      <div class="text-center">
+        <a class="btn btn-secondary btn-sm {% if project in user.profile.favourite_projects.all %} btn-warning {% endif %}"
+        style="width: 160px" href="#" id="set-farovire-button">
+          <i class="far fa-star"></i>
+          {% trans "Favorite" %}
+        </a>
+      </div>
+
     </div>
-  {% endif %}
 
+    <div class="col">
+      <div class="col-xs">
+        <h2 id="project-title">{{ project.title }}</h2>
+      </div>
+      {% if project.url %}
+        <div class="col-xs">
+          <b>{% trans "URL" %}: </b> <a href="{{ project.url }}">{{ project.url }}</a>
+        </div>
+      {% endif %}
+      <div class="col-xs">
+        <b>{% trans "Created" %}: </b> {{ project.created|date:"Y/m/d H:m"}}
+      </div>
+      <div class="col-xs">
+        <b>{% trans "Modified" %}: </b> {{ project.modified|date:"Y/m/d H:m"}}
+      </div>
+
+      {% if project.description %}
+        <hr class="col-md-12">
+        <div class="description-body">
+          {% render_markdown project.description %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+
+<hr class="col-xs-12">
+
+{% for c in credentials %}
+  <div class="media m-2">
+    <img class="pr-2 align-self-center" style="width: 32px;" 
+      {% if c.icon %}
+        src="data:image/png;base64,{{ c.icon.icon | decode_utf8 }}"
+      {% else %}
+        src="{% static "rattic/img/credential-default.png" %}"
+      {% endif %}
+    >
+    <div class="media-body border-bottom border-gray ml-1 mr-1 pb-2 row">
+      <div class="col-md-12">
+        <a href="{% url 'cred:cred_detail' c.id %}" style="text-decoration:none">
+        {{c.title}}
+        </a>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+
+{% block paginator %}
+  {% include "paginator.html" with itemlist=credentials %}
+{% endblock %}
+
+<!-- Modal -->
+<div class="modal fade" id="delete-project-modal" tabindex="-1" role="dialog" aria-labelledby="delete-project-modal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">{% trans 'Delete project' %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      {% blocktrans %}
+        Deleting this project will remove or make expired all associated credentials, do you really want to continue?
+      {% endblocktrans %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" id="delete-project-modal-button">{% trans 'Delete' %}</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Cancel' %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block customjs %}
+  <script type="application/javascript" src="{% static "rattic/js/cred_detail_project.js" %}"></script>
 {% endblock %}

@@ -1,8 +1,10 @@
+from base64 import b64encode
+
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.urls import reverse
-from apps.account.models import ApiKey, ApiKeyForm
-from apps.account.models import UserProfileForm, LDAPPassChangeForm
+from apps.account.models import ApiKey
+from apps.account.forms import UserProfileForm, LDAPPassChangeForm, ApiKeyForm
 
 from django.views.decorators.debug import sensitive_post_parameters
 from django.contrib.auth.decorators import login_required
@@ -23,7 +25,6 @@ import uuid
 
 @login_required
 def rattic_change_password(request, *args, **kwargs):
-    print(request.user)
     if request.user.has_usable_password():
         # If a user is changing their password
         return PasswordChangeView(request, *args, **kwargs)
@@ -54,8 +55,16 @@ def profile(request):
     # Process the form if we have data coming in
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=request.user.profile)
+
         if form.is_valid():
-            form.save()
+            saved_form = form.save()
+
+            if request.FILES.getlist('icon'):
+                f = request.FILES.getlist('icon')[0]
+                saved_form.avatar = b64encode(f.file.read())
+                saved_form.save()
+
+
     else:
         form = UserProfileForm(instance=request.user.profile)
 
@@ -78,11 +87,11 @@ def newapikey(request):
         form = ApiKeyForm(request.POST, instance=newkey)
         if form.is_valid():
             form.save()
-        return render(request, 'account_viewapikey.html', {'key': newkey})
+        return HttpResponseRedirect(reverse('account:profile'))
     else:
         form = ApiKeyForm()
 
-    return render(request, 'account_newapikey.html', {'form': form})
+    return HttpResponseRedirect(reverse('account:profile'))
 
 
 @login_required
@@ -96,7 +105,7 @@ def deleteapikey(request, key_id):
         key.delete()
         return HttpResponseRedirect(reverse('account:profile'))
 
-    return render(request, 'account_deleteapikey.html', {'key': key})
+    return HttpResponseRedirect(reverse('account:profile'))
 
 
 # Stolen from django.contrib.auth.views
@@ -133,31 +142,25 @@ def ldap_password_change(request,
     return TemplateResponse(request, template_name, context,
                             current_app=current_app)
 
-
 class RatticSessionDeleteView(SessionDeleteView):
     def get_success_url(self):
         return reverse('account:profile')
-
 
 class RatticTFADisableView(DisableView):
     template_name = 'account_tfa_disable.html'
     redirect_url = 'account:profile'
 
-
 class RatticTFABackupTokensView(BackupTokensView):
     template_name = 'account_tfa_backup_tokens.html'
     redirect_url = 'tfa_backup'
-
 
 class RatticTFASetupView(SetupView):
     template_name = 'account_tfa_setup.html'
     qrcode_url = 'account:tfa_qr'
     redirect_url = 'account:profile'
 
-
 class RatticTFALoginView(LoginView):
     template_name = 'account_tfa_login.html'
-
 
 class RatticTFAGenerateApiKey(LoginView):
     def get(self, request, *args, **kwargs):

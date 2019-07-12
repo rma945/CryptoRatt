@@ -4,45 +4,39 @@ from apps.staff.views import *
 
 app_name = "staff"
 urlpatterns = [
-    # Views in views.py
-    path('', home, name="home"),
+    path('', app_settings, name="settings"),
+    path('users/', users, name="users"),
+    path('groups/', groups, name="groups"),
+    path('tags/', tags, name="tags"),
+    path('trash/', trash, name="trash"),
+    # path('trash/', trash, name="trash"),
 
     # User/Group Management
-    path('userdetail/<int:uid>/', userdetail, name="user_detail"),
-    path('removetoken/<int:uid>/', removetoken, name="remove_token"),
-    path('groupdetail/<int:gid>/', groupdetail, name="group_detail"),
-
-    # Auditing
+    path('user/<int:uid>/', user_detail, name="user_detail"),  
+    path('group/<int:gid>/', group_detail, name="group_detail"),
+    path('tag/<int:tid>/', tag_detail, name="tag_detail"),
+    
+    # audit
     path('audit-by-<slug:by>/<int:byarg>/', audit, name="audit"),
-
-    # Importing
-    path('import/keepass/', upload_keepass),
-    path('import/process/', import_overview),
-    path('import/process/<int:import_id>/', import_process),
-    path('import/process/<int:import_id>/ignore/', import_ignore),
 
     # credentials undeletion
     path('credundelete/<int:cred_id>/', credundelete, name="cred_undelete"),
 
     # group \ user delete
-    path('useredit/<int:pk>/', UpdateUser.as_view(), name="user_edit"),
-    path('groupdelete/<int:gid>/', groupdelete, name="group_delete"),
-    path('userdelete/<int:uid>/', userdelete, name="user_delete"),
+    path('edit/user/<int:uid>/', edit_user, name="edit_user"),
+    path('edit/group/<int:gid>/', edit_group, name="edit_group"),
+    path('delete/group/<int:gid>/', delete_group, name="delete_group"),
+    path('delete/user/<int:uid>/', delete_user, name="delete_user"),
+    path('delete/tag/<int:tid>/', delete_tag, name="delete_tag"),
+
+    # api
+    path('deactivate/user/', deactivate_user, name="deactivate_user"),
+    # path('delete/token/<int:uid>/', delete_token, name="delete_token"),
 ]
 
-
-# don`t manage groups if USE_LDAP_GROUPS or SAML_ENABLED
-if (not settings.USE_LDAP_GROUPS and not settings.SAML_ENABLED):
-    urlpatterns += [
-        # Group Management
-        path('groupadd/', groupadd, name="group_add"),
-        path('groupedit/<int:gid>/', groupedit, name="group_edit"),
-    ]
-
-# don`t add users if USE_LDAP_GROUPS or SAML_ENABLED
+# disable adduser if LDAP or SAML enabled
 if (not settings.LDAP_ENABLED and not settings.SAML_ENABLED):
     urlpatterns += [
-        # staff.views,
-        # User Management
+        path('groupadd/', group_add, name="group_add"),
         path('useradd/', NewUser.as_view(), name="user_add"),
     ]

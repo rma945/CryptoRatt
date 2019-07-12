@@ -6,8 +6,6 @@ from django.test.utils import override_settings
 
 from ratticweb.tests.helper import TestData
 
-from apps.cred.tasks import change_queue_emails
-
 
 class CredEmailTests(TestCase):
     def setUp(self):

@@ -1,10 +1,22 @@
 {% extends "base.html" %}
-
+{% load static from staticfiles %}
 {% load i18n %}
 
 {% block content %}
-<h1>404 - {% trans "Page not found" %}</h1>
-<p>{% blocktrans %}This is not the page you are looking for, contact your systems administrator if you believe you have recieved this in error.{% endblocktrans %}</p>
+
+<div class="col p-4">
+  <img class="mx-auto d-block" width="200" alt="{% trans "CryptoRatt" %}" src="{% static rattic_logo %}"/>
+</div>
+
+<h1 class="text-center text-danger display-3 font-weight-bold">404 error</h1>
+<div class="col justify-content-center text-center">
+  <h4>
+    {% blocktrans %}
+    This is not the credentials page you are looking for.
+    Contact your systems administrator if you believe you have recieved this in error.
+    {% endblocktrans %}
+  </h4>
+</div>
 
 {% endblock %}
 

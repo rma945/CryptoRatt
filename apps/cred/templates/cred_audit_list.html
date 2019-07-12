@@ -1,0 +1,63 @@
+{% load i18n %}
+
+<div class="accordion mt-2" id="audit-logs-collapse">
+  <div class="card">
+    <div class="card-header card-header-sm" id="audit-logs-header" data-toggle="collapse" data-target="#audit-logs-collapse-body" 
+    {% if expanded %}
+      aria-expanded="true"
+    {% else %}
+      aria-expanded="false"
+    {%endif %}
+    aria-controls="audit-logs-collapse-body">
+      <b>{% trans "Audit Logs" %}</b>
+    </div>
+
+    <!-- audit-logs-start -->
+    <div id="audit-logs-collapse-body" 
+    {% if expanded %}
+      class="collapse show"
+    {% else %}
+      class="collapse"
+    {%endif %}
+
+    aria-labelledby="audit-logs-header" data-parent="#audit-logs-collapse">
+      <div class="card-body card-body-sm">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>{% trans "Action" %}</th>
+              {% if type == 'user' %}
+                <th>{% trans "User" %}</th>
+              {% else %}
+                <th>{% trans "Credential" %}</th>
+              {% endif %}
+              <th>{% trans "When" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for audit in credlogs %}
+            <tr>
+              <td>{{ audit.get_audittype_display }}</td>
+              {% if type == 'user' %}
+                {% if audit.user %}
+                  <td><a href="{% url "staff:user_detail" audit.user.id %}">{{ audit.user.username }}</a></td>
+                {% else %}
+                  <td>{% trans 'deleted user' %}</td>
+                {% endif %}
+              {% else %}
+                <td><a href="{% url "cred:cred_detail" audit.cred.id %}">{{ audit.cred.title }}</a></td>
+              {% endif %}
+              <td>{{ audit.time }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>    
+        </table>
+        <div class="d-flex">
+          <a class="btn btn-sm btn-primary btn-block" role="button" href="{{ morelink }}">{% trans "More logs..." %}</a>
+        </div>
+      </div>
+    </div>
+    <!-- audit-logs-end -->
+    
+  </div>
+</div>

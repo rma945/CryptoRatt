@@ -1,63 +1,60 @@
-{% load static from staticfiles %}
-{% load url_root from ratticweb %}
-
+{% load static %}
 {% load i18n %}
 
 <!DOCTYPE html>
 <html lang="en">
-{% if TEMPLATE_DEBUG %}
-<!--
-{% debug %}
--->
-{% endif %}
+
 <head>
-  <title>{% block title %}{% trans "Rattic" %}{% endblock %}</title>
+  <title>{% block title %}{% trans "CryptoRatt" %}{% endblock %}</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="rattic_url_root" content="{% url_root %}" />
-  {% if user.is_staff and USE_LDAP_GROUPS %}
-    <meta name="rattic_user_staff" content="true" />
+  <link href="{% static "favicon.ico" %}" rel="shortcut icon">
+  <link href=
+  {% if user.is_authenticated %}
+    "{% get_static_prefix %}/bootstrap/css/{{ user.profile.theme }}"
   {% else %}
-    <meta name="rattic_user_staff" content="false" />
+    "{% static "bootstrap/css/bootstrap.default.min.css" %}"
   {% endif %}
-  {% block headarea %}
+   rel="stylesheet" media="screen">
+  <link href="{% static "font-awesome/css/fontawesome.min.css" %}" rel="stylesheet" media="screen">
+  <link href="{% static "font-awesome/css/regular.min.css" %}" rel="stylesheet" media="screen">
+  <link href="{% static "font-awesome/css/solid.min.css" %}" rel="stylesheet" media="screen">
+  <link href="{% static "selectize/css/selectize.bootstrap4.css" %}" rel="stylesheet" media="screen">
+  <link href="{% static "simple-mde/simplemde.min.css" %}" rel="stylesheet" media="screen">
+  <link href="{% static "rattic/css/custom.css" %}" rel="stylesheet">
+  {% block customheader %}
   {% endblock %}
-  <link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet" media="screen">
-  <link href="{% static "selectize/0.8.5/css/selectize.css" %}" rel="stylesheet" media="screen">
-  <link href="{% static "selectize/0.8.5/css/selectize.bootstrap2.css" %}" rel="stylesheet" media="screen">
-  <link href="{% static "rattic/css/base.css" %}" rel="stylesheet" media="screen">
-  <link href="{% static "rattic/css/icons.css" %}" rel="stylesheet" media="screen">
-  <script src="{% static "modernizr/2.6.2/modernizr.js" %}" ></script>
-  <link href="{% static "favicon_new.ico" %}" rel="shortcut icon">
 </head>
+
 <body>
-<div id="wrap">
-    <div class="container-fluid">
-         {% include "navbar.html" %}
-         <div class="row-fluid">
-              <div class="span2 hidden-phone">
-                  {% include "sidebar.html" %}
-              </div>
-              {% block self_span_content %}
-                  <div class="span10">
-                      {% block content %}{% endblock %}
-                  </div>
-              {% endblock %}
-         </div>
-         <div id="push"></div>
+  <div
+    {% if not request.COOKIES.disable_favorites %}
+      class="d-flex"
+    {% else %}
+      class="d-flex disabled"
+    {% endif %}
+    {% if user.is_authenticated %} 
+      id="content-wrapper"
+    {% endif %}
+  >
+    {% if user.is_authenticated %}
+        {% include "sidebar.html" %}
+    {% endif %}
+
+    <div id="page-content-wrapper">
+      {% if user.is_authenticated %}
+        {% include "navbar.html" %}
+      {% endif %}
+
+      <div class="container col-lg-12 col-sm-12 pr-2">
+        {% block content %}
+        {% endblock %}
+      </div>
     </div>
-</div>
-<div id="footer">
-  {% comment %} <div class="container-fluid">
-      <p class="muted credit">{% blocktrans %}Password management powered by{% endblocktrans %} <a href="http://rattic.org/">{% trans "RatticDB" %}</a><span class='hidden-phone'>, {% trans "built by" %} <a href="https://twitter.com/smarthall">@smarthall</a> {% trans "and" %} <a href="https://twitter.com/zemmiph0bia">@zemmiph0bia</a>. | <a href="https://github.com/tildaslash/RatticWeb/issues/new">{% trans "Report an issue" %}</a> | <a href="https://twitter.com/RatticDB">{% trans "Contact Us" %}</a></span></p>
-  </div> {% endcomment %}
-</div>
-<script type="application/javascript" src="{% static "jquery/js/jquery.min.js" %}"></script>
-<script type="application/javascript" src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
-<script type="application/javascript" src="{% static "selectize/0.8.5/js/selectize.min.js" %}"></script>
-<script type="application/javascript" src="{% static "clipboard/clipboard.min.js" %}"></script>
-<script type="application/javascript" src="{% static "clipboard/init.js" %}"></script>
-<script type="application/javascript" src="{% static "sjcl/1.0.8/sjcl.js" %}"></script>
-<script type="application/javascript" src="{% static "rattic/js/newcore.js" %}"></script>
+  </div>
+  <script type="application/javascript" src="{% static "jquery/jquery.min.js" %}"></script>
+  <script type="application/javascript" src="{% static "bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+  <script type="application/javascript" src="{% static "rattic/js/base.js" %}"></script>
+  {% block customjs %}{% endblock %}
 </body>
 </html>

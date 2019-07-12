@@ -7,11 +7,6 @@ import logging
 # south_logger=logging.getLogger('south')
 # south_logger.setLevel(logging.INFO)
 
-# So are the KeepassDB ones
-keepassdb_logger=logging.getLogger('keepassdb')
-keepassdb_logger.setLevel(logging.INFO)
-
-
 class ExcludeAppsTestSuiteRunner(NoseTestSuiteRunner):
     """Override the default django 'test' command, exclude from testing
     apps which we know will fail."""

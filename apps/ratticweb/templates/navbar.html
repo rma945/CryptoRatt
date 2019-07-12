@@ -1,82 +1,118 @@
 {% load static from staticfiles %}
-{% load url_root from ratticweb %}
+{% load custom_tags %}
 {% load i18n %}
 {% url "cred:cred_list" "special" "changeq" as cred_views_viewqueue %}
 
-<div class="navbar">
-    <div class="navbar-inner">
-        <a class="brand" href="{% url_root %}"><img class="logo" src="{% static rattic_icon %}" /><span class="hidden-phone"> {% trans "RatticDB" %}</span></a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="btn d-none d-sm-block" id="favorites-menu-toggle"><i class="fas fa-bars"></i></a>
+    
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation-bar"
+   aria-controls="navigation-bar" aria-expanded="false" aria-label="toggle fav-bar"><i class="fas fa-bars"></i>
+  </button>
 
-        <ul class="nav visible-desktop">
-          {% if user.is_authenticated %}
-            <li {% if pageurl == "cred:project_list" %}class="active"{% endif %}>
-              <a href="{% url "cred:project_list" %}">{% trans "Projects" %}</a>
-            </li>
-            <li {% if pageurl == "cred:cred_list" %}class="active"{% endif %}>
-              <a href="{% url "cred:cred_list" %}">{% trans "Passwords" %}</a>
-            </li>
-              <li {% if pageurl == "cred_views_viewqueue" %}class="active"{% endif %}>
-                <a href="{{ cred_views_viewqueue }}">{% trans "Change Queue" %}{% if changeqcount > 0 %} <span class="badge">{{ changeqcount }}</span>{% endif %}</a>
-              </li>
-            {% if user.is_staff %}
-              <li {% if pageurl == "staff:home" %}class="active"{% endif %}>
-                <a href="{% url "staff:home" %}">{% trans "Staff Management" %}</a>
-              </li>
-            {% endif %}
-            {% if helplinks %}
-              <li {% if pageurl == "help:home" %}class="active"{% endif %}>
-                <a href="{% url "help:home" %}">{% trans "Help" %}</a>
-              </li>
-            {% endif %}
+  <div class="collapse navbar-collapse" id="navigation-bar">
+    <ul class="navbar-nav mr-auto">
+
+      <!-- create new items menu -->
+      <ul class="navbar-nav pull-right">
+        <li class="nav-item dropdown d-none d-sm-block">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="badge badge-primary">
+              <i class="fas fa-plus"></i>
+            </span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url "cred:cred_add" %}"><i class="fas fa-asterisk"></i> {% trans "Create credential" %}</a>
+            <a class="dropdown-item" href="{% url "cred:project_add" %}"><i class="far fa-paper-plane"></i> {% trans "Create project" %}</a>
+          </div>
+        </li>
+      </ul>
+
+      <li class="nav-item {% if request.resolver_match.view_name == "cred:projects" %}active{% endif %}">
+        <a class="nav-link" href="{% url "cred:projects" %}">{% trans "Projects" %}</a>
+      </li>
+
+      <li class="nav-item {% if request.resolver_match.view_name == "cred:cred_list" %}active{% endif %}">
+        <a class="nav-link" href="{% url "cred:cred_list" %}">{% trans "Passwords" %}
+          {% if changeqcount > 0 %}
+            <span class="badge badge-warning" data-toggle="tooltip" data-placement="bottom" title="{% trans "Credentials awaitings for a update!" %}">
+              {{ changeqcount }}
+            </span>
           {% endif %}
-        </ul>
+        </a>
+      </li>
 
-        <ul class="nav hidden-desktop">
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">{% trans "Menu" %} <b class="caret"></b></a>
-            <ul class="dropdown-menu" role="menu">
-              {% if user.is_authenticated %}
-                <li>
-                  <a href="{% url "cred:tags" %}">{% trans "Tags" %}</a>
-                </li>
-                <li>
-                  <a href="{% url "cred:project_list" %}">{% trans "All Projects" %}</a>
-                </li>
-                <li>
-                  <a href="{% url "cred:cred_list" %}">{% trans "All Passwords" %}</a>
-                </li>
-                <li>
-                  <a href="{{ cred_views_viewqueue }}">{% trans "Change Queue" %}{% if changeqcount > 0 %} <span class="badge">{{ changeqcount }}</span>{% endif %}</a>
-                </li>
-                {% if user.is_staff %}
-                  <li>
-                    <a href="{{ staff_views_home }}">{% trans "Staff Management" %}</a>
-                  </li>
-                {% endif %}
-                <li>
-                  <a href="{% url "account:logout" %}">{% trans "Logout" %}</a>
-                </li>
-              {% else %}
-                <li>
-                  <a href="{% url "account:login" %}">{% trans "Login" %}</a>
-                </li>
-              {% endif %}
-              {% if helplinks %}
-                <li>
-                  <a href="{{ help_views_home }}">{% trans "Help" %}</a>
-                </li>
-              {% endif %}
-            </ul>
-          </li>
-          {% if user.is_authenticated %}
-          <li {% if pageurl == "cred:search" %}class="active"{% endif %}>
-            <a href="{% url "cred:search" %}">{% trans "Search" %}</a>
-          </li>
-          {% endif %}
-        </ul>
+      {% if helplinks %}
+        <li class="nav-item {% if request.resolver_match.view_name == "help:home" %}active{% endif %}">
+          <a class="nav-link" href="{% url "help:home" %}">{% trans "Help" %}</a>
+        </li>
+      {% endif %}
 
-        <form class="navbar-search pull-right hidden-phone rattic-cred-search">
-             <input id="search-box" type="search" name="box" class="search-query" placeholder="{% trans "Search" %}">
-        </form>
+      <li class="nav-item d-block d-sm-none">
+        <a class="nav-link" href="{% url "cred:cred_add" %}">{% trans "Create credential" %}</a>
+      </li>
+      <li class="nav-item d-block d-sm-none">
+        <a class="nav-link" href="{% url "cred:project_add" %}">{% trans "Create project" %}</a>
+      </li>
+      <li class="nav-item d-block d-sm-none">
+        <a class="nav-link" href="{% url "account:profile" %}">{% trans "Profile" %}</a>
+      </li>
+      <li class="nav-item d-block d-sm-none">
+        <a class="nav-link" href="{% url "account:logout" %}">{% trans "Logout" %}</a>
+      </li>
+    </ul>
+
+    <div class="col-md-4 ml-auto">
+      <form class="form" id="search-form">
+        <div class="input-group">
+          <input id="search-form-input" type="search" name="search"
+           class="form-control search-query" aria-label="Search" placeholder="{% trans "Search" %}">
+        </div>
+      </form>
     </div>
-</div>
+
+    <!-- account dropdown start-->
+    <ul class="navbar-nav pull-right">
+      <li class="nav-item dropdown d-none d-sm-block">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+          <!-- draw avatar start -->
+          <img class="rounded" 
+          {% if user.profile.avatar %}
+            src="data:image/jpeg;base64, {{ user.profile.avatar|decode_utf8 }}"
+          {% else %}
+            src="{% static "rattic/img/avatar-default.png" %}"
+          {% endif %}
+          width="24" height="24">
+          {{ user.username}}
+          <!-- draw avatar end -->
+          
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url "account:profile" %}"><i class="far fa-user"></i> {% trans "Profile" %}</a>
+          <div class="dropdown-divider"></div>
+
+          <a class="dropdown-item" href="{% url "cred:projects" %}"><i class="far fa-paper-plane"></i>  {% trans "Projects" %}</a>
+          <a class="dropdown-item" href="{% url "cred:cred_list" %}"><i class="fas fa-asterisk"></i></i> {% trans "Passwords" %}</a>
+
+          <a class="dropdown-item" href="{{ cred_views_viewqueue }}"><i class="fas fa-exchange-alt"></i> {% trans "Change queue" %}
+          {% if changeqcount > 0 %}<span class="badge badge-primary">{{ changeqcount }}</span>{% endif %}</a>
+
+          {% if user.is_staff %}
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url "staff:settings" %}"><i class="fas fa-cog"></i> {% trans "Settings" %}</a>
+          {% endif %}
+
+          {% if helplinks %}
+            <a class="dropdown-item" href="{{ help_views_home }}">{% trans "Help" %}</a>
+          {% endif %}
+
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url "account:logout" %}"><i class="fas fa-sign-out-alt"></i> {% trans "Logout" %}</a>
+        </div>
+      </li>
+    </ul>
+   
+    <!--account dropdown end-->
+  </div>
+</nav>

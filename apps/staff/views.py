@@ -1,6 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from base64 import b64encode
+
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.views.generic.edit import UpdateView, FormView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User, Group
@@ -11,108 +13,160 @@ from django_otp import user_has_device, devices_for_user
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 import datetime
+import json
 from django.utils.timezone import now
 from django.utils.timezone import utc
 
-from apps.cred.icon import get_icon_list
 from apps.cred.models import CredAudit, Cred, Tag
 from apps.cred.forms import CredForm
-from apps.staff.models import UserForm, GroupForm, KeepassImportForm, AuditFilterForm
-from apps.staff.decorators import rattic_staff_required
+from apps.staff.forms import UserForm, GroupForm, AuditFilterForm
+from apps.staff.forms import EditUserForm
+from apps.staff.decorators import staff_required
 
 
-@rattic_staff_required
-def home(request):
-    userlist = User.objects.all()
-    grouplist = Group.objects.all()
-    return render(request, 'staff_home.html', {'userlist': userlist, 'grouplist': grouplist})
+@staff_required
+def app_settings(request):
+    return render(request, 'staff_tab_settings.html')
+
+@staff_required
+def users(request):
+    paginator = Paginator(
+        User.objects.all().order_by('username'),
+        request.user.profile.items_per_page
+    )
+    
+    page = request.GET.get('page')
+    users = paginator.get_page(page)    
+    
+    return render(request, 'staff_tab_users.html', {'users': users})
+
+@staff_required
+def groups(request):
+    paginator = Paginator(
+        Group.objects.all().order_by('name'),
+        request.user.profile.items_per_page
+    )
+    
+    page = request.GET.get('page')
+    groups = paginator.get_page(page)    
+
+    return render(request, 'staff_tab_groups.html', {'groups': groups})
+
+@staff_required
+def tags(request):
+    paginator = Paginator(
+        Tag.objects.all().order_by('name'),
+        request.user.profile.items_per_page
+    )
+    
+    page = request.GET.get('page')
+    tags = paginator.get_page(page)    
+
+    return render(request, 'staff_tab_tags.html',  {'tags': tags})
+
+@staff_required
+def trash(request):
+    paginator = Paginator(
+        Cred.objects.filter(is_deleted=True).order_by('title'),
+        request.user.profile.items_per_page
+    )
+    
+    page = request.GET.get('page')
+    creds = paginator.get_page(page)    
+
+    return render(request, 'staff_tab_trash.html',  {'creds': creds})
 
 
-@rattic_staff_required
-def userdetail(request, uid):
+@staff_required
+def user_detail(request, uid):
     user = get_object_or_404(User, pk=uid)
+    credlogs = CredAudit.objects.filter(user=user, cred__group__in=request.user.groups.all())[:5]
+    
+    # disable user if it don`t exists in LDAP
     if settings.LDAP_ENABLED and settings.USE_LDAP_GROUPS:
         from django_auth_ldap.backend import LDAPBackend
         popuser = LDAPBackend().populate_user(user.username)
         if popuser is None:
             user.is_active = False
             user.save()
-            return HttpResponseRedirect(reverse('cred:cred_list',
-                args=('changeadvice', user.id)))
-    credlogs = CredAudit.objects.filter(user=user, cred__group__in=request.user.groups.all())[:5]
-    morelink = reverse("staff:audit", args=('user', user.id))
-    return render(request, 'staff_userdetail.html', {
-        'viewuser': user,
-        'credlogs': credlogs,
-        'morelink': morelink,
-        'hastoken': user_has_device(user)})
 
+    return render(
+        request, 'staff_detail_user.html',
+        {'viewuser': user, 'credlogs': credlogs,})
 
-@rattic_staff_required
-def groupadd(request):
+@staff_required
+def group_detail(request, gid):
+    group = get_object_or_404(Group, pk=gid)
+    return render(request, 'staff_detail_group.html', {'group': group})
+
+@staff_required
+def tag_detail(request, tid):
+    tag = get_object_or_404(Tag, pk=tid)
+    return render(request, 'staff_detail_tag.html', {'tag': tag})
+
+@staff_required
+def group_add(request):
     if request.method == 'POST':
         form = GroupForm(request.POST)
         if form.is_valid():
             form.save()
             request.user.groups.add(form.instance)
-            return HttpResponseRedirect(reverse('staff:home'))
+            return HttpResponseRedirect(reverse('staff:settings'))
     else:
         form = GroupForm()
 
     return render(request, 'staff_groupedit.html', {'form': form})
 
-
-@rattic_staff_required
-def groupdetail(request, gid):
-    group = get_object_or_404(Group, pk=gid)
-    return render(request, 'staff_groupdetail.html', {'group': group})
-
-
-@rattic_staff_required
-def groupedit(request, gid):
+@staff_required
+def edit_group(request, gid):
     group = get_object_or_404(Group, pk=gid)
     if request.method == 'POST':
         form = GroupForm(request.POST, instance=group)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('staff:home'))
+            return HttpResponseRedirect(reverse('staff:groups'))
     else:
         form = GroupForm(instance=group)
 
-    return render(request, 'staff_groupedit.html', {'group': group, 'form': form})
+    return render(request, 'staff_edit_group.html', {'edit_group': group, 'form': form})
 
 
-@rattic_staff_required
-def groupdelete(request, gid):
+@staff_required
+def delete_group(request, gid):
     group = get_object_or_404(Group, pk=gid)
     if request.method == 'POST':
         group.delete()
-        return HttpResponseRedirect(reverse('staff:home'))
-    return render(request, 'staff_groupdetail.html', {'group': group, 'delete': True})
+    return HttpResponseRedirect(reverse('staff:groups'))
 
 
-@rattic_staff_required
-def userdelete(request, uid):
-    user = get_object_or_404(User, pk=uid)
+@staff_required
+def delete_user(request, uid):
     if request.method == 'POST':
+        user = get_object_or_404(User, pk=uid)
         user.delete()
-        return HttpResponseRedirect(reverse('staff:home'))
-    return render(request, 'staff_userdetail.html', {'viewuser': user, 'delete': True})
+    return HttpResponseRedirect(reverse('staff:users'))
+
+@staff_required
+def delete_tag(request, tid):
+    tag = get_object_or_404(Tag, pk=tid)
+    if request.method == 'POST':
+        tag.delete()
+    return HttpResponseRedirect(reverse('staff:tags'))
 
 
-@rattic_staff_required
+@staff_required
 def audit(request, by, byarg):
     auditlog = CredAudit.objects.all()
-    item = None
+    audit_item = None
 
     if by == 'user':
-        item = get_object_or_404(User, pk=byarg)
-        auditlog = auditlog.filter(user=item)
+        audit_item = get_object_or_404(User, pk=byarg)
+        auditlog = auditlog.filter(user=audit_item)
     elif by == 'cred':
-        item = get_object_or_404(Cred, pk=byarg)
-        auditlog = auditlog.filter(cred=item)
+        audit_item = get_object_or_404(Cred, pk=byarg)
+        auditlog = auditlog.filter(cred=audit_item)
     elif by == 'days':
-        item = int(byarg)
+        audit_item = int(byarg)
         try:
             delta = datetime.timedelta(days=int(byarg))
             datefrom = now() - delta
@@ -132,28 +186,27 @@ def audit(request, by, byarg):
     page = request.GET.get('page')
 
     try:
-        logs = paginator.page(page)
+        audit_logs = paginator.page(page)
     except PageNotAnInteger:
-        logs = paginator.page(1)
+        audit_logs = paginator.page(1)
     except EmptyPage:
-        logs = paginator.page(paginator.num_pages)
+        audit_logs = paginator.page(paginator.num_pages)
 
     return render(request, 'staff_audit.html', {
+        'audit_item': audit_item,
         'filterform': form,
-        'logs': logs,
+        'audit_logs': audit_logs,
         'by': by,
-        'item': item,
         'byarg': byarg
     })
 
-
 class NewUser(FormView):
     form_class = UserForm
-    template_name = 'staff_useredit.html'
-    success_url = reverse_lazy('staff:home')
+    template_name = 'staff_edit_user.html'
+    success_url = reverse_lazy('staff:settings')
 
     # Staff access only
-    @method_decorator(rattic_staff_required)
+    @method_decorator(staff_required)
     def dispatch(self, *args, **kwargs):
         return super(NewUser, self).dispatch(*args, **kwargs)
 
@@ -164,174 +217,44 @@ class NewUser(FormView):
         user.save()
         return super(NewUser, self).form_valid(form)
 
-
-class UpdateUser(UpdateView):
-    model = User
-    form_class = UserForm
-    template_name = 'staff_useredit.html'
-    success_url = reverse_lazy('staff:home')
-
-    # Staff access only
-    @method_decorator(rattic_staff_required)
-    def dispatch(self, *args, **kwargs):
-        return super(UpdateUser, self).dispatch(*args, **kwargs)
-
-    # If the password changed, set password to newpass
-    def form_valid(self, form):
-        if form.cleaned_data['newpass'] is not None and len(form.cleaned_data['newpass']) > 0:
-            form.instance.set_password(form.cleaned_data['newpass'])
-        # If user is having groups removed we want change advice for those
-        # groups
-        if form.instance.is_active and 'groups' in form.changed_data:
-            # Get a list of the missing groups
-            missing_groups = []
-            for g in form.instance.groups.all():
-                if g not in form.cleaned_data['groups']:
-                    missing_groups.append('group=' + str(g.id))
-
-            # The user may have just added groups
-            if len(missing_groups) > 0:
-                self.success_url = reverse('cred:cred_list',
-                        args=('changeadvice', form.instance.id)) + '?' + '&'.join(missing_groups)
-        # If user is becoming inactive we want to redirect to change advice
-        if 'is_active' in form.changed_data and not form.instance.is_active:
-            self.success_url = reverse('cred:cred_list', args=('changeadvice', form.instance.id))
-        return super(UpdateUser, self).form_valid(form)
-
-
-@rattic_staff_required
-def upload_keepass(request):
-    # If data was submitted
+@staff_required
+def edit_user(request, uid):
+    edituser = get_object_or_404(User, pk=uid)
+    
     if request.method == 'POST':
-        form = KeepassImportForm(request.user, request.POST, request.FILES)
-        # And it is valid
+        form = EditUserForm(request.POST, request.FILES, request.user, instance=edituser)
+
         if form.is_valid():
-            # Store the data in the session
-            data = {
-                'group': form.cleaned_data['group'].id,
-                'entries': form.cleaned_data['db']['entries'],
-            }
-            request.session['imported_data'] = data
+            saved_form = form.save()
 
-            # Start the user processing entries
-            return HttpResponseRedirect(reverse('staff:import_overview'))
+            if request.FILES.getlist('icon'):
+                edituser_profile = edituser.profile
+                f = request.FILES.getlist('icon')[0]
+                edituser_profile.avatar = b64encode(f.file.read())
+                edituser_profile.save()
+
+            return HttpResponseRedirect(reverse('staff:user_detail', args=(uid,)))
     else:
-        form = KeepassImportForm(request.user)
-    return render(request, 'staff_keepassimport.html', {'form': form})
+        form = EditUserForm(instance=edituser)
+
+    return render(request, 'staff_edit_user.html', {'edit_user':  edituser, 'form': form})
 
 
-@rattic_staff_required
-def import_overview(request):
-    # If there was no session data, return 404
-    if 'imported_data' not in request.session.keys():
-        raise Http404
-
-    # Get the entries to import
-    entries = request.session['imported_data']['entries']
-
-    # If there is nothing left, go back home
-    if len(entries) == 0:
-        del request.session['imported_data']
-        request.session.save()
-        return HttpResponseRedirect(reverse('staff:home'))
-
-    return render(request, 'staff_import_overview.html', {
-        'entries': entries,
-    })
-
-
-@rattic_staff_required
-def import_ignore(request, import_id):
-    # If there was no session data, return 404
-    if 'imported_data' not in request.session.keys():
-        raise Http404
-
-    # Get the entry we are concerned with
-    try:
-        del request.session['imported_data']['entries'][int(import_id)]
-        request.session.save()
-    except IndexError:
-        raise Http404
-
-    return HttpResponseRedirect(reverse('staff:import_overview'))
-
-
-@rattic_staff_required
-def import_process(request, import_id):
-    # If there was no session data, return 404
-    if 'imported_data' not in request.session.keys():
-        raise Http404
-
-    # Get the entry we are concerned with
-    try:
-        entry = request.session['imported_data']['entries'][int(import_id)]
-    except IndexError:
-        raise Http404
-
-    # Get the group
-    groupid = request.session['imported_data']['group']
-    try:
-        group = Group.objects.get(pk=groupid)
-    except Group.DoesNotExist:
-        del request.session['imported_data']
-        raise Http404
-
+# TODO: Move to API
+@staff_required 
+def deactivate_user(request):
     if request.method == 'POST':
-        # Try and import what we have now
+        request_json = json.loads(request.body)
 
-        # TODO: implement file uploads
+        user = get_object_or_404(User, pk=request_json['user_id'])
+        user.is_active = request_json['is_active']
+        user.save()
 
-        # Build the form
-        form = CredForm(request.user, request.POST, request.FILES)
-
-        # Do we have enough data to save?
-        if form.is_valid():
-
-            # Save the credential
-            form.save()
-
-            # Write the audit log
-            CredAudit(
-                audittype=CredAudit.CREDADD,
-                cred=form.instance,
-                user=request.user,
-            ).save()
-
-            # Remove the entry we're importing
-            del request.session['imported_data']['entries'][int(import_id)]
-            request.session.save()
-
-            # Go back to the overview
-            return HttpResponseRedirect(reverse('staff:import_overview'))
-
-    else:
-        # Init the cred, and create the form
-        processed = dict(entry)
-
-        # Create all the tags
-        tlist = []
-        for t in processed['tags']:
-            (tag, create) = Tag.objects.get_or_create(name=t)
-            tlist.append(tag)
-        processed['tags'] = tlist
-
-        # Setup the group
-        processed['group'] = group
-
-        # If the icon is empty set it
-        if 'iconname' not in processed.keys():
-            processed['iconname'] = 'Key.png'
-
-        # Create the form
-        form = CredForm(request.user, processed, {})
-
-    return render(request, 'staff_import_process.html', {
-        'form': form,
-        'icons': get_icon_list(),
-    })
+        return JsonResponse({'user_id':request_json['user_id'], 'is_active': user.is_active})
+    return Http404
 
 
-@rattic_staff_required
+@staff_required
 def credundelete(request, cred_id):
     cred = get_object_or_404(Cred, pk=cred_id)
 
@@ -357,8 +280,8 @@ def credundelete(request, cred_id):
     return render(request, 'cred_detail.html', {'cred': cred, 'lastchange': lastchange, 'action': reverse('cred:cred_delete', args=(cred_id,)), 'undelete': True})
 
 
-@rattic_staff_required
-def removetoken(request, uid):
+@staff_required
+def delete_token(request, uid):
     # Grab the user
     user = get_object_or_404(User, pk=uid)
 

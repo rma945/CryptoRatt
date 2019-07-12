@@ -3,13 +3,14 @@
 RatticWeb is the website part of the Rattic password management solution, which allows you to easily manage your users and passwords.
 
 If you decide to use RatticWeb you should take the following into account:
+
 * The webpage should be served over HTTPS only, apart from a redirect from normal HTTP.
 * The filesystem in which the database is stored should be protected with encryption.
 * The access logs should be protected.
 * The machine which serves RatticWeb should be protected from access.
 * Tools like [OSSEC](http://www.ossec.net/) are your friend.
 
-# Changes
+## Changes
 
 * added SAML2 based auth
 * added JS based copy button
@@ -19,15 +20,16 @@ If you decide to use RatticWeb you should take the following into account:
 * added projects
 * added multiple attachments field
 
-# How to migrate from Rattic 1.3.1 
+## How to migrate from Rattic 1.3.1
 
-#### Update python modules
+### Update python modules
 
+```bash
+pip3 install -U -r requirements/requirements-mysql.txt
 ```
-pip3 install -U -r requirements-mysql.txt
-```
 
-#### system migrations
+### system migrations
+
 ```bash
 ./manage.py migrate contenttypes 0001_initial --fake
 ./manage.py migrate contenttypes 0002_remove_content_type_name
@@ -58,11 +60,16 @@ pip3 install -U -r requirements-mysql.txt
 ./manage.py migrate admin 0002_logentry_remove_auto_add
 ./manage.py migrate admin 0003_logentry_add_action_flag_choices
 ```
+
 #### app migrations
+
 ```bash
 ./manage.py migrate cred 0001_initial --fake
 ./manage.py migrate cred 0002_add_projects
 ./manage.py migrate cred 0003_upgrade_to_django22 -v 3
 ./manage.py migrate account 0001_initial --fake
 ./manage.py migrate account 0002_upgrade_to_django22
+./manage.py migrate account 0003_upgrade_to_boostrap
+./manage.py migrate cred 0004_upgrade_to_boostrap
+./manage.py migrate cred 0005_credential_icons
 ```

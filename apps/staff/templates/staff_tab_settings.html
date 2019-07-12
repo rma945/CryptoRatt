@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="col-md-12 pt-2">
+  <nav>
+    <div class="nav nav-tabs" role="tablist">
+      <a class="nav-item nav-link active" href={% url 'staff:settings' %}>{% trans 'Settings' %}</a>
+      <a class="nav-item nav-link" href={% url 'staff:users' %}>{% trans 'Users' %}</a>
+      <a class="nav-item nav-link" href={% url 'staff:groups' %}>{% trans 'Groups' %}</a>
+      <a class="nav-item nav-link" href={% url 'staff:tags' %}>{% trans 'Tags' %}</a>
+      <a class="nav-item nav-link" href={% url 'staff:trash' %}>{% trans 'Trash box' %}</a>
+    </div>
+  </nav>
+
+  <div class="tab-content border-right border-left border-bottom">
+    </br>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block customjs %}
+  <script type="application/javascript" src="{% static "rattic/js/account_profile.js" %}"></script>
+  <script type="application/javascript" src="{% static "selectize/js/selectize.min.js" %}"></script>
+{% endblock %}

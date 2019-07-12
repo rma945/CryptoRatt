@@ -1,73 +1,19 @@
+from base64 import b64encode, b64decode
+
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-from django.http import HttpResponseRedirect
-from django.http import HttpResponse
-from django.http import Http404
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse, Http404
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.translation import ugettext as _
 
-from apps.cred.models import Project, Cred, Attachment, CredAudit, Tag, CredChangeQ
+from apps.cred.models import Project, Cred, Attachment, CredAudit, Tag, CredChangeQ, CredentialIcon
 from apps.cred.search import cred_search
 from apps.cred.forms import ExportForm, ProjectForm, CredForm, TagForm
-from apps.cred.exporters import export_keepass
-from apps.cred.icon import get_icon_list
+from apps.staff.decorators import staff_required
 
 from django.contrib.auth.models import Group
-
-
-@login_required
-def download(request, cfilter="special", value="all"):
-    if request.method == 'POST':  # If the form has been submitted...
-
-        form = ExportForm(request.POST)  # A form bound to the POST data
-        if form.is_valid():  # All validation rules pass
-
-            # Get the creds to export
-            (search_object, creds) = cred_search(request.user, cfilter, value)
-            filename = 'RatticExport.kdb'
-
-            # Decide on the filename
-            if cfilter == 'tag':
-                filename = 'RatticExportTag-%s.kdb' % search_object.name
-
-            elif cfilter == 'group':
-                filename = 'RatticExportGroup-%s.kdb' % search_object.name
-
-            elif cfilter == 'search':
-                filename = 'RatticExportSearch-%s.kdb' % search_object
-
-            elif cfilter == 'special' and value == 'all':
-                filename = 'RatticExportAll.kdb'
-
-            elif cfilter == 'special' and value == 'trash':
-                filename = 'RatticExportTrash.kdb'
-
-            else:
-                raise Http404
-
-            # Make the Audit logs
-            auditlogs = []
-            for c in creds:
-                auditlogs.append(CredAudit(
-                    audittype=CredAudit.CREDEXPORT,
-                    cred=c,
-                    user=request.user,
-                ))
-
-            # Create all Audit logs at once
-            CredAudit.objects.bulk_create(auditlogs)
-
-            # Give the Keepass file to the user
-            return export_keepass(creds, form.cleaned_data['password'], filename)
-    else:
-        form = ExportForm()  # An unbound form
-
-    return render(request, 'cred_export.html', {
-        'form': form,
-    })
-
 
 @login_required
 def list(request, cfilter='special', value='all', sortdir='ascending', sort='title', page=1):
@@ -177,55 +123,64 @@ def list(request, cfilter='special', value='all', sortdir='ascending', sort='tit
     viewdict['credlist'] = cred
 
     # Create the form for exporting
-    viewdict['exportform'] = ExportForm()
+    # viewdict['exportform'] = ExportForm()
 
     return render(request, 'cred_list.html', viewdict)
 
 @login_required
-def project_list(request, page=1):
+def projects(request):
+    paginator = Paginator(
+        Project.objects.all().order_by('title'),
+        request.user.profile.items_per_page
+    )
     
-    # paginator
-    paginator = Paginator(Project.objects.all(), request.user.profile.items_per_page)
-    try:
-        proj = paginator.page(page)
-    except PageNotAnInteger:
-        proj = paginator.page(1)
-    except EmptyPage:
-        proj = paginator.page(paginator.num_pages)
-    viewdict = { 
-        'projectlist': proj,
-        'page': str(page).lower(),
-    }
+    page = request.GET.get('page')
+    projects = paginator.get_page(page)
 
-    return render(request, 'project_list.html', viewdict)
+    return render(request, 'project_list.html', {'projects': projects})
 
 @login_required
 def project_detail(request, project_id):
-    # Restrict project view only to staff members
-    if not request.user.is_staff:
-        raise Http404
 
     project = get_object_or_404(Project, pk=project_id)
 
-    return render(request, 'project_detail.html', {'project': project})
+    paginator = Paginator(
+        Cred.objects.filter(project=project,is_deleted=False, latest=None).order_by('title'),
+        request.user.profile.items_per_page
+    )
+    
+    page = request.GET.get('page')
+    credentials = paginator.get_page(page)
 
-@login_required
+    return render(request, 'project_detail.html', {'project': project, 'credentials': credentials})
+
+@staff_required
 def project_add(request):
-    # Restrict project add only to staff members
     if not request.user.is_staff:
         raise Http404
 
     if request.method == 'POST':
         form = ProjectForm(request.user, request.POST)
+        
         if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse("cred:project_list"))
+            saved_form = form.save()
+
+            if request.FILES.getlist('icon'):
+                f = request.FILES.getlist('icon')[0]
+                saved_form.icon = b64encode(f.file.read())
+                saved_form.save()
+            
+            if form.cleaned_data['credentials']:
+                for c in form.cleaned_data['credentials']:
+                    saved_form.cred_set.add(c)
+            
+            return HttpResponseRedirect(reverse("cred:project_detail", args=(saved_form.id,)))
     else:
         form = ProjectForm(request.user)
 
     return render(request, 'project_edit.html', {'form': form, 'action':reverse("cred:project_add")})
 
-@login_required
+@staff_required
 def project_edit(request, project_id):
     if not request.user.is_staff:
         raise Http404
@@ -235,9 +190,20 @@ def project_edit(request, project_id):
 
     if request.method == 'POST':
         form = ProjectForm(request.user, request.POST, request.FILES, instance=project)
-
+        
+        print('form status:', form.is_valid())
         if form.is_valid():
-            form.save()
+            saved_form = form.save()
+
+            if request.FILES.getlist('icon'):
+                f = request.FILES.getlist('icon')[0]
+                saved_form.icon = b64encode(f.file.read())
+                saved_form.save()
+
+            if form.cleaned_data['credentials']:
+                saved_form.cred_set.clear()
+                for c in form.cleaned_data['credentials']:
+                    saved_form.cred_set.add(c)
 
         if next is None:
             return HttpResponseRedirect(reverse("cred:project_detail", args=(project.id,)))
@@ -257,19 +223,33 @@ def project_edit(request, project_id):
         }
     )
 
-
-@login_required
+@staff_required
 def project_delete(request, project_id):
-    # Restrict project delete only to staff members
     if not request.user.is_staff:
         raise Http404
 
-    project = get_object_or_404(Project, pk=project_id)
-
-    if request.method == 'GET':
+    if request.method == 'POST':
+        project = get_object_or_404(Project, pk=project_id)
         project.delete()
 
-    return HttpResponseRedirect(reverse("cred:project_list"))
+    return HttpResponseRedirect(reverse("cred:projects"))
+
+# TODO: MOVE TO API
+@login_required
+def set_favorite_project(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+    
+    if request.method == 'POST':
+        if project in request.user.profile.favourite_projects.all():
+            json_data = {'action': 'removed'}            
+            request.user.profile.favourite_projects.remove(project)
+        else:
+            json_data = {'action': 'added'}            
+            request.user.profile.favourite_projects.add(project)
+        return JsonResponse(json_data)
+        
+    return HttpResponseRedirect(reverse('cred:projects'))
+
 
 @login_required
 def tags(request):
@@ -380,16 +360,17 @@ def add(request):
                     ).save()
             
             CredAudit(audittype=CredAudit.CREDADD, cred=form.instance, user=request.user).save()
-            return HttpResponseRedirect(reverse('cred:cred_list'))
+            return HttpResponseRedirect(reverse('cred:cred_detail', args=(saved_form.id,)))
     else:
         form = CredForm(request.user)
+        icons = CredentialIcon.objects.all().order_by('name')
 
     return render(
         request, 'cred_edit.html',
         {
             'form': form,
             'action':reverse('cred:cred_add'),
-            'icons': get_icon_list()
+            'icons': icons,
         }
     )
 
@@ -446,20 +427,22 @@ def edit(request, cred_id):
                 else:
                     return HttpResponseRedirect(next)
     else:
-        # get all attachments
-        attachments = Attachment.objects.filter(credential=cred)
         form = CredForm(request.user, instance=cred)
         CredAudit(audittype=CredAudit.CREDPASSVIEW, cred=cred, user=request.user).save()
 
+    # get all attachments
+    attachments = Attachment.objects.filter(credential=cred)
+    icons = CredentialIcon.objects.all().order_by('name')
+    
     return render(
         request, 'cred_edit.html',
         {
             'form': form,
             'action': reverse('cred:cred_edit', args=(cred.id,)),
             'next': next,
-            'icons': get_icon_list(),
             'cred': cred,
             'attachments': attachments,
+            'icons': icons,
         }
     )
 
@@ -480,12 +463,13 @@ def delete(request, cred_id):
         lastchange = _("Unknown (Logs deleted)")
 
     # Check user has perms (user must be member of the password owner group)
-    if not cred.is_owned_by(request.user):
+    if cred.is_owned_by(request.user) or request.user.is_staff:
+        if request.method == 'POST':
+            CredAudit(audittype=CredAudit.CREDDELETE, cred=cred, user=request.user).save()
+            cred.delete()
+            return HttpResponseRedirect(reverse('cred:cred_list'))
+    else:
         raise Http404
-    if request.method == 'POST':
-        CredAudit(audittype=CredAudit.CREDDELETE, cred=cred, user=request.user).save()
-        cred.delete()
-        return HttpResponseRedirect(reverse('cred:cred_list'))
 
     CredAudit(audittype=CredAudit.CREDVIEW, cred=cred, user=request.user).save()
 
@@ -494,16 +478,46 @@ def delete(request, cred_id):
         {
             'cred': cred,
             'lastchange': lastchange,
-            'action': reverse('cred:cred_delete', args=(cred_id,)),
-            'delete': True
+            'action': reverse('cred:cred_edit', args=(cred_id,)),
         }
     )
 
+# TODO: MOVE TO API
+@login_required
+def set_favorite_credential(request, cred_id):
+    credential = get_object_or_404(Cred, pk=cred_id)
+
+    if request.method == 'POST':
+        if credential in request.user.profile.favourite_credentials.all():
+            json_data = {'action': 'removed'}
+            request.user.profile.favourite_credentials.remove(credential)
+        else:
+            json_data = {'action': 'added'}
+            request.user.profile.favourite_credentials.add(credential)
+        return JsonResponse(json_data)
+
+    return HttpResponseRedirect(reverse('cred:cred_list'))
+
 
 @login_required
-def search(request):
-    return render(request, 'cred_search.html', {})
+def cred_undelete(request, cred_id):
+    if request.method == 'POST':
+        if request.user.is_staff:
+            cred = get_object_or_404(Cred, pk=cred_id)
 
+            if cred.latest is not None:
+                raise Http404
+
+            cred.is_deleted = False
+            cred.save()
+
+            CredAudit(audittype=CredAudit.CREDUNDELETE,
+                      cred=cred, user=request.user).save()
+            CredAudit(audittype=CredAudit.CREDVIEW,
+                      cred=cred, user=request.user).save()
+        return HttpResponseRedirect(reverse('cred:cred_detail', args=(cred_id,)))
+
+    return HttpResponseRedirect(reverse('cred:cred_list'))
 
 @login_required
 def tagadd(request):
@@ -551,52 +565,7 @@ def addtoqueue(request, cred_id):
     CredAudit(audittype=CredAudit.CREDSCHEDCHANGE, cred=cred, user=request.user).save()
     return HttpResponseRedirect(reverse('cred:cred_list', args=('special', 'changeq')))
 
-
-@login_required
-def bulkdelete(request):
-    todel = Cred.objects.filter(id__in=request.POST.getlist('credcheck'))
-    for c in todel:
-        if c.is_owned_by(request.user) and c.latest is None:
-            CredAudit(audittype=CredAudit.CREDDELETE, cred=c, user=request.user).save()
-            c.delete()
-
-    redirect = request.POST.get('next', reverse('cred:cred_list'))
-    return HttpResponseRedirect(redirect)
-
-
-@login_required
-def bulkundelete(request):
-    toundel = Cred.objects.filter(id__in=request.POST.getlist('credcheck'))
-    for c in toundel:
-        if c.is_owned_by(request.user):
-            CredAudit(audittype=CredAudit.CREDADD, cred=c, user=request.user).save()
-            c.is_deleted = False
-            c.save()
-
-    redirect = request.POST.get('next', reverse('cred:cred_list'))
-    return HttpResponseRedirect(redirect)
-
-
-@login_required
-def bulkaddtoqueue(request):
-    tochange = Cred.objects.filter(id__in=request.POST.getlist('credcheck'))
-    for c in tochange:
-        if c.is_owned_by(request.user) and c.latest is None:
-            CredAudit(audittype=CredAudit.CREDSCHEDCHANGE, cred=c, user=request.user).save()
-            CredChangeQ.objects.add_to_changeq(c)
-
-    redirect = request.POST.get('next', reverse('cred:cred_list'))
-    return HttpResponseRedirect(redirect)
-
-
-@login_required
-def bulktagcred(request):
-    tochange = Cred.objects.filter(id__in=request.POST.getlist('credcheck'))
-    tag = get_object_or_404(Tag, pk=request.POST.get('tag'))
-    for c in tochange:
-        if c.is_owned_by(request.user) and c.latest is None:
-            CredAudit(audittype=CredAudit.CREDMETACHANGE, cred=c, user=request.user).save()
-            c.tags.add(tag)
-
-    redirect = request.POST.get('next', reverse('cred:cred_list'))
-    return HttpResponseRedirect(redirect)
+#TODO: move to API
+def get_icon(self, cred_id):
+    credential_icon = get_object_or_404(CredentialIcon, pk=cred_id)
+    return HttpResponse(b64decode(credential_icon.icon), content_type="image/png")

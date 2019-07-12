@@ -73,5 +73,5 @@ def cred_search(user, cfilter='special', value='all', sortdir='ascending', sort=
         cred_list = cred_list.order_by('latest', '-' + sort)
     else:
         raise Http404
-
+       
     return (search_object, cred_list)

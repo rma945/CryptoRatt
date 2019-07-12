@@ -1,0 +1,253 @@
+/* favorites bar */
+
+#content-wrapper {
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#content-wrapper.disabled {
+    padding-left: 250px;
+}
+
+#sidebar {
+    z-index: 1000;
+    position: fixed;
+    left: 250px;
+    width: 0;
+    height: 100%;
+    margin-left: -250px;
+    /* overflow-y: auto; */
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#content-wrapper.disabled #sidebar {
+    width: 250px;
+}
+
+#page-content-wrapper {
+    width: 100%;
+    position: absolute;
+}
+
+#content-wrapper.disabled #page-content-wrapper {
+    position: absolute;
+    margin-right: -250px;
+}
+
+@media(min-width:768px) {
+    #content-wrapper {
+        padding-left: 250px;
+    }
+
+    #content-wrapper.disabled {
+        padding-left: 0;
+    }
+
+    #sidebar {
+        width: 250px;
+    }
+
+    #content-wrapper.disabled #sidebar {
+        width: 0;
+    }
+
+    #page-content-wrapper {
+        position: relative;
+    }
+
+    #content-wrapper.disabled #page-content-wrapper {
+        position: relative;
+        margin-right: 0;
+    }
+}
+
+/* custom thin styles */
+.favorites-card {
+    border-radius: 0px;
+    border: 1px solid rgba(0,0,0,.125);
+    border-left: 0px;
+}
+
+.no-links {
+    text-decoration: none;
+      -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+/* add overflow for a favorites list */
+.favorites-list li { 
+  text-overflow: ellipsis;
+  overflow: hidden; 
+  width: 220px; 
+  white-space: nowrap;
+}
+
+.favorites-list a {
+    font-size: 1em;
+    text-decoration: none;
+      -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+.no-margin-right {
+    margin:0px;
+}
+
+.alert-sm {
+    padding: .3rem .5rem;
+    margin-bottom: .2rem
+}
+
+.card-body-sm {
+    padding: .8rem .8rem;
+}
+
+.card-header-sm {
+    padding: .3rem .8rem;
+}
+
+#attachments-header, #description-header, #permissions-header, #audit-logs-header  {
+    margin-bottom: 0px
+}
+
+.badge-big {
+    padding: .45em;
+}
+
+/* disable up-down arrows in a numbers imput type */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none;
+  margin: 0; 
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* disable text selection for a different browsers */
+.noselect a:hover, a:link, a:active {
+  text-decoration: none;
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+/* cred_detail.html */
+#password-field, #username-field {
+    background-color: white;
+}
+
+/* markdown table style */
+.description-body th {
+    border:1px solid gray;
+}
+
+.description-body td {
+    border:1px solid gray;
+}
+
+/* cred_edit.html */
+.CodeMirror {
+    height: 200px;
+}
+
+.cred-image {
+    padding: 0;
+}
+
+.form-control-small {
+    height: calc(1em + .75rem + 2px);
+}
+
+.cred-card-attachment {
+    border:0;
+    border-radius: 0;
+    border-bottom: 1px solid rgba(0,0,0, .125);
+    border-left: 1px solid rgba(0,0,0, .125);
+    border-right: 1px solid rgba(0,0,0, .125);
+}
+
+/* overwrite mde styles */
+.CodeMirror, .CodeMirror-scroll {
+    min-height: 100px;
+}
+
+/* overwrite selectize styles */
+.selectize-control.multi .selectize-input > div {
+    background: #007bff;
+    color:#fff;
+    border: 0px solid #fff;
+    padding: 1px 4px;
+}
+
+.selectize-control.multi .selectize-input > div.active {
+    background: #007bff;
+    color: #fff;
+    border: 0px solid #fff;
+}
+
+.selectize-control.plugin-remove_button [data-value] .remove {
+    border-left: 1px solid #fff;
+}
+
+.password-length-slider {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    border-radius: 5px;
+}
+
+.password-length-slider:hover {
+  opacity: 1; /* Fully shown on mouse-over */
+}
+
+.password-length-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #007bff;
+  cursor: pointer;
+  border-radius: 25px;
+}
+
+.password-length-slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #007bff;
+  cursor: pointer;
+}
+
+.password-length-input {
+    text-align: center; 
+    border: 0px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    border-bottom: 2px solid gray;
+    max-width: 64px;
+    color: black;
+}

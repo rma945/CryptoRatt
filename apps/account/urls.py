@@ -23,9 +23,9 @@ urlpatterns = [
     path('deleteapikey/<int:key_id>/', deleteapikey, {}, name="delete_api_key"),
 
     path('login/', RatticTFALoginView.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(), {'next_page': settings.RATTIC_ROOT_URL}, name="logout"),
+    path('logout/', LogoutView.as_view(), {'next_page': settings.LOGIN_URL}, name="logout"),
 
-    path('killsession/<slug:pk>/', RatticSessionDeleteView.as_view(), {'next_page': settings.RATTIC_ROOT_URL}, name='kill_session'),
+    path('killsession/<slug:pk>/', RatticSessionDeleteView.as_view(), {'next_page': settings.LOGIN_URL}, name='kill_session'),
 
     path('generate_api_key', RatticTFAGenerateApiKey.as_view(), name="generate_api_key"),
     path('two_factor/disable/', RatticTFADisableView.as_view(), name='tfa_disable'),
@@ -35,7 +35,7 @@ urlpatterns = [
 ]
 
 # URLs we don't want enabled with LDAP
-if not settings.LDAP_ENABLED and not settings.SAML_ENABLED:
+if not settings.LDAP_ENABLED and not settings.SAML_ENABLED or settings.DEBUG:
     urlpatterns += [
         path('reset/', PasswordResetView.as_view(),
             {
