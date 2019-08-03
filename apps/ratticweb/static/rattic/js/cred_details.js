@@ -131,17 +131,21 @@ function tooltipToggle(element) {
 $(document).ready(function () {
 
   // initialize js clipboards and add default unselect actions on it
-  var urlClipboard = new ClipboardJS('#copy-url-button');
+  var urlClipboard = new ClipboardJS('#copy-url-button', {
+    text: function () {   
+      url = $('#copy-url-button').attr('data-clipboard-target');
+      return $(url).attr('href');
+    }
+  });
   var usernameClipboard = new ClipboardJS('#copy-username-button');
   var passwordClipboard = new ClipboardJS('#copy-password-button-hidden');
   
   urlClipboard.on('success', function (e) {
-    e.clearSelection();
-    tooltipToggle($('#copy-url-button'))
+    tooltipToggle($('#copy-url-button'));
   });
   
   usernameClipboard.on('success', function(e) {
-    e.clearSelection();
+    e.clearSelection();    
     tooltipToggle($('#copy-username-button'))
   });
   
