@@ -1,9 +1,13 @@
 from base64 import b64encode
 
+from django.conf import settings
+from django.contrib.auth import logout
+from django.http import JsonResponse
+
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.urls import reverse
-from apps.account.models import ApiKey
+from apps.account.models import ApiKey, UserSession
 from apps.account.forms import UserProfileForm, LDAPPassChangeForm, ApiKeyForm
 
 from django.views.decorators.debug import sensitive_post_parameters
@@ -16,7 +20,6 @@ from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.forms import SetPasswordForm
 from django.utils import timezone
 
-from user_sessions.views import SessionDeleteView
 from two_factor.utils import default_device
 from two_factor.views import DisableView, BackupTokensView, SetupView, LoginView
 from datetime import timedelta
@@ -30,7 +33,7 @@ def rattic_change_password(request, *args, **kwargs):
         return PasswordChangeView(request, *args, **kwargs)
     else:
         # If a user is setting an initial password
-        kwargs['password_change_form'] = SetPasswordForm
+        kwargs["password_change_form"] = SetPasswordForm
         return PasswordChangeView(request, *args, **kwargs)
 
 
@@ -46,52 +49,54 @@ def profile(request):
     except IndexError:
         backup_tokens = 0
 
-    # Get a list of the users current sessions
-    sessions = request.user.session_set.filter(expire_date__gt=now())
+    # Get list of current user sessions
+    sessions = UserSession.objects.filter(user_id=request.user.id)
 
     # Get the current session key
     session_key = request.session.session_key
 
     # Process the form if we have data coming in
-    if request.method == 'POST':
+    if request.method == "POST":
         form = UserProfileForm(request.POST, instance=request.user.profile)
 
         if form.is_valid():
             saved_form = form.save()
 
-            if request.FILES.getlist('icon'):
-                f = request.FILES.getlist('icon')[0]
+            if request.FILES.getlist("icon"):
+                f = request.FILES.getlist("icon")[0]
                 saved_form.avatar = b64encode(f.file.read())
                 saved_form.save()
-
-
     else:
         form = UserProfileForm(instance=request.user.profile)
 
     # Show the template
-    return render(request, 'account_profile.html', {
-        'keys': keys,
-        'sessions': sessions,
-        'session_key': session_key,
-        'form': form,
-        'user': request.user,
-        'default_device': default_device(request.user),
-        'backup_tokens': backup_tokens,
-    })
+    return render(
+        request,
+        "account_profile.html",
+        {
+            "keys": keys,
+            "sessions": sessions,
+            "session_key": session_key,
+            "form": form,
+            "user": request.user,
+            "default_device": default_device(request.user),
+            "backup_tokens": backup_tokens,
+        },
+    )
 
 
 @login_required
 def newapikey(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         newkey = ApiKey(user=request.user, active=True)
         form = ApiKeyForm(request.POST, instance=newkey)
         if form.is_valid():
             form.save()
-        return HttpResponseRedirect(reverse('account:profile'))
+        return HttpResponseRedirect(reverse("account:profile"))
     else:
         form = ApiKeyForm()
 
-    return HttpResponseRedirect(reverse('account:profile'))
+    return HttpResponseRedirect(reverse("account:profile"))
 
 
 @login_required
@@ -101,26 +106,29 @@ def deleteapikey(request, key_id):
     if key.user != request.user:
         raise Http404
 
-    if request.method == 'POST':
+    if request.method == "POST":
         key.delete()
-        return HttpResponseRedirect(reverse('account:profile'))
+        return HttpResponseRedirect(reverse("account:profile"))
 
-    return HttpResponseRedirect(reverse('account:profile'))
+    return HttpResponseRedirect(reverse("account:profile"))
 
 
 # Stolen from django.contrib.auth.views
 # modifed to support LDAP errors
 @sensitive_post_parameters()
 @login_required
-def ldap_password_change(request,
-                    template_name='account_changepass.html',
-                    post_change_redirect='/account/',
-                    password_change_form=LDAPPassChangeForm,
-                    current_app=None, extra_context=None):
+def ldap_password_change(
+    request,
+    template_name="account_changepass.html",
+    post_change_redirect="/account/",
+    password_change_form=LDAPPassChangeForm,
+    current_app=None,
+    extra_context=None,
+):
     import ldap
 
     if post_change_redirect is None:
-        post_change_redirect = reverse('account.views.rattic_change_password_done')
+        post_change_redirect = reverse("account.views.rattic_change_password_done")
     if request.method == "POST":
         form = password_change_form(user=request.user, data=request.POST)
         if form.is_valid():
@@ -128,49 +136,58 @@ def ldap_password_change(request,
                 form.save()
                 return HttpResponseRedirect(post_change_redirect)
             except ldap.LDAPError as e:
-                return render(request, 'account_ldaperror.html', {
-                    'desc': e.message['desc'],
-                    'info': e.message['info'],
-                })
+                return render(
+                    request,
+                    "account_ldaperror.html",
+                    {"desc": e.message["desc"], "info": e.message["info"]},
+                )
     else:
         form = password_change_form(user=request.user)
-    context = {
-        'form': form,
-    }
+    context = {"form": form}
     if extra_context is not None:
         context.update(extra_context)
-    return TemplateResponse(request, template_name, context,
-                            current_app=current_app)
+    return TemplateResponse(request, template_name, context, current_app=current_app)
 
-class RatticSessionDeleteView(SessionDeleteView):
-    def get_success_url(self):
-        return reverse('account:profile')
+
+# TODO: move to API
+@login_required
+def RatticSessionDeleteView(request, session_id):
+    if session_id == request.session.session_key:
+        logout(request)
+        return JsonResponse({"logout": True})
+
+    return JsonResponse({"logout": False})
+
 
 class RatticTFADisableView(DisableView):
-    template_name = 'account_tfa_disable.html'
-    redirect_url = 'account:profile'
+    template_name = "account_tfa_disable.html"
+    redirect_url = "account:profile"
+
 
 class RatticTFABackupTokensView(BackupTokensView):
-    template_name = 'account_tfa_backup_tokens.html'
-    redirect_url = 'tfa_backup'
+    template_name = "account_tfa_backup_tokens.html"
+    redirect_url = "tfa_backup"
+
 
 class RatticTFASetupView(SetupView):
-    template_name = 'account_tfa_setup.html'
-    qrcode_url = 'account:tfa_qr'
-    redirect_url = 'account:profile'
+    template_name = "account_tfa_setup.html"
+    qrcode_url = "account:tfa_qr"
+    redirect_url = "account:profile"
+
 
 class RatticTFALoginView(LoginView):
-    template_name = 'account_tfa_login.html'
+    template_name = "account_tfa_login.html"
+
 
 class RatticTFAGenerateApiKey(LoginView):
     def get(self, request, *args, **kwargs):
         res = HttpResponse()
-        res.set_cookie("csrftoken", request.META['CSRF_COOKIE'])
-        res.status_code=405
+        res.set_cookie("csrftoken", request.META["CSRF_COOKIE"])
+        res.status_code = 405
         return res
 
     def render(self, form=None, renderer=None, **kwargs):
-        if self.steps.current == 'token':
+        if self.steps.current == "token":
             device = self.get_device()
             device.generate_challenge()
             res = HttpResponse(device.persistent_id)
@@ -181,7 +198,11 @@ class RatticTFAGenerateApiKey(LoginView):
         login(self.request, self.get_user())
         ApiKey.delete_expired(user=self.request.user)
 
-        newkey = ApiKey(user=self.request.user, active=True, expires=timezone.now() + timedelta(minutes=5))
+        newkey = ApiKey(
+            user=self.request.user,
+            active=True,
+            expires=timezone.now() + timedelta(minutes=5),
+        )
         form = ApiKeyForm({"name": uuid.uuid1()}, instance=newkey)
         if form.is_valid():
             form.save()
