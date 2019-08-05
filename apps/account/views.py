@@ -16,7 +16,6 @@ from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.forms import SetPasswordForm
 from django.utils import timezone
 
-from user_sessions.views import SessionDeleteView
 from two_factor.utils import default_device
 from two_factor.views import DisableView, BackupTokensView, SetupView, LoginView
 from datetime import timedelta
@@ -142,7 +141,7 @@ def ldap_password_change(request,
     return TemplateResponse(request, template_name, context,
                             current_app=current_app)
 
-class RatticSessionDeleteView(SessionDeleteView):
+class RatticSessionDeleteView(PasswordChangeView):
     def get_success_url(self):
         return reverse('account:profile')
 
