@@ -22,6 +22,7 @@ from apps.account.views import (
     ldap_password_change,
 )
 
+
 app_name = "account"
 
 urlpatterns = [
@@ -39,7 +40,7 @@ urlpatterns = [
 ]
 
 # URLs we don't want enabled with LDAP
-if not settings.LDAP_ENABLED and not settings.SAML_ENABLED or settings.DEBUG:
+if not settings.LDAP_ENABLED and not settings.SSO_ENABLED or settings.DEBUG:
     urlpatterns += [
         path("reset/", PasswordResetView.as_view(), {
             "post_reset_redirect": "/account/reset/done/",
@@ -72,6 +73,6 @@ if not settings.LDAP_ENABLED and not settings.SAML_ENABLED or settings.DEBUG:
         ),
     ]
 
-# URLs we do want enabled with LDAP
-if (settings.LDAP_ENABLED and settings.AUTH_LDAP_ALLOW_PASSWORD_CHANGE and not settings.SAML_ENABLED):
+# Disable password reset with LDAP\SSO
+if (settings.LDAP_ENABLED and settings.AUTH_LDAP_ALLOW_PASSWORD_CHANGE and not settings.SSO_ENABLED):
     urlpatterns += [path("changepass/", ldap_password_change, {}, name="password_change")]

@@ -65,6 +65,7 @@ MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
 
     # Custom Middleware
+    'mozilla_django_oidc.middleware.SessionRefresh',
     'django_otp.middleware.OTPMiddleware',
     'apps.account.middleware.StrictAuthentication',
     'apps.account.middleware.PasswordExpirer',
@@ -91,8 +92,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            '/templates',
-            '/templates/events'
+            'templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -128,7 +128,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-    'django_saml2_auth',
+    'mozilla_django_oidc',
     'django_otp',
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
@@ -136,16 +136,15 @@ INSTALLED_APPS = (
     'tastypie',
 ) + LOCAL_APPS
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 if os.environ.get("ENABLE_TESTS") == "1":
     INSTALLED_APPS += ('django_nose', )
 
 TEST_RUNNER = 'tests.runner.ExcludeAppsTestSuiteRunner'
 
-# A sample logging configuration. The only tangible logging
-# performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error when DEBUG=False.
-# See http://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -194,9 +193,9 @@ LOGGING = {
 
 # URLs
 PUBLIC_HELP_WIKI_BASE = 'https://github.com/rma945/CryptoRatt/wiki/'
-LOGIN_REDIRECT_URL = urljoin(RATTIC_ROOT_URL, "cred/list/")
-LOGOUT_REDIRECT_URL = urljoin(RATTIC_ROOT_URL, "/")
-LOGIN_URL = RATTIC_ROOT_URL
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+LOGIN_URL = "/"
 
 # django-auth-ldap
 AUTH_LDAP_USER_FLAGS_BY_GROUP = {}
@@ -256,49 +255,18 @@ EMAIL_HOST_PASSWORD = config.get('email', 'password')
 EMAIL_USE_TLS = confgetbool('email', 'usetls', False)
 DEFAULT_FROM_EMAIL = config.get('email', 'from_email')
 
-# [saml]
-SAML_ENABLED = 'saml' in config.sections()
-
-if SAML_ENABLED:
-    # SAML IDP URL
-    SAML_IDP_URL = config.get('saml', 'idp_url')
-    
-    # SAML
-    SAML2_AUTH = {
-        # Metadata is required, choose either remote url or local file path
-        'ENTITY_ID': confget('saml', 'entity_id', ''),
-        'METADATA_AUTO_CONF_URL': confget('saml', 'metadata_url', ''),
-        'NAME_ID_FORMAT': 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
-
-        # Optional settings below
-        'DEFAULT_NEXT_URL': '/cred/list/',
-        'CREATE_USER': 'TRUE',
-        'NEW_USER_PROFILE': {
-            'ACTIVE_STATUS': True,
-            'STAFF_STATUS': False,
-            'SUPERUSER_STATUS': False,
-        },
-        'ATTRIBUTES_MAP': {
-            'email': confget('saml', 'attribute_email', 'email'),
-            'username': confget('saml', 'attribute_username', 'username'),
-            'first_name': confget('saml', 'attribute_firstname', 'firstname'),
-            'last_name': confget('saml', 'attribute_lastname', 'lastname'),
-        },
-            'TRIGGER': {
-            'BEFORE_LOGIN': 'apps.ratticweb.saml.hooks.sync_user',
-        },
-    }
-
 # [ldap]
 LDAP_ENABLED = 'ldap' in config.sections()
 
 if LDAP_ENABLED:
-
     LOGGING['loggers']['django_auth_ldap']['level'] = confget('ldap', 'loglevel', 'WARNING')
+
+    AUTHENTICATION_BACKENDS += (
+        'django_auth_ldap.backend.LDAPBackend',
+    )
 
     # Needed if anonymous queries are not allowed
     AUTH_LDAP_BIND_DN = confget('ldap', 'binddn', '')
-
     AUTH_LDAP_BIND_PASSWORD = confget('ldap', 'bindpw', '')
 
     # User attributes
@@ -349,16 +317,32 @@ if LDAP_ENABLED:
     if config.has_option('ldap', 'staff'):
         AUTH_LDAP_USER_FLAGS_BY_GROUP['is_staff'] = confget('ldap', 'staff', '')
 
-    AUTHENTICATION_BACKENDS = (
-        'django_auth_ldap.backend.LDAPBackend',
-        'django.contrib.auth.backends.ModelBackend',
-    )
 else:
     # No LDAP section means no LDAP groups
     USE_LDAP_GROUPS = False
 
+# OIDC
+SSO_ENABLED = 'sso' in config.sections()
+if SSO_ENABLED:
+    OIDC_RP_CLIENT_ID = config.get('sso', 'client_id')
+    OIDC_RP_CLIENT_SECRET = config.get('sso', 'client_secret')
+    OIDC_RP_SIGN_ALGO = config.get('sso', 'sign_algo')
+    OIDC_OP_JWKS_ENDPOINT = config.get('sso', 'jwks_endpoint')
+    OIDC_OP_AUTHORIZATION_ENDPOINT = config.get('sso', 'authorization_endpoint')
+    OIDC_OP_TOKEN_ENDPOINT = config.get('sso', 'token_endpoint')
+    OIDC_OP_USER_ENDPOINT = config.get('sso', 'user_endpoint')
+    OIDC_CREATE_USER = config.get('sso', 'create_user')
+    OIDC_VERIFY_SSL = True
+    OIDC_DRF_AUTH_BACKEND = None
+    OIDC_ADMIN_GROUP = config.get('sso', 'admin_group')
+
+    LDAP_ENABLED = False
+    AUTHENTICATION_BACKENDS += (
+        'apps.ratticweb.oidc_auth_backend.OIDCAuthBackend',
+    )
+
 # Passwords expiry settings
-if LDAP_ENABLED or SAML_ENABLED:
+if LDAP_ENABLED or SSO_ENABLED:
     PASSWORD_EXPIRY = False
 else:
     try:
