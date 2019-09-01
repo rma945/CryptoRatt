@@ -26,6 +26,8 @@
                     <span class="badge badge-primary">
                       {% trans "This Session" %}
                     </span>
+                  {% else %}
+                    {{ s.created|date:"Y/m/d H:m" }}
                   {% endif %}
                 </td>
                 <td>
