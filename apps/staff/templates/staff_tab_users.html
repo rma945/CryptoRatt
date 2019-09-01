@@ -29,10 +29,14 @@
         <div class="media-body border-bottom border-gray mr-5 row">
           <div class="col-4 mr-auto">
             <a href="{% url 'staff:user_detail' u.id %}" style="text-decoration:none">
-              <small><b>{{u.username}}</b></small></br>
+              <small>
+                <b>{{u.username}}</b>
+              </small>
+              {% if not u.is_active %} - <span class="badge badge badge-danger">disabled</span> {% endif %}
+              </br>
             </a>
             <small>email: {{ u.email}}</small></br>
-            <small>role: {% if not u.is_staff %} user {% else %} <span class="badge badge-pill badge-danger">admin</span> {% endif %}</small></br>
+            <small>role: {% if not u.is_staff %} user {% else %} <span class="badge badge badge-success">admin</span> {% endif %}</small></br>
           </div>
           <div class="col-xs-1 ml-auto align-self-center">
             <div class="dropdown">

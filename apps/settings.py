@@ -57,7 +57,7 @@ STATICFILES_FINDERS = (
 MIDDLEWARE = (
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    'apps.account.sessions.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -75,9 +75,11 @@ MIDDLEWARE = (
     'apps.ratticweb.middleware.DisableContentTypeSniffing',
 )
 
-ROOT_URLCONF = 'apps.ratticweb.urls'
+# Custom session engine 
+SESSION_ENGINE = 'apps.account.sessions'
 
-# Urls
+# Set URLS
+ROOT_URLCONF = 'apps.ratticweb.urls'
 RATTIC_ROOT_URL = '/'
 MEDIA_URL = urljoin(RATTIC_ROOT_URL, 'media/')
 STATIC_URL = urljoin(RATTIC_ROOT_URL, 'static/')
