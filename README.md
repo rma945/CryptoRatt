@@ -12,7 +12,7 @@ If you decide to use RatticWeb you should take the following into account:
 
 ## Changes
 
-* added SAML2 based auth
+* added OIDC based auth
 * added JS based copy button
 * added per-user based access to credentials
 * fixed staff access to not owned credentials

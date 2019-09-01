@@ -14,13 +14,14 @@
 
   <div class="row d-flex justify-content-center">
     <div class="col-md-4">
-      {% if not SAML_ENABLED or DEBUG_ENABLED %}
+      {% if not SSO_ENABLED or DEBUG_ENABLED %}
         <a role="button" class="btn btn-primary btn-block" href={% url 'account:login' %}>Login</a>
       {% endif %}
 
-      {% if SAML_ENABLED %}
-        <a role="button" class="btn btn-primary btn-block" href={{SAML_IDP_URL}} >Login by SSO</a>
+      {% if SSO_ENABLED %}
+        <a role="button" class="btn btn-primary btn-block" href="{% url 'oidc_authentication_init' %}?next={{next}}" >Login by SSO</a>
       {% endif %}
+
     </div>
   </div>
 </div>

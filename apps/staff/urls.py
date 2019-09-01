@@ -34,8 +34,8 @@ urlpatterns = [
     # path('delete/token/<int:uid>/', delete_token, name="delete_token"),
 ]
 
-# disable adduser if LDAP or SAML enabled
-if (not settings.LDAP_ENABLED and not settings.SAML_ENABLED):
+# disable adduser if LDAP or SSO enabled
+if (not settings.LDAP_ENABLED and not settings.SSO_ENABLED):
     urlpatterns += [
         path('groupadd/', group_add, name="group_add"),
         path('useradd/', NewUser.as_view(), name="user_add"),

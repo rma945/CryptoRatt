@@ -59,6 +59,11 @@ function deleteSession(button) {
       processData: false,
       contentType: false,
       type: 'POST',
+      success: function (response) {
+        if (response.logout == true ) {
+          location.reload();
+        }
+      }
     });
 
     // hide modal
