@@ -54,7 +54,6 @@ class CredForm(ModelForm):
     uploads = FileField(
         widget=ClearableFileInput(attrs={'multiple': True, 'class': 'custom-file-input'}),
         required=False)
-    
 
     def __init__(self, requser, *args, **kwargs):
         super(CredForm, self).__init__(*args, **kwargs)
