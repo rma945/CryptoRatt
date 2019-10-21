@@ -11,6 +11,7 @@ from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import F
 from django.utils import timezone
+from django.contrib.sessions.base_session import AbstractBaseSession
 
 from django_otp import user_has_device
 
@@ -53,7 +54,6 @@ def user_save_handler(sender, instance, **kwargs):
         p.password_changed = now()
         p.save()
 
-
 class ApiKey(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, related_name='rattic_api_key', null=True, on_delete=models.CASCADE)
     key = models.CharField(max_length=128, blank=True, default='', db_index=True)
@@ -90,5 +90,15 @@ class ApiKey(models.Model):
     def has_expiry(self):
         return self.expires > self.created
 
+class UserSession(AbstractBaseSession):
+    """Custom user session model with account_id as session key"""
+    user_id = models.IntegerField(null=True, db_index=True)
+    created = models.DateTimeField(auto_now=True)
+    user_agent = models.TextField(blank=True, null=True)
+    ip = models.CharField(max_length=128, blank=True, null=True)
+
+    @classmethod
+    def get_session_store_class(cls):
+        return SessionStore
 
 admin.site.register(UserProfile)
