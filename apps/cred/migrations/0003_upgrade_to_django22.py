@@ -44,7 +44,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('filename', models.CharField(max_length=256, verbose_name='Filename')),
-                ('mime', models.CharField(blank=True, default=None, max_length=64, null=True, verbose_name='Mime')),
+                ('mime', models.CharField(default=None, max_length=64, null=True, verbose_name='Mime')),
                 ('content', models.BinaryField(default=None, null=True)),
                 ('credential', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cred.Cred')),
             ],
@@ -53,27 +53,37 @@ class Migration(migrations.Migration):
             model_name='Cred',
             name='group',
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='auth.Group', verbose_name='Group'),
-        ),       
+        ),
         migrations.AlterField(
             model_name='Cred',
             name='latest',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='history', to='cred.Cred'),
-        ),       
+        ),
+        migrations.AddField(
+            model_name='Cred',
+            name='is_expired',
+            field=models.BooleanField(db_index=True, default=False),
+        ),
+        migrations.AddField(
+            model_name='cred',
+            name='users',
+            field=models.ManyToManyField(blank=True, default=None, related_name='child_creds', to=settings.AUTH_USER_MODEL, verbose_name='Users'),
+        ),
         migrations.AlterField(
             model_name='CredChangeQ',
             name='cred',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cred.Cred'),
-        ),       
+        ),
         migrations.AlterField(
             model_name='CredAudit',
             name='cred',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='logs', to='cred.Cred'),
-        ),       
+        ),
         migrations.AlterField(
             model_name='CredAudit',
             name='user',
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='credlogs', to=settings.AUTH_USER_MODEL),
-        ),       
+        ),
         migrations.AlterField(
             model_name='credaudit',
             name='audittype',

@@ -27,6 +27,22 @@ class Migration(migrations.Migration):
             model_name='cred',
             name='iconname',
         ),
+        migrations.RemoveField(
+            model_name='cred',
+            name='attachment',
+        ),
+        migrations.RemoveField(
+            model_name='cred',
+            name='attachment_name',
+        ),
+        migrations.RemoveField(
+            model_name='cred',
+            name='ssh_key',
+        ),
+        migrations.RemoveField(
+            model_name='cred',
+            name='ssh_key_name',
+        ),
         migrations.AddField(
             model_name='attachment',
             name='created',

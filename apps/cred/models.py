@@ -93,9 +93,9 @@ class Project(models.Model):
         return self.title
 
 class Cred(models.Model):
-    METADATA = ('project', 'description', 'descriptionmarkdown', 'group', 'groups', 'tags', 'iconname', 'latest', 'id', 'modified')
+    METADATA = ('project', 'description', 'group', 'groups', 'tags', 'iconname', 'latest', 'id', 'modified')
     SORTABLES = ('title', 'username', 'group', 'id', 'modified')
-    APP_SET = ('is_deleted', 'latest', 'modified', 'attachments')
+    APP_SET = ('is_deleted', 'latest', 'modified')
     objects = SearchManager()
 
     # User changable fields
@@ -217,7 +217,7 @@ class Attachment(models.Model):
     credential = models.ForeignKey(Cred, on_delete=models.CASCADE)
     filename = models.CharField(verbose_name=_('Filename'), max_length=256)
     created = models.DateTimeField(auto_now_add=True, blank=True)
-    mime = models.CharField(verbose_name=_('Mime'), max_length=64, blank=True, null=True, default=None)
+    mime = models.CharField(verbose_name=_('Mime'), max_length=64, null=True, default=None)
     content = models.BinaryField(null=True, default=None)
 
     def __str__(self):
