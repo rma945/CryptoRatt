@@ -1,9 +1,6 @@
-# Description
+# CryptoRatt
 
-CryptoRatt - credentials managment solution, that aimed for provide a free and useful password management solution for small or large teams. It provides SSO login via LDAP or ID, and password management audit, permissions managment and more.
-
-CryptoRatt is a fork from [tildashas/RatticWeb](https://github.com/tildaslash/RatticWeb) with additional features and updated UI.
-
+CryptoRatt - is a credentials managment solution, that aimed for provide a free and useful password management solution for small or large teams. It provides SSO login via LDAP or ID, and password management audit, permissions managment and more. This project was  forked from [tildashas/RatticWeb](https://github.com/tildaslash/RatticWeb) with additional features and updated UI.
 
 ## Features
 
