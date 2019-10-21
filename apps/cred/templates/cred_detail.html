@@ -116,25 +116,25 @@
 <div class="card mt-2">
   <div class="card-body card-body-sm">
     {% if cred.username %}
-    <div class="row align-items-center pb-2">
-      <div class="col-md-1 align-items-center"><b>{% trans "Username" %}</b></div>
-      <div class="col-md-4">
-        <div class="input-group input-group-sm">
-          <input type="text" id="username-field" value="{{ cred.username }}" readonly class="form-control" aria-label="input-username" aria-describedby="input-buttons">
-          <div class="input-group-append" id="input-buttons">
-            <button class="btn btn-primary copy-button" id="copy-username-button" type="button" data-clipboard-target="#username-field">
-              <i class="far fa-copy"></i>
-            </button>
+      <div class="row pb-2 justify-content-start">
+        <div class="col-xl-1 col-lg-2 col-sm-3 col-4 text-nowrap"><b>{% trans "Username" %}</b></div>
+        <div class="col-xl-5 col-md-9 col-sm-9 col-8 ">
+          <div class="input-group input-group-sm">
+            <input type="text" id="username-field" value="{{ cred.username }}" readonly class="form-control" aria-label="input-username" aria-describedby="input-buttons">
+            <div class="input-group-append" id="input-buttons">
+              <button class="btn btn-primary copy-button" id="copy-username-button" type="button" data-clipboard-target="#username-field">
+                <i class="far fa-copy"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     {% endif %}
     {% if cred.password %}
       <button style="display: none;" id="copy-password-button-hidden" type="button" data-clipboard-target="#password-field"></button>
-      <div class="row align-items-center">
-        <div class="col-md-1 align-items-center"><b>{% trans "Password" %}</b></div>
-        <div class="col-md-4">
+      <div class="row justify-content-start">
+        <div class="col-xl-1 col-lg-2 col-sm-3 col-4 text-nowrap"><b>{% trans "Password" %}</b></div>
+        <div class="col-xl-5 col-md-9 col-sm-9 col-8 ">
           <div class="input-group input-group-sm">
             <input type="password" id="password-field" value="all-passwords-are-encrypted" readonly class="form-control" aria-label="input-password" aria-describedby="input-buttons">
             <div class="input-group-append" id="credentials-input-buttons">
