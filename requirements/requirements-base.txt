@@ -3,7 +3,7 @@ djangorestframework>=3.10.2
 django-otp==0.5.2
 django-tastypie==0.14.2
 django-celery>=3.2.2
-django-two-factor-auth==1.8.0
+django-two-factor-auth==1.12
 django-auth-ldap==1.7.0
 python-ldap>=3.2.0
 mozilla-django-oidc>=1.2.2
